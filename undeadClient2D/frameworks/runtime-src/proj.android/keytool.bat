@@ -1,0 +1,1 @@
+D:\worksoft\Java\jdk1.8.0_45\bin\keytool -genkey -alias reswar.keystore -keyalg RSA -validity 20000 -keystore reswar.keystore
