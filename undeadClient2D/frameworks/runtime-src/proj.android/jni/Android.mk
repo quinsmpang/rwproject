@@ -23,6 +23,7 @@ LOCAL_SRC_FILES := \
 ../../Classes/IniUtil.cpp \
 ../../Classes/TableUtil.cpp \
 ../../Classes/LaunchScene.cpp \
+../../Classes/PlatformUtils.cpp \
 hellolua/main.cpp
 
 LOCAL_C_INCLUDES := \
