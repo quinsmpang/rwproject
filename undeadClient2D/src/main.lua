@@ -1,12 +1,13 @@
 
 cc.FileUtils:getInstance():addSearchPath("src")
 cc.FileUtils:getInstance():addSearchPath("res")
+cc.FileUtils:getInstance():addSearchPath("res/data")
 cc.FileUtils:getInstance():addSearchPath("res/ui")
 cc.FileUtils:getInstance():addSearchPath("res/city")
 cc.FileUtils:getInstance():addSearchPath("res/building")
 --CC_USE_FRAMEWORK = true
 
--- for module display
+-- for module display deviceUniqueIdentifier
 CC_DESIGN_RESOLUTION = {
     width = 960,
     height = 640,
@@ -55,6 +56,7 @@ GlobalSchedule = my.GlobalSchedule
 IniUtil = my.IniUtil
 TableUtil = my.TableUtil
 ScrollViewEx = my.ScrollViewEx
+PlatformUtils = my.PlatformUtils
 
 -- 屏幕分辨率
 FRAME_SIZE = cc.Director:getInstance():getOpenGLView():getFrameSize()

@@ -29,9 +29,9 @@ std::string PlatformUtils::GetDeviceID()
 {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	#include <Iphlpapi.h>
-	char macBuf[64] = { 0 };
-	char pBuf[128] = { 0 };
-	int nSize = 128;
+	char macBuf[32] = { 0 };
+	char pBuf[18] = { 0 };
+	int nSize = 18;
 	UINT uSystemInfoLen = 0;
 	UINT uErrorCode = 0;
 	IP_ADAPTER_INFO iai;
@@ -75,11 +75,13 @@ std::string PlatformUtils::GetDeviceID()
 	{
 		return "";
 	}
+	char dev[64] = {0};
 	for ( int tmpi = 0; tmpi < (int)uSystemInfoLen; tmpi++ )
 	{
-		sprintf( macBuf, "0.2x", pBuf[tmpi] );
+		sprintf_s( macBuf, "%2x", pBuf[tmpi] & 0xff );
+		strcat( dev, macBuf );
 	}
-	return macBuf;
+	return dev;
 
 #endif// CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 

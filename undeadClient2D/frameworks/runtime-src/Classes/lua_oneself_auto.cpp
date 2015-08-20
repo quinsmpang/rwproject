@@ -6,6 +6,7 @@
 #include "IniUtil.h"
 #include "TableUtil.h"
 #include "ScrollViewEx.h"
+#include "PlatformUtils.h"
 #include "tolua_fix.h"
 #include "LuaBasicConversions.h"
 
@@ -94,7 +95,7 @@ int lua_oneself_ByteBuffer_ReadLong(lua_State* tolua_S)
             tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_ByteBuffer_ReadLong'", nullptr);
             return 0;
         }
-        long ret = cobj->ReadLong();
+        long long ret = cobj->ReadLong();
         tolua_pushnumber(tolua_S,(lua_Number)ret);
         return 1;
     }
@@ -3291,6 +3292,108 @@ int lua_register_oneself_ScrollViewEx(lua_State* tolua_S)
     g_typeCast["ScrollViewEx"] = "ScrollViewEx";
     return 1;
 }
+
+int lua_oneself_PlatformUtils_GetDeviceID(lua_State* tolua_S)
+{
+    int argc = 0;
+    PlatformUtils* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"PlatformUtils",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (PlatformUtils*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_oneself_PlatformUtils_GetDeviceID'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_PlatformUtils_GetDeviceID'", nullptr);
+            return 0;
+        }
+        std::string ret = cobj->GetDeviceID();
+        tolua_pushcppstring(tolua_S,ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "PlatformUtils:GetDeviceID",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_PlatformUtils_GetDeviceID'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_oneself_PlatformUtils_GetInstance(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"PlatformUtils",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 0)
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_PlatformUtils_GetInstance'", nullptr);
+            return 0;
+        }
+        PlatformUtils* ret = PlatformUtils::GetInstance();
+        object_to_luaval<PlatformUtils>(tolua_S, "PlatformUtils",(PlatformUtils*)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "PlatformUtils:GetInstance",argc, 0);
+    return 0;
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_PlatformUtils_GetInstance'.",&tolua_err);
+#endif
+    return 0;
+}
+static int lua_oneself_PlatformUtils_finalize(lua_State* tolua_S)
+{
+    printf("luabindings: finalizing LUA object (PlatformUtils)");
+    return 0;
+}
+
+int lua_register_oneself_PlatformUtils(lua_State* tolua_S)
+{
+    tolua_usertype(tolua_S,"PlatformUtils");
+    tolua_cclass(tolua_S,"PlatformUtils","PlatformUtils","",nullptr);
+
+    tolua_beginmodule(tolua_S,"PlatformUtils");
+        tolua_function(tolua_S,"GetDeviceID",lua_oneself_PlatformUtils_GetDeviceID);
+        tolua_function(tolua_S,"GetInstance", lua_oneself_PlatformUtils_GetInstance);
+    tolua_endmodule(tolua_S);
+    std::string typeName = typeid(PlatformUtils).name();
+    g_luaType[typeName] = "PlatformUtils";
+    g_typeCast["PlatformUtils"] = "PlatformUtils";
+    return 1;
+}
 TOLUA_API int register_all_oneself(lua_State* tolua_S)
 {
 	tolua_open(tolua_S);
@@ -3302,6 +3405,7 @@ TOLUA_API int register_all_oneself(lua_State* tolua_S)
 	lua_register_oneself_TableUtil(tolua_S);
 	lua_register_oneself_IniUtil(tolua_S);
 	lua_register_oneself_GlobalSchedule(tolua_S);
+	lua_register_oneself_PlatformUtils(tolua_S);
 	lua_register_oneself_ByteBuffer(tolua_S);
 	lua_register_oneself_ScrollViewEx(tolua_S);
 

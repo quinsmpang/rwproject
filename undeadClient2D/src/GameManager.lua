@@ -18,7 +18,7 @@ function GameManager.onInit()
 	UIManager.init()
 	
 	-- 配置数据初始化
-	Data.OnInit();
+	Data.OnFristInit();
 	
 	-- 启动全局定时器
 	GlobalSchedule:start( 1/30, 0.0);
@@ -32,9 +32,10 @@ end
 
 -- 获取服务器列表
 function GameManager.GetServerList()
+	local deviceID = PlatformUtils:GetInstance():GetDeviceID();
 	local http = cc.XMLHttpRequest:new()
     http.responseType = cc.XMLHTTPREQUEST_RESPONSE_JSON
-    http:open("GET", "http://114.215.190.229/Fruit/server/serverlist_cocos.php?c=2&v1=0&v2=11")
+    http:open("GET", "http://114.215.190.229/Fruit/server/serverlist_cocos.php?c=2&v1="..deviceID.."&v2=11")
 	local function onReadyStateChange()
 		if http.readyState == 4 and (http.status >= 200 and http.status < 207) then
 			local json = require("json")
@@ -66,8 +67,8 @@ function GameManager.onConnectServer()
 		buffer:WriteInt(200);
 		buffer:WriteInt(300);
 		buffer:WriteInt(400);
-		buffer:WriteInt(2);	-- 平台
-		buffer:WriteInt(1); -- 使用语言
+		buffer:WriteInt(Data.platid);	-- 平台
+		buffer:WriteInt(Data.language); -- 使用语言
 		buffer:WriteInt(700);
 		buffer:WriteInt(800);
 		SendMessage(buffer);
@@ -87,6 +88,59 @@ function GameManager.onDisconnect()
 	GameManager.status = 0;
 	Alert( "连接中断", "重试", function() 
 		GameManager.tcpManager:ConnectServer( Data.curServerinfo["h"], Data.curServerinfo["p"] )
+	end )
+end
+
+-- 游戏登陆验证
+function GameManager.onLogin()
+	-- 登陆
+	local sendValue = {};
+	sendValue.m_username = ""
+	sendValue.m_username_length = string.len( sendValue.m_username );
+	sendValue.m_password = ""
+	sendValue.m_password_length = string.len( sendValue.m_password );
+	sendValue.m_deviceid = PlatformUtils:GetInstance():GetDeviceID();
+	sendValue.m_deviceid_length = string.len( sendValue.m_deviceid );
+	netsend_login_C( sendValue )
+	
+	-- 监听登陆返回事件
+	EventProtocol.addEventListener( "proc_login_C", function( recvValue ) 
+	end )
+	
+	-- 监听返回列表事件
+	EventProtocol.addEventListener( "proc_list_C", function( recvValue ) 
+		if recvValue.m_actor_num <= 0 then
+		
+			-- 创建角色
+			local sendValue = {};
+			sendValue.m_aclass = 0;
+			sendValue.m_name = "我是人类"
+			sendValue.m_name_length = string.len( sendValue.m_name );
+			netsend_create_C( sendValue );
+			print( "创建角色" )
+			
+		else
+			
+			-- 进入游戏
+			netsend_entergame_C( recvValue.m_listinfo[1].m_actorid );
+			print( "进入游戏："..recvValue.m_listinfo[1].m_actorid )
+		end
+		
+	end )
+	
+	-- 监听创建返回事件
+	EventProtocol.addEventListener( "proc_create_C", function( recvValue ) 
+		
+			if recvValue.m_result == 0 then
+			
+				-- 创建成功，进入游戏
+				netsend_entergame_C( recvValue.m_actorid );
+				print( "创建成功进入游戏："..recvValue.m_actorid )
+				GameManager.onStart()
+			else
+				print( "创建角色失败,角色重名" )
+			end
+			
 	end )
 end
 
@@ -144,8 +198,8 @@ function onMessageProc( cmd, buf, size )
 			local m_value4 = buffer:ReadInt();
 			-- 已接收加密秘钥等信息
 			GameManager.status = 2;
-			-- 主游戏逻辑开始
-			GameManager.onStart();
+			-- 启动登陆验证
+			GameManager.onLogin();
 		end
 		return;
 	end

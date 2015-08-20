@@ -10,12 +10,12 @@ end
 -- 初始化
 function Building:init( buildingid )
 	
-	local buildinglist = { "city_human_craftsman.png","City_renlei_majiu_3.png","City_renlei_talou2.png","city_renlei_tiejiangpu3.png","city_renlei_tushuguan2.png","city_renlei_xiaochang4.png","City_renlei_xuyuanchi1.png" }
 	-- 建筑图片
-	self._sprite = cc.Sprite:create( buildinglist[math.random( 1, #buildinglist )] )
+	self._sprite = cc.Sprite:create( "City_renlei_talou1.png" )
     self._sprite:setPosition( cc.p(0, 0) )
     self:addChild( self._sprite )
-
+	
+	-- 建筑点击事件
     local function onTouchBegan(touch, event)
         local locationInNode = self._sprite:convertToNodeSpace(touch:getLocation())
         local s = self._sprite:getContentSize()
