@@ -436,7 +436,11 @@ void struct_create_netsend2()
 			fprintf( fp, "\r\n");
 
 			fprintf( fp, "function netsend_%s_C( sendValue )\r\n", pnetcmd[tmpi].m_cmdstr );
+#ifdef COCOS2D
+			fprintf( fp, "	local buf = ByteBuffer:new();\r\n" );
+#else
 			fprintf( fp, "	local buf = ByteBuffer.New();\r\n" );
+#endif
 
 			strcpy( tmpstr, pnetcmd[tmpi].m_cmdstr );
 			u_str_toupper( tmpstr );
