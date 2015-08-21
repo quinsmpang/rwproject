@@ -5,6 +5,13 @@
 #include <Iphlpapi.h>
 #endif// CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include "cocos2d.h"
+#include "jni/JniHelper.h"
+#include <android/log.h>
+#include <jni.h>
+#include <cstring>
+#endif// CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
 PlatformUtils *PlatformUtils::m_pInstance = nullptr;
 PlatformUtils *PlatformUtils::GetInstance()
@@ -28,7 +35,6 @@ PlatformUtils::~PlatformUtils()
 std::string PlatformUtils::GetDeviceID()
 {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-	#include <Iphlpapi.h>
 	char macBuf[32] = { 0 };
 	char pBuf[18] = { 0 };
 	int nSize = 18;
@@ -86,7 +92,16 @@ std::string PlatformUtils::GetDeviceID()
 #endif// CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-
+	cocos2d::JniMethodInfo t;
+	std::string ret( "none" );
+	if (cocos2d::JniHelper::getStaticMethodInfo(t, "org/cocos2dx/lib/Cocos2dxHelper", "GetDeviceID", "()Ljava/lang/String;")) 
+	{
+		jstring str = (jstring)t.env->CallStaticObjectMethod(t.classID, t.methodID);
+		t.env->DeleteLocalRef( t.classID );
+		ret = cocos2d::JniHelper::jstring2string( str );
+		t.env->DeleteLocalRef( str );
+	}
+	return ret;
 #endif// CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
