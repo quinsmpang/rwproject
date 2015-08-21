@@ -102,6 +102,7 @@ function Building:setBaseInfo( kind, level )
 		self._timeProgress = TimeProgressBar.create()
 		local s = self._sprite:getContentSize();
 		self._timeProgress:setPosition( cc.p(0, 0-s.height/2) )
+		self._timeProgress:setCountdown(100, 86);
 		self:addChild( self._timeProgress, 10 );
 	end
 end

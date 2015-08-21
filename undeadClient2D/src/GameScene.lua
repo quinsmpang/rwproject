@@ -11,15 +11,11 @@ end
 -- 初始化
 function GameScene:init()
 
-	
 	-- 监听事件
     local function onNodeEvent(event)
         if event == "enter" then
         
         elseif event == "exit" then
-            if self._schedulerEntry then
-                scheduler:unscheduleScriptEntry(self._schedulerEntry)
-            end
             collectgarbage("collect")
             
         elseif event == "enterTransitionFinish" then
@@ -49,3 +45,5 @@ function GameScene.create()
 end
 
 return GameScene
+
+

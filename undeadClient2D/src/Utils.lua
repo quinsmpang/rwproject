@@ -2,10 +2,13 @@
 
 -- 获取时间格式
 function GetTimeFomat( totalsecond )
+	if totalsecond <= 0 then
+		return ""
+	end
 	local day = math.floor( totalsecond / 86400 );
-	local hour = math.floor( totalsecond / 3600 );
-	local minitue = math.floor( totalsecond / 60 );
-	local second = math.floor( totalsecond ) % 60;
+	local hour = math.floor(math.floor(totalsecond/3600)%24);
+	local minitue = math.floor(math.floor(totalsecond/60)%60);
+	local second = math.floor(totalsecond%60);
 	
 	local szTime = "";
 	if day > 0 then
