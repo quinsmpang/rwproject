@@ -1,5 +1,5 @@
 -- 玩家城池缓存数据
-CityBuildingMax = 256
+CityBuildingMax = 36
 
 -- 唯一建筑
 BUILDING_TownCenter			=	1	--	王城/圣殿
@@ -37,11 +37,11 @@ BUILDING_STATE_DELETE_ING	= 5 -- 拆除中
 BUILDING_STATE_DELETE_ED	= 6 -- 拆除完成，特殊使用，需点击方可真正的拆除成功
 
 
-local Building = class("Building");
-function Building:ctor()
+local CacheBuilding = class("CacheBuilding");
+function CacheBuilding:ctor()
 	self:Init();
 end
-function Building:Init()
+function CacheBuilding:Init()
 	
 	-- 基本信息
 	self.m_offset		=	0;
@@ -51,16 +51,16 @@ function Building:Init()
 	self.m_finishtime	=	0;
 	self.m_abilitys		=	{ 0, 0, 0, 0 };
 end
-function Building:Clear()
+function CacheBuilding:Clear()
 	self:Init();
 end
 
 --  城池缓存信息
-local City = class("City");
-function City:ctor()
+local CacheCity = class("CacheCity");
+function CacheCity:ctor()
 	self:Init();
 end
-function City:Init()
+function CacheCity:Init()
 	self.m_wood				=	0;	-- 木材
 	self.m_food				=	0;	-- 粮食
 	self.m_iron				=	0;	-- 铁
@@ -75,14 +75,14 @@ function City:Init()
 	-- 建筑列表
 	self.BuildingList 		=	{};
 	for i=1,CityBuildingMax,1 do
-		local object = Building.new();
+		local object = CacheBuilding.new();
 		table.insert( self.BuildingList, object );
 	end
 	
 end
 
 -- 属性变化
-function City:Set( recvValue )
+function CacheCity:Set( recvValue )
 	self.m_wood				=	recvValue.m_wood;
 	self.m_food				=	recvValue.m_food;
 	self.m_iron				=	recvValue.m_iron;
@@ -100,7 +100,7 @@ end
 
 -- 木材改变
 -- EventProtocol.addEventListener( "ChangeWood", function( recvValue ) end )
-function City:ChangeWood( nValue, nPath )
+function CacheCity:ChangeWood( nValue, nPath )
 	local oldValue = self.m_wood;
 	self.m_wood = nValue;
 	EventProtocol.dispatchEvent( "ChangeWood", { value=nValue, change=nValue-oldValue, path=nPath } );
@@ -108,7 +108,7 @@ end
 
 -- 粮食
 -- EventProtocol.addEventListener( "ChangeFood", function( recvValue ) end )
-function City:ChangeFood( nValue, nPath )
+function CacheCity:ChangeFood( nValue, nPath )
 	local oldValue = self.m_food;
 	self.m_food = nValue;
 	EventProtocol.dispatchEvent( "ChangeFood", { value=nValue, change=nValue-oldValue, path=nPath } );
@@ -116,7 +116,7 @@ end
 
 -- 铁
 -- EventProtocol.addEventListener( "ChangeIron", function( recvValue ) end )
-function City:ChangeIron( nValue, nPath )
+function CacheCity:ChangeIron( nValue, nPath )
 	local oldValue = self.m_iron;
 	self.m_iron = nValue;
 	EventProtocol.dispatchEvent( "ChangeIron", { value=nValue, change=nValue-oldValue, path=nPath } );
@@ -124,7 +124,7 @@ end
 
 -- 秘银
 -- EventProtocol.addEventListener( "ChangeMithril", function( recvValue ) end )
-function City:ChangeMithril( nValue, nPath )
+function CacheCity:ChangeMithril( nValue, nPath )
 	local oldValue = self.m_mithril;
 	self.m_mithril = nValue;
 	EventProtocol.dispatchEvent( "ChangeMithril", { value=nValue, change=nValue-oldValue, path=nPath } );
@@ -132,14 +132,14 @@ end
 
 -- 金币改变
 -- EventProtocol.addEventListener( "ChangeGold", function( recvValue ) end )
-function City:ChangeGold( nValue, nPath )
+function CacheCity:ChangeGold( nValue, nPath )
 	local oldValue = self.m_gold;
 	self.m_gold = nValue;
 	EventProtocol.dispatchEvent( "ChangeGold", { value=nValue, change=nValue-oldValue, path=nPath } );
 end
 
 -- 添加建筑
-function City:AddBuilding( info )
+function CacheCity:AddBuilding( info )
 	if info.m_offset < 0 or info.m_offset >= CityBuildingMax then
 		return;
 	end
@@ -147,24 +147,35 @@ function City:AddBuilding( info )
 	self.BuildingList[offset].m_offset 	= info.m_offset;
 	self.BuildingList[offset].m_kind 	= info.m_kind;
 	self.BuildingList[offset].m_level 	= info.m_level;
-
-	BuildingAdd( info.m_offset, info.m_kind, info.m_level );
+	
+	-- 设置显示
+	if GameManager.gameScence then
+		local building = GameManager.gameScence._city._buildingLayer:getChildByTag( info.m_offset )
+		if building then
+			building:setBaseInfo( info.m_kind, info.m_level )
+		end
+	end
 end
 
 -- 删除建筑
-function City:DelBuilding( info )
+function CacheCity:DelBuilding( info )
 	if info.m_offset < 0 or info.m_offset >= CityBuildingMax then
 		return;
 	end
 	local offset = info.m_offset + 1;
 	self.BuildingList[offset]:Clear();
 	
-	
-	BuildingDelete( info.m_offset );
+	-- 设置显示
+	if GameManager.gameScence then
+		local building = GameManager.gameScence._city._buildingLayer:getChildByTag( info.m_offset )
+		if building then
+			building:setBaseInfo( 0, 0 )
+		end
+	end
 end
 
 -- 设置建筑时间信息
-function City:SetBuildingTimeInfo( info )
+function CacheCity:SetBuildingTimeInfo( info )
 	if info.m_offset < 0 or info.m_offset >= CityBuildingMax then
 		return;
 	end
@@ -174,22 +185,29 @@ function City:SetBuildingTimeInfo( info )
 	
 	local level = self.BuildingList[offset].m_level;
 	local id = self.BuildingList[offset].m_kind;
-	BuildingSetTime( info.m_offset, info.m_state, info.m_time,  Data.building_upgrade[id][level].sec );
+	
+	-- 设置显示
+	if GameManager.gameScence then
+		local building = GameManager.gameScence._city._buildingLayer:getChildByTag( info.m_offset )
+		if building then
+			building:setTimeInfo( info.m_state, info.m_time, Data.building_upgrade[id][level].sec )
+		end
+	end
 end
 
 -- 设置建筑相关数据
-function  City:SetBuildingAbility( info )
+function  CacheCity:SetBuildingAbility( info )
 	if info.m_offset < 0 or info.m_offset >= CityBuildingMax then
 		return;
 	end
 	local offset = info.m_offset + 1;
 	self.BuildingList[offset].m_abilitys = info.m_value;
 
-	BuildingRefreshAbility( info.m_offset );
+	--BuildingRefreshAbility( info.m_offset );
 end
 
 -- 服务器发过来的时间戳
-function City:SetServerTime( servertime )
+function CacheCity:SetServerTime( servertime )
 	self.m_servertime = servertime;
 	self.m_clienttime = os.time();
 end
@@ -198,14 +216,14 @@ end
 -- 当前时间-客户端收到服务器时间戳的时间为=流逝时间
 -- 流逝时间+服务器时间=当前时间
 function GetServerTime()
-	return GetCity().m_servertime + (os.time()-GetCity().m_clienttime);
+	return GetCacheCity().m_servertime + (os.time()-GetCacheCity().m_clienttime);
 end
 
 -- 全局
-G_City = nil;
-function GetCity()
-	if G_City == nil then
-		G_City = City.new();
+G_CacheCity = nil;
+function GetCacheCity()
+	if G_CacheCity == nil then
+		G_CacheCity = CacheCity.new();
 	end
-	return G_City;
+	return G_CacheCity;
 end

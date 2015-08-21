@@ -5,8 +5,11 @@ local this = GameManager;
 -- 当前游戏状态
 GameManager.status = 0;
 
--- 当前场景
-GameManager.currentScence = "";
+-- 当前场景名称
+GameManager.currentScenceName = "";
+
+-- 游戏场景
+GameManager.gameScence = nil;
 
 -- 网络管理器
 GameManager.tcpManager = nil;
@@ -122,6 +125,7 @@ function GameManager.onLogin()
 		else
 			
 			-- 进入游戏
+			GameManager.onStart()
 			netsend_entergame_C( recvValue.m_listinfo[1].m_actorid );
 			print( "进入游戏："..recvValue.m_listinfo[1].m_actorid )
 		end
@@ -134,9 +138,9 @@ function GameManager.onLogin()
 			if recvValue.m_result == 0 then
 			
 				-- 创建成功，进入游戏
+				GameManager.onStart()
 				netsend_entergame_C( recvValue.m_actorid );
 				print( "创建成功进入游戏："..recvValue.m_actorid )
-				GameManager.onStart()
 			else
 				print( "创建角色失败,角色重名" )
 			end
@@ -146,14 +150,16 @@ end
 
 -- 游戏启动
 function GameManager.onStart()
+	-- 配置数据初始化 
+	Data.OnSecondInit()
 	
 	-- 创建游戏主场景
     local scene = require("GameScene")
-    local gameScene = scene.create()
+    GameManager.gameScence = scene.create()
     if cc.Director:getInstance():getRunningScene() then
-        cc.Director:getInstance():replaceScene(gameScene)
+        cc.Director:getInstance():replaceScene(GameManager.gameScence)
     else
-        cc.Director:getInstance():runWithScene(gameScene)
+        cc.Director:getInstance():runWithScene(GameManager.gameScence)
     end
 	
 	
@@ -203,7 +209,6 @@ function onMessageProc( cmd, buf, size )
 		end
 		return;
 	end
-	
 	-- 普通游戏数据包处理
 	if in_proc_command_C( cmd, buffer ) == 0 then
 	end

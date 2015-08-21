@@ -52,6 +52,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     // set default FPS
     Director::getInstance()->setAnimationInterval(1.0 / 60.0f);
 	Director::getInstance()->getOpenGLView()->setDesignResolutionSize( 640, 960, ResolutionPolicy::NO_BORDER );
+
 	// Æô¶¯³¡¾°
 	LaunchScene *launchScene = LaunchScene::create();
 	if ( Director::getInstance()->getRunningScene() )
