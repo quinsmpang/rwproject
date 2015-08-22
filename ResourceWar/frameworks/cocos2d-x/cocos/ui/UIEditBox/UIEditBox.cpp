@@ -234,11 +234,6 @@ void EditBox::setFontSize(int fontSize)
 
 void EditBox::setFontColor(const Color3B& color)
 {
-    setFontColor(Color4B(color));
-}
-
-void EditBox::setFontColor(const Color4B& color)
-{
     _colText = color;
     if (_editBoxImpl != nullptr)
     {
@@ -279,12 +274,7 @@ void EditBox::setPlaceholderFontSize(int fontSize)
 
 void EditBox::setPlaceholderFontColor(const Color3B& color)
 {
-    setPlaceholderFontColor(Color4B(color));
-}
-
-void EditBox::setPlaceholderFontColor(const Color4B& color)
-{
-    _colPlaceHolder = color;
+    _colText = color;
     if (_editBoxImpl != nullptr)
     {
         _editBoxImpl->setPlaceholderFontColor(color);
@@ -393,11 +383,6 @@ void EditBox::setAnchorPoint(const Vec2& anchorPoint)
     {
         _editBoxImpl->setAnchorPoint(anchorPoint);
     }
-}
-
-std::string EditBox::getDescription() const
-{
-    return "EditBox";
 }
 
 void EditBox::visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t parentFlags)

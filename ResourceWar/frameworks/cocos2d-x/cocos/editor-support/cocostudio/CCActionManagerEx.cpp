@@ -155,16 +155,6 @@ ActionObject* ActionManagerEx::playActionByName(const char* jsonName,const char*
 	}
 	return action;
 }
-
-ActionObject* ActionManagerEx::stopActionByName(const char* jsonName,const char* actionName)
-{
-	ActionObject* action = getActionByName(jsonName,actionName);
-	if (action)
-	{
-		action->stop();
-	}
-	return action;
-}
     
 void ActionManagerEx::releaseActions()
 {

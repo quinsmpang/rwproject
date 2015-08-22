@@ -180,8 +180,7 @@ int lua_cocos2dx_physics_PhysicsWorld_rayCast(lua_State* tolua_S)
             return 0;
         cobj->rayCast(arg0, arg1, arg2, nullptr);
         toluafix_remove_function_by_refid(tolua_S, handler);
-        lua_settop(tolua_S, 1);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "rayCast",argc, 4);
     return 0;
@@ -237,8 +236,7 @@ int lua_cocos2dx_physics_PhysicsWorld_queryRect(lua_State* tolua_S)
             return 0;
         cobj->queryRect(arg0, arg1, nullptr);
         toluafix_remove_function_by_refid(tolua_S, handler);
-        lua_settop(tolua_S, 1);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "queryRect",argc, 3);
     return 0;
@@ -297,8 +295,7 @@ int lua_cocos2dx_physics_PhysicsWorld_queryPoint(lua_State* tolua_S)
             return 0;
         cobj->queryPoint(arg0, arg1, nullptr);
         toluafix_remove_function_by_refid(tolua_S, handler);
-        lua_settop(tolua_S, 1);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "queryPoint",argc, 3);
     return 0;
@@ -705,7 +702,7 @@ int lua_cocos2dx_physics_PhysicsShape_recenterPoints(lua_State* tolua_S)
         vec2_array_to_luaval(tolua_S, arg0, arg1);
         CC_SAFE_DELETE_ARRAY(arg0);
         
-        return 1;
+        return 0;
     }
     if (argc == 2)
     {
@@ -726,7 +723,7 @@ int lua_cocos2dx_physics_PhysicsShape_recenterPoints(lua_State* tolua_S)
         cocos2d::PhysicsShape::recenterPoints(arg0, arg1, arg2);
         vec2_array_to_luaval(tolua_S, arg0, arg1);
         CC_SAFE_DELETE_ARRAY(arg0);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "recenterPoints",argc, 2);
     return 0;
@@ -809,7 +806,7 @@ int lua_cocos2dx_physics_PhysicsShapeBox_getPoints(lua_State* tolua_S)
         cocos2d::Vec2 arg0[4];
         cobj->getPoints(arg0);
         vec2_array_to_luaval(tolua_S, arg0, 4);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "getPoints",argc, 1);
     return 0;
@@ -853,7 +850,7 @@ int lua_cocos2dx_physics_PhysicsShapePolygon_getPoints(lua_State* tolua_S)
         cobj->getPoints(arg0);
         vec2_array_to_luaval(tolua_S, arg0, count);
         CC_SAFE_DELETE_ARRAY(arg0);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "getPoints",argc, 1);
     return 0;
@@ -1094,7 +1091,7 @@ int lua_cocos2dx_physics_PhysicsShapeEdgeBox_getPoints(lua_State* tolua_S)
         cobj->getPoints(arg0);
         vec2_array_to_luaval(tolua_S, arg0, count);
         CC_SAFE_DELETE_ARRAY(arg0);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "getPoints",argc, 1);
     return 0;
@@ -1138,7 +1135,7 @@ int lua_cocos2dx_physics_PhysicsShapeEdgePolygon_getPoints(lua_State* tolua_S)
         cobj->getPoints(arg0);
         vec2_array_to_luaval(tolua_S, arg0, count);
         CC_SAFE_DELETE_ARRAY(arg0);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "getPoints",argc, 1);
     return 0;
@@ -1182,7 +1179,7 @@ int lua_cocos2dx_physics_PhysicsShapeEdgeChain_getPoints(lua_State* tolua_S)
         cobj->getPoints(arg0);
         vec2_array_to_luaval(tolua_S, arg0, count);
         CC_SAFE_DELETE_ARRAY(arg0);
-        return 1;
+        return 0;
     }
     luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "getPoints",argc, 1);
     return 0;
@@ -1271,11 +1268,11 @@ static int tolua_cocos2dx_EventListenerPhysicsContact_registerScriptHandler(lua_
                 };
             }
                 break;
-            case ScriptHandlerMgr::HandlerType::EVENT_PHYSICS_CONTACT_SEPARATE:
+            case ScriptHandlerMgr::HandlerType::EVENT_PHYSICS_CONTACT_SEPERATE:
             {
                 ScriptHandlerMgr::getInstance()->addObjectHandler((void*)self, handler, type);
                 
-                self->onContactSeparate = [handler](PhysicsContact& contact){
+                self->onContactSeperate = [handler](PhysicsContact& contact){
                     LuaStack* stack = LuaEngine::getInstance()->getLuaStack();
                     stack->pushObject(&contact, "cc.PhysicsContact");
                     stack->executeFunctionByHandler(handler, 1);

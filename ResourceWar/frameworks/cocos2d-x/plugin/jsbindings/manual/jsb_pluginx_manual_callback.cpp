@@ -23,11 +23,11 @@ public:
         
         JSContext* cx = s_cx;
         
-        JS::RootedObject obj(cx, _JSDelegate);
+        JSObject* obj = _JSDelegate;
         JSAutoCompartment ac(cx, obj);
         
         bool hasAction;
-        JS::RootedValue retval(cx);
+        jsval retval;
         JS::RootedValue temp_retval(cx);
         jsval dataVal[3];
         dataVal[0] = INT_TO_JSVAL(ret);
@@ -44,7 +44,8 @@ public:
                 return;
             }
 
-            JS_CallFunctionName(cx, obj, "onPayResult", JS::HandleValueArray::fromMarkedLocation(3, dataVal), &retval);
+            JS_CallFunctionName(cx, obj, "onPayResult",
+                                3, dataVal, &retval);
         }
     }
 
@@ -60,11 +61,11 @@ public:
     virtual void onRequestProductsResult(cocos2d::plugin::IAPProductRequest ret, cocos2d::plugin::TProductList info){
         JSContext* cx = s_cx;
         
-        JS::RootedObject obj(cx, _JSDelegate);
+        JSObject* obj = _JSDelegate;
         JSAutoCompartment ac(cx, obj);
         
         bool hasAction;
-        JS::RootedValue retval(cx);
+        jsval retval;
         JS::RootedValue temp_retval(cx);
         jsval dataVal[2];
         dataVal[0] = INT_TO_JSVAL(ret);
@@ -80,18 +81,19 @@ public:
                 return;
             }
             
-            JS_CallFunctionName(cx, obj, "onRequestProductResult", JS::HandleValueArray::fromMarkedLocation(2, dataVal), &retval);
+            JS_CallFunctionName(cx, obj, "onRequestProductResult",
+                                2, dataVal, &retval);
         }
 
     }
 private:
-    JS::Heap<JSObject*> _JSDelegate;
+    JSObject* _JSDelegate;
 };
 
 bool js_pluginx_ProtocolIAP_setResultListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
     s_cx = cx;
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
     cocos2d::plugin::ProtocolIAP* cobj = (cocos2d::plugin::ProtocolIAP *)(proxy ? proxy->ptr : NULL);
@@ -99,12 +101,12 @@ bool js_pluginx_ProtocolIAP_setResultListener(JSContext *cx, uint32_t argc, jsva
 
     if (argc == 1) {
         // save the delegate
-        JSObject *jsDelegate = args.get(0).toObjectOrNull();
+        JSObject *jsDelegate = JSVAL_TO_OBJECT(argv[0]);
         Pluginx_PurchaseResult* nativeDelegate = new Pluginx_PurchaseResult();
         nativeDelegate->setJSDelegate(jsDelegate);
         cobj->setResultListener(nativeDelegate);
         
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
 
@@ -114,7 +116,6 @@ bool js_pluginx_ProtocolIAP_setResultListener(JSContext *cx, uint32_t argc, jsva
 
 bool js_pluginx_ProtocolIAP_getResultListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy = jsb_get_js_proxy(obj);
 	cocos2d::plugin::ProtocolIAP* cobj = (cocos2d::plugin::ProtocolIAP *)(proxy ? proxy->ptr : NULL);
@@ -130,7 +131,7 @@ bool js_pluginx_ProtocolIAP_getResultListener(JSContext *cx, uint32_t argc, jsva
 				jsret = JSVAL_NULL;
 			}
 		} while (0);
-        args.rval().setUndefined();
+		JS_SET_RVAL(cx, vp, jsret);
 		return true;
 	}
     
@@ -140,7 +141,7 @@ bool js_pluginx_ProtocolIAP_getResultListener(JSContext *cx, uint32_t argc, jsva
 
 bool js_pluginx_ProtocolIAP_payForProduct(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -148,28 +149,28 @@ bool js_pluginx_ProtocolIAP_payForProduct(JSContext *cx, uint32_t argc, jsval *v
     JSB_PRECONDITION2( cobj, cx, false, "js_pluginx_protocols_ProtocolIAP_payForProduct : Invalid Native Object");
     if (argc == 1) {
         cocos2d::plugin::TProductInfo arg0;
-        ok &= pluginx::jsval_to_TProductInfo(cx, args.get(0), &arg0);
+        ok &= pluginx::jsval_to_TProductInfo(cx, argv[0], &arg0);
         JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_ProtocolIAP_payForProduct : Error processing arguments");
         cobj->payForProduct(arg0);
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
     if(argc == 2){
         cocos2d::plugin::TProductInfo arg0;
-        ok &= pluginx::jsval_to_TProductInfo(cx, args.get(0), &arg0);
+        ok &= pluginx::jsval_to_TProductInfo(cx, argv[0], &arg0);
         JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_ProtocolIAP_payForProduct : Error processing arguments");
         
         std::function<void (int, std::string&)> arg1;
         do {
-            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
+            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[1]));
             auto lambda = [=](int larg0, std::string& larg1) -> void {
                 JSAutoCompartment ac(cx, obj);
                 jsval largv[2];
                 largv[0] = int32_to_jsval(cx, larg0);
                 largv[1] = std_string_to_jsval(cx, larg1);
-                JS::RootedValue rval(cx);
-                bool succeed = func->invoke(2, &largv[0], &rval);
+                jsval rval;
+                bool succeed = func->invoke(2, &largv[0], rval);
                 if (!succeed && JS_IsExceptionPending(cx)) {
                     JS_ReportPendingException(cx);
                 }
@@ -178,7 +179,7 @@ bool js_pluginx_ProtocolIAP_payForProduct(JSContext *cx, uint32_t argc, jsval *v
         } while(0);
         
         cobj->payForProduct(arg0, arg1);
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
@@ -193,11 +194,11 @@ public:
     virtual void onAdsResult(AdsResultCode code, const char* msg)
     {
         JSContext* cx = s_cx;
-        JS::RootedObject obj(cx, _JSDelegate);
+        JSObject* obj = _JSDelegate;
         JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
-        JS::RootedValue retval(cx);
+        jsval retval;
         JS::RootedValue temp_retval(cx);
         jsval dataVal[2];
         dataVal[0] = INT_TO_JSVAL(code);
@@ -212,18 +213,19 @@ public:
             if(temp_retval == JSVAL_VOID) {
                 return;
             }
-            JS_CallFunctionName(cx, obj, "onAdsResult", JS::HandleValueArray::fromMarkedLocation(2, dataVal), &retval);
+            JS_CallFunctionName(cx, obj, "onAdsResult",
+                                2, dataVal, &retval);
         }
     }
 
     virtual void onPlayerGetPoints(ProtocolAds* pAdsPlugin, int points)
     {
         JSContext* cx = s_cx;
-        JS::RootedObject obj(cx, _JSDelegate);
+        JSObject* obj = _JSDelegate;
         JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
-        JS::RootedValue retval(cx);
+        jsval retval;
         JS::RootedValue temp_retval(cx);
 
         js_proxy_t * p;
@@ -243,7 +245,8 @@ public:
             if(temp_retval == JSVAL_VOID) {
                 return;
             }
-            JS_CallFunctionName(cx, obj, "onPlayerGetPoints", JS::HandleValueArray::fromMarkedLocation(2, dataVal), &retval);
+            JS_CallFunctionName(cx, obj, "onPlayerGetPoints",
+                                2, NULL, &retval);
         }
     }
 
@@ -257,25 +260,25 @@ public:
     }
 
 private:
-    JS::Heap<JSObject*> _JSDelegate;
+    JSObject* _JSDelegate;
 };
 
 bool js_pluginx_ProtocolAds_setAdsListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
     s_cx = cx;
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
     cocos2d::plugin::ProtocolAds* cobj = (cocos2d::plugin::ProtocolAds *)(proxy ? proxy->ptr : NULL);
     bool ok = true;
     if (argc == 1) {
         // save the delegate
-        JSObject *jsDelegate = args.get(0).toObjectOrNull();
+        JSObject *jsDelegate = JSVAL_TO_OBJECT(argv[0]);
         Pluginx_AdsListener* nativeDelegate = new Pluginx_AdsListener();
         nativeDelegate->setJSDelegate(jsDelegate);
         cobj->setAdsListener(nativeDelegate);
         
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
 
@@ -285,7 +288,6 @@ bool js_pluginx_ProtocolAds_setAdsListener(JSContext *cx, uint32_t argc, jsval *
 
 bool js_pluginx_ProtocolAds_getAdsListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy = jsb_get_js_proxy(obj);
 	cocos2d::plugin::ProtocolAds* cobj = (cocos2d::plugin::ProtocolAds *)(proxy ? proxy->ptr : NULL);
@@ -301,7 +303,7 @@ bool js_pluginx_ProtocolAds_getAdsListener(JSContext *cx, uint32_t argc, jsval *
 				jsret = JSVAL_NULL;
 			}
 		} while (0);
-		args.rval().set(jsret);
+		JS_SET_RVAL(cx, vp, jsret);
 		return true;
 	}
     
@@ -315,11 +317,11 @@ public:
     virtual void onShareResult(cocos2d::plugin::ShareResultCode ret, const char* msg)
     {
         JSContext* cx = s_cx;
-        JS::RootedObject obj(cx, _JSDelegate);
+        JSObject* obj = _JSDelegate;
         JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
-        JS::RootedValue retval(cx);
+        jsval retval;
         JS::RootedValue temp_retval(cx);
         jsval dataVal[2];
         dataVal[0] = INT_TO_JSVAL(ret);
@@ -333,7 +335,8 @@ public:
             if(temp_retval == JSVAL_VOID) {
                 return;
             }
-            JS_CallFunctionName(cx, obj, "onShareResult", JS::HandleValueArray::fromMarkedLocation(2, dataVal), &retval);
+            JS_CallFunctionName(cx, obj, "onShareResult",
+                                2, dataVal, &retval);
         }
     }
 
@@ -348,13 +351,13 @@ public:
     }
 
 private:
-    JS::Heap<JSObject*> _JSDelegate;
+    JSObject* _JSDelegate;
 };
 
 bool js_pluginx_ProtocolShare_setResultListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
     s_cx = cx;
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
     cocos2d::plugin::ProtocolShare* cobj = (cocos2d::plugin::ProtocolShare *)(proxy ? proxy->ptr : NULL);
@@ -362,12 +365,12 @@ bool js_pluginx_ProtocolShare_setResultListener(JSContext *cx, uint32_t argc, js
 
     if (argc == 1) {
         // save the delegate
-        JSObject *jsDelegate = args.get(0).toObjectOrNull();
+        JSObject *jsDelegate = JSVAL_TO_OBJECT(argv[0]);
         Pluginx_ShareResult* nativeDelegate = new Pluginx_ShareResult();
         nativeDelegate->setJSDelegate(jsDelegate);
         cobj->setResultListener(nativeDelegate);
         
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
 
@@ -377,7 +380,6 @@ bool js_pluginx_ProtocolShare_setResultListener(JSContext *cx, uint32_t argc, js
 
 bool js_pluginx_ProtocolShare_getResultListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy = jsb_get_js_proxy(obj);
 	cocos2d::plugin::ProtocolShare* cobj = (cocos2d::plugin::ProtocolShare *)(proxy ? proxy->ptr : NULL);
@@ -393,7 +395,7 @@ bool js_pluginx_ProtocolShare_getResultListener(JSContext *cx, uint32_t argc, js
 				jsret = JSVAL_NULL;
 			}
 		} while (0);
-		args.rval().set(jsret);
+		JS_SET_RVAL(cx, vp, jsret);
 		return true;
 	}
     
@@ -403,7 +405,7 @@ bool js_pluginx_ProtocolShare_getResultListener(JSContext *cx, uint32_t argc, js
 
 bool js_pluginx_ProtocolShare_share(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -411,28 +413,28 @@ bool js_pluginx_ProtocolShare_share(JSContext *cx, uint32_t argc, jsval *vp)
     JSB_PRECONDITION2( cobj, cx, false, "js_pluginx_protocols_ProtocolShare_share : Invalid Native Object");
     if (argc == 1) {
         cocos2d::plugin::TShareInfo arg0;
-        ok &= pluginx::jsval_to_TShareInfo(cx, args.get(0), &arg0);
+        ok &= pluginx::jsval_to_TShareInfo(cx, argv[0], &arg0);
         JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_ProtocolShare_share : Error processing arguments");
         cobj->share(arg0);
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
     if(argc == 2){
         cocos2d::plugin::TShareInfo arg0;
-        ok &= pluginx::jsval_to_TShareInfo(cx, args.get(0), &arg0);
+        ok &= pluginx::jsval_to_TShareInfo(cx, argv[0], &arg0);
         JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_ProtocolShare_share : Error processing arguments");
         
         std::function<void (int, std::string&)> arg1;
         do {
-            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
+            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[1]));
             auto lambda = [=](int larg0, std::string& larg1) -> void {
                 JSAutoCompartment ac(cx, obj);
                 jsval largv[2];
                 largv[0] = int32_to_jsval(cx, larg0);
                 largv[1] = std_string_to_jsval(cx, larg1);
-                JS::RootedValue rval(cx);
-                bool succeed = func->invoke(2, &largv[0], &rval);
+                jsval rval;
+                bool succeed = func->invoke(2, &largv[0], rval);
                 if (!succeed && JS_IsExceptionPending(cx)) {
                     JS_ReportPendingException(cx);
                 }
@@ -441,7 +443,7 @@ bool js_pluginx_ProtocolShare_share(JSContext *cx, uint32_t argc, jsval *vp)
         } while(0);
         
         cobj->share(arg0, arg1);
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
@@ -455,11 +457,11 @@ public:
     virtual void onSocialResult(cocos2d::plugin::SocialRetCode ret, const char* msg)
     {
         JSContext* cx = s_cx;
-        JS::RootedObject obj(cx, _JSDelegate);
+        JSObject* obj = _JSDelegate;
         JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
-        JS::RootedValue retval(cx);
+        jsval retval;
         JS::RootedValue temp_retval(cx);
         jsval dataVal[2];
         dataVal[0] = INT_TO_JSVAL(ret);
@@ -473,7 +475,8 @@ public:
             if(temp_retval == JSVAL_VOID) {
                 return;
             }
-            JS_CallFunctionName(cx, obj, "onSocialResult", JS::HandleValueArray::fromMarkedLocation(2, dataVal), &retval);
+            JS_CallFunctionName(cx, obj, "onSocialResult",
+                                2, dataVal, &retval);
         }
     }
 
@@ -488,13 +491,13 @@ public:
     }
 
 private:
-    JS::Heap<JSObject*> _JSDelegate;
+    JSObject* _JSDelegate;
 };
 
 bool js_pluginx_ProtocolSocial_setListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
     s_cx = cx;
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
     cocos2d::plugin::ProtocolSocial* cobj = (cocos2d::plugin::ProtocolSocial *)(proxy ? proxy->ptr : NULL);
@@ -502,12 +505,12 @@ bool js_pluginx_ProtocolSocial_setListener(JSContext *cx, uint32_t argc, jsval *
 
     if (argc == 1) {
         // save the delegate
-        JSObject *jsDelegate = args.get(0).toObjectOrNull();
+        JSObject *jsDelegate = JSVAL_TO_OBJECT(argv[0]);
         Pluginx_SocialResult* nativeDelegate = new Pluginx_SocialResult();
         nativeDelegate->setJSDelegate(jsDelegate);
         cobj->setListener(nativeDelegate);
         
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
 
@@ -517,7 +520,6 @@ bool js_pluginx_ProtocolSocial_setListener(JSContext *cx, uint32_t argc, jsval *
 
 bool js_pluginx_ProtocolSocial_getListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy = jsb_get_js_proxy(obj);
 	cocos2d::plugin::ProtocolSocial* cobj = (cocos2d::plugin::ProtocolSocial *)(proxy ? proxy->ptr : NULL);
@@ -533,7 +535,7 @@ bool js_pluginx_ProtocolSocial_getListener(JSContext *cx, uint32_t argc, jsval *
 				jsret = JSVAL_NULL;
 			}
 		} while (0);
-		args.rval().set(jsret);
+		JS_SET_RVAL(cx, vp, jsret);
 		return true;
 	}
     
@@ -543,7 +545,7 @@ bool js_pluginx_ProtocolSocial_getListener(JSContext *cx, uint32_t argc, jsval *
 
 bool js_pluginx_ProtocolSocial_submitScore(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -552,31 +554,31 @@ bool js_pluginx_ProtocolSocial_submitScore(JSContext *cx, uint32_t argc, jsval *
     if (argc == 2) {
         const char* arg0;
         long arg1;
-        std::string arg0_tmp; ok &= jsval_to_std_string(cx, args.get(0), &arg0_tmp); arg0 = arg0_tmp.c_str();
-        ok &= jsval_to_long(cx, args.get(1), (long *)&arg1);
+        std::string arg0_tmp; ok &= jsval_to_std_string(cx, argv[0], &arg0_tmp); arg0 = arg0_tmp.c_str();
+        ok &= jsval_to_long(cx, argv[1], (long *)&arg1);
         JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_ProtocolSocial_submitScore : Error processing arguments");
         cobj->submitScore(arg0, arg1);
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
     if(argc == 3){
         const char* arg0;
         long arg1;
-        std::string arg0_tmp; ok &= jsval_to_std_string(cx, args.get(0), &arg0_tmp); arg0 = arg0_tmp.c_str();
-        ok &= jsval_to_long(cx, args.get(1), (long *)&arg1);
+        std::string arg0_tmp; ok &= jsval_to_std_string(cx, argv[0], &arg0_tmp); arg0 = arg0_tmp.c_str();
+        ok &= jsval_to_long(cx, argv[1], (long *)&arg1);
         JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_ProtocolSocial_submitScore : Error processing arguments");
         
         std::function<void (int, std::string&)> arg2;
         do {
-            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(2)));
+            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[2]));
             auto lambda = [=](int larg0, std::string& larg1) -> void {
                 JSAutoCompartment ac(cx, obj);
                 jsval largv[2];
                 largv[0] = int32_to_jsval(cx, larg0);
                 largv[1] = std_string_to_jsval(cx, larg1);
-                JS::RootedValue rval(cx);
-                bool succeed = func->invoke(2, &largv[0], &rval);
+                jsval rval;
+                bool succeed = func->invoke(2, &largv[0], rval);
                 if (!succeed && JS_IsExceptionPending(cx)) {
                     JS_ReportPendingException(cx);
                 }
@@ -585,7 +587,7 @@ bool js_pluginx_ProtocolSocial_submitScore(JSContext *cx, uint32_t argc, jsval *
         } while(0);
         
         cobj->submitScore(arg0, arg1, arg2);
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
@@ -595,7 +597,7 @@ bool js_pluginx_ProtocolSocial_submitScore(JSContext *cx, uint32_t argc, jsval *
 
 bool js_pluginx_ProtocolSocial_unlockAchievement(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -603,28 +605,28 @@ bool js_pluginx_ProtocolSocial_unlockAchievement(JSContext *cx, uint32_t argc, j
     JSB_PRECONDITION2( cobj, cx, false, "js_pluginx_protocols_ProtocolSocial_unlockAchievement : Invalid Native Object");
     if (argc == 1) {
         cocos2d::plugin::TAchievementInfo arg0;
-        ok &= pluginx::jsval_to_TAchievementInfo(cx, args.get(0), &arg0);
+        ok &= pluginx::jsval_to_TAchievementInfo(cx, argv[0], &arg0);
         JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_ProtocolSocial_unlockAchievement : Error processing arguments");
         cobj->unlockAchievement(arg0);
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
     if(argc ==2){
         cocos2d::plugin::TAchievementInfo arg0;
-        ok &= pluginx::jsval_to_TAchievementInfo(cx, args.get(0), &arg0);
+        ok &= pluginx::jsval_to_TAchievementInfo(cx, argv[0], &arg0);
         JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_ProtocolSocial_unlockAchievement : Error processing arguments");
         
         std::function<void (int, std::string&)> arg1;
         do {
-            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
+            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[1]));
             auto lambda = [=](int larg0, std::string& larg1) -> void {
                 JSAutoCompartment ac(cx, obj);
                 jsval largv[2];
                 largv[0] = int32_to_jsval(cx, larg0);
                 largv[1] = std_string_to_jsval(cx, larg1);
-                JS::RootedValue rval(cx);
-                bool succeed = func->invoke(2, &largv[0], &rval);
+                jsval rval;
+                bool succeed = func->invoke(2, &largv[0], rval);
                 if (!succeed && JS_IsExceptionPending(cx)) {
                     JS_ReportPendingException(cx);
                 }
@@ -633,7 +635,7 @@ bool js_pluginx_ProtocolSocial_unlockAchievement(JSContext *cx, uint32_t argc, j
         } while(0);
         
         cobj->unlockAchievement(arg0, arg1);
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
@@ -647,11 +649,11 @@ public:
     virtual void onActionResult(ProtocolUser* userPlugin, cocos2d::plugin::UserActionResultCode ret, const char* msg)
     {
         JSContext* cx = s_cx;
-        JS::RootedObject obj(cx, _JSDelegate);
+        JSObject* obj = _JSDelegate;
         JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
-        JS::RootedValue retval(cx);
+        jsval retval;
         JS::RootedValue temp_retval(cx);
 
         js_proxy_t * p;
@@ -672,7 +674,8 @@ public:
             if(temp_retval == JSVAL_VOID) {
                 return;
             }
-            JS_CallFunctionName(cx, obj, "onActionResult", JS::HandleValueArray::fromMarkedLocation(3, dataVal), &retval);
+            JS_CallFunctionName(cx, obj, "onActionResult",
+                                3, dataVal, &retval);
         }
     }
 
@@ -687,13 +690,13 @@ public:
     }
 
 private:
-    JS::Heap<JSObject*> _JSDelegate;
+    JSObject* _JSDelegate;
 };
 
 bool js_pluginx_ProtocolUser_setActionListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
     s_cx = cx;
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
     cocos2d::plugin::ProtocolUser* cobj = (cocos2d::plugin::ProtocolUser *)(proxy ? proxy->ptr : NULL);
@@ -701,12 +704,12 @@ bool js_pluginx_ProtocolUser_setActionListener(JSContext *cx, uint32_t argc, jsv
 
     if (argc == 1) {
         // save the delegate
-        JSObject *jsDelegate = args.get(0).toObjectOrNull();
+        JSObject *jsDelegate = JSVAL_TO_OBJECT(argv[0]);
         Pluginx_UserActionListener* nativeDelegate = new Pluginx_UserActionListener();
         nativeDelegate->setJSDelegate(jsDelegate);
         cobj->setActionListener(nativeDelegate);
         
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
 
@@ -716,7 +719,6 @@ bool js_pluginx_ProtocolUser_setActionListener(JSContext *cx, uint32_t argc, jsv
 
 bool js_pluginx_ProtocolUser_getActionListener(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy = jsb_get_js_proxy(obj);
 	cocos2d::plugin::ProtocolUser* cobj = (cocos2d::plugin::ProtocolUser *)(proxy ? proxy->ptr : NULL);
@@ -732,7 +734,7 @@ bool js_pluginx_ProtocolUser_getActionListener(JSContext *cx, uint32_t argc, jsv
 				jsret = JSVAL_NULL;
 			}
 		} while (0);
-		args.rval().set(jsret);
+		JS_SET_RVAL(cx, vp, jsret);
 		return true;
 	}
     
@@ -742,7 +744,7 @@ bool js_pluginx_ProtocolUser_getActionListener(JSContext *cx, uint32_t argc, jsv
 
 bool js_pluginx_ProtocolUser_login(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -751,7 +753,7 @@ bool js_pluginx_ProtocolUser_login(JSContext *cx, uint32_t argc, jsval *vp)
     do {
         if (argc == 0) {
             cobj->login();
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             return true;
         }
     } while(0);
@@ -760,14 +762,14 @@ bool js_pluginx_ProtocolUser_login(JSContext *cx, uint32_t argc, jsval *vp)
         if (argc == 1) {
             std::function<void (int, std::string&)> arg0;
             do {
-                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(0)));
+                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[0]));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
                     JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     largv[1] = std_string_to_jsval(cx, larg1);
-                    JS::RootedValue rval(cx);
-                    bool succeed = func->invoke(2, &largv[0], &rval);
+                    jsval rval;
+                    bool succeed = func->invoke(2, &largv[0], rval);
                     if (!succeed && JS_IsExceptionPending(cx)) {
                         JS_ReportPendingException(cx);
                     }
@@ -777,7 +779,7 @@ bool js_pluginx_ProtocolUser_login(JSContext *cx, uint32_t argc, jsval *vp)
             
             if (!ok) { ok = true; break; }
             cobj->login(arg0);
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             return true;
         }
     } while(0);
@@ -788,7 +790,7 @@ bool js_pluginx_ProtocolUser_login(JSContext *cx, uint32_t argc, jsval *vp)
 
 bool js_pluginx_ProtocolUser_logout(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -796,7 +798,7 @@ bool js_pluginx_ProtocolUser_logout(JSContext *cx, uint32_t argc, jsval *vp)
     JSB_PRECONDITION2( cobj, cx, false, "js_pluginx_protocols_ProtocolUser_logout : Invalid Native Object");
     if (argc == 0) {
         cobj->logout();
-        args.rval().setUndefined();
+        JS_SET_RVAL(cx, vp, JSVAL_VOID);
         return true;
     }
     
@@ -804,14 +806,14 @@ bool js_pluginx_ProtocolUser_logout(JSContext *cx, uint32_t argc, jsval *vp)
         if (argc == 1) {
             std::function<void (int, std::string&)> arg0;
             do {
-                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(0)));
+                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[0]));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
                     JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     largv[1] = std_string_to_jsval(cx, larg1);
-                    JS::RootedValue rval(cx);
-                    bool succeed = func->invoke(2, &largv[0], &rval);
+                    jsval rval;
+                    bool succeed = func->invoke(2, &largv[0], rval);
                     if (!succeed && JS_IsExceptionPending(cx)) {
                         JS_ReportPendingException(cx);
                     }
@@ -821,7 +823,7 @@ bool js_pluginx_ProtocolUser_logout(JSContext *cx, uint32_t argc, jsval *vp)
             
             if (!ok) { ok = true; break; }
             cobj->logout(arg0);
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             return true;
         }
     } while(0);
@@ -833,7 +835,7 @@ bool js_pluginx_ProtocolUser_logout(JSContext *cx, uint32_t argc, jsval *vp)
 
 bool js_pluginx_FacebookAgent_login(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -844,21 +846,18 @@ bool js_pluginx_FacebookAgent_login(JSContext *cx, uint32_t argc, jsval *vp)
         if (argc == 1) {
             std::function<void (int, std::string&)> arg0;
             do {
-                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(0)));
+                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[0]));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
                     JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     jsval temp = std_string_to_jsval(cx, larg1);
                     JS::RootedValue outVal(cx);
-//                    size_t utf16Count = 0;
-//                    const jschar* utf16Buf = JS_GetStringCharsZAndLength(cx, JSVAL_TO_STRING(temp), &utf16Count);
-//                    JS_ParseJSON(cx, utf16Buf, static_cast<uint32_t>(utf16Count), &outVal);
-                    JS_ParseJSON(cx, JS::RootedString(cx, temp.toString()), &outVal);
+                    JS_ParseJSON(cx, JS_GetStringCharsZ(cx, JSVAL_TO_STRING(temp)), static_cast<uint32_t>(larg1.size()), &outVal);
                     largv[1] = outVal.get();
                     
-                    JS::RootedValue rval(cx);
-                    bool succeed = func->invoke(2, &largv[0], &rval);
+                    jsval rval;
+                    bool succeed = func->invoke(2, &largv[0], rval);
                     if (!succeed && JS_IsExceptionPending(cx)) {
                         JS_ReportPendingException(cx);
                     }
@@ -868,33 +867,30 @@ bool js_pluginx_FacebookAgent_login(JSContext *cx, uint32_t argc, jsval *vp)
             
             if (!ok) { ok = true; break; }
             cobj->login(arg0);
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             return true;
         }
         
         if (argc == 2) {
             std::string arg0;
-            ok &= pluginx::jsval_array_to_string(cx, args.get(0), &arg0);
+            ok &= pluginx::jsval_array_to_string(cx, argv[0], &arg0);
             JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_FacebookAgent_login : Error processing arguments");
             if (!ok) { ok = true; break; }
             
             std::function<void (int, std::string&)> arg1;
             do {
-                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
+                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[1]));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
                     JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     jsval temp = std_string_to_jsval(cx, larg1);
                     JS::RootedValue outVal(cx);
-//                    size_t utf16Count = 0;
-//                    const jschar* utf16Buf = JS_GetStringCharsZAndLength(cx, JSVAL_TO_STRING(temp), &utf16Count);
-//                    JS_ParseJSON(cx, utf16Buf, static_cast<uint32_t>(utf16Count), &outVal);
-                    JS_ParseJSON(cx, JS::RootedString(cx, temp.toString()), &outVal);
+                    JS_ParseJSON(cx, JS_GetStringCharsZ(cx, JSVAL_TO_STRING(temp)), static_cast<uint32_t>(larg1.size()), &outVal);
                     largv[1] = outVal.get();
                     
-                    JS::RootedValue rval(cx);
-                    bool succeed = func->invoke(2, &largv[0], &rval);
+                    jsval rval;
+                    bool succeed = func->invoke(2, &largv[0], rval);
                     if (!succeed && JS_IsExceptionPending(cx)) {
                         JS_ReportPendingException(cx);
                     }
@@ -904,7 +900,7 @@ bool js_pluginx_FacebookAgent_login(JSContext *cx, uint32_t argc, jsval *vp)
             
             if (!ok) { ok = true; break; }
             cobj->login(arg0, arg1);
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             return true;
         }
     } while(0);
@@ -916,7 +912,7 @@ bool js_pluginx_FacebookAgent_login(JSContext *cx, uint32_t argc, jsval *vp)
 
 bool js_pluginx_FacebookAgent_api(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -926,27 +922,27 @@ bool js_pluginx_FacebookAgent_api(JSContext *cx, uint32_t argc, jsval *vp)
     do {
         if (argc == 4) {
             std::string arg0;
-            ok &= jsval_to_std_string(cx, args.get(0), &arg0);
+            ok &= jsval_to_std_string(cx, argv[0], &arg0);
             if (!ok) { ok = true; break; }
             int arg1;
-            ok &= jsval_to_int32(cx, args.get(1), (int32_t *)&arg1);
+            ok &= jsval_to_int32(cx, argv[1], (int32_t *)&arg1);
             if (!ok) { ok = true; break; }
             cocos2d::plugin::TShareInfo arg2;
-            ok &= pluginx::jsval_to_FBInfo(cx, args.get(2), &arg2);
+            ok &= pluginx::jsval_to_FBInfo(cx, argv[2], &arg2);
             JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_FacebookAgent_api : Error processing arguments");
             if (!ok) { ok = true; break; }
             
             std::function<void (int, std::string&)> arg3;
             do {
-                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(3)));
+                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[3]));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
                     JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     largv[1] = std_string_to_jsval(cx, larg1);
                     
-                    JS::RootedValue rval(cx);
-                    bool succeed = func->invoke(2, &largv[0], &rval);
+                    jsval rval;
+                    bool succeed = func->invoke(2, &largv[0], rval);
                     if (!succeed && JS_IsExceptionPending(cx)) {
                         JS_ReportPendingException(cx);
                     }
@@ -956,7 +952,7 @@ bool js_pluginx_FacebookAgent_api(JSContext *cx, uint32_t argc, jsval *vp)
             
             if (!ok) { ok = true; break; }
             cobj->api(arg0, arg1, arg2, arg3);
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             return true;
         }
     } while(0);
@@ -967,7 +963,7 @@ bool js_pluginx_FacebookAgent_api(JSContext *cx, uint32_t argc, jsval *vp)
 
 bool js_pluginx_FacebookAgent_appRequest(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -977,27 +973,24 @@ bool js_pluginx_FacebookAgent_appRequest(JSContext *cx, uint32_t argc, jsval *vp
     do {
         if (argc == 2) {
             cocos2d::plugin::TShareInfo arg0;
-            ok &= pluginx::jsval_to_TShareInfo(cx, args.get(0), &arg0);
+            ok &= pluginx::jsval_to_TShareInfo(cx, argv[0], &arg0);
             JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_FacebookAgent_appRequest : Error processing arguments");
             if (!ok) { ok = true; break; }
             
             std::function<void (int, std::string&)> arg1;
             do {
-                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
+                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[1]));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
                     JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     jsval temp = std_string_to_jsval(cx, larg1);
                     JS::RootedValue outVal(cx);
-//                    size_t utf16Count = 0;
-//                    const jschar* utf16Buf = JS_GetStringCharsZAndLength(cx, JSVAL_TO_STRING(temp), &utf16Count);
-//                    JS_ParseJSON(cx, utf16Buf, static_cast<uint32_t>(utf16Count), &outVal);
-                    JS_ParseJSON(cx, JS::RootedString(cx, temp.toString()), &outVal);
+                    JS_ParseJSON(cx, JS_GetStringCharsZ(cx, JSVAL_TO_STRING(temp)), static_cast<uint32_t>(larg1.size()), &outVal);
                     largv[1] = outVal.get();
                     
-                    JS::RootedValue rval(cx);
-                    bool succeed = func->invoke(2, &largv[0], &rval);
+                    jsval rval;
+                    bool succeed = func->invoke(2, &largv[0], rval);
                     if (!succeed && JS_IsExceptionPending(cx)) {
                         JS_ReportPendingException(cx);
                     }
@@ -1007,7 +1000,7 @@ bool js_pluginx_FacebookAgent_appRequest(JSContext *cx, uint32_t argc, jsval *vp
             
             if (!ok) { ok = true; break; }
             cobj->appRequest(arg0, arg1);
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             return true;
         }
     } while(0);
@@ -1018,7 +1011,7 @@ bool js_pluginx_FacebookAgent_appRequest(JSContext *cx, uint32_t argc, jsval *vp
 
 bool js_pluginx_FacebookAgent_dialog(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
     JSObject *obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
@@ -1028,27 +1021,24 @@ bool js_pluginx_FacebookAgent_dialog(JSContext *cx, uint32_t argc, jsval *vp)
     do {
         if (argc == 2) {
             cocos2d::plugin::TShareInfo arg0;
-            ok &= pluginx::jsval_to_TShareInfo(cx, args.get(0), &arg0);
+            ok &= pluginx::jsval_to_TShareInfo(cx, argv[0], &arg0);
             JSB_PRECONDITION2(ok, cx, false, "js_pluginx_protocols_FacebookAgent_dialog : Error processing arguments");
             if (!ok) { ok = true; break; }
             
             std::function<void (int, std::string&)> arg1;
             do {
-                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
+                std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), argv[1]));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
                     JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     jsval temp = std_string_to_jsval(cx, larg1);
                     JS::RootedValue outVal(cx);
-//                    size_t utf16Count = 0;
-//                    const jschar* utf16Buf = JS_GetStringCharsZAndLength(cx, JSVAL_TO_STRING(temp), &utf16Count);
-//                    JS_ParseJSON(cx, utf16Buf, static_cast<uint32_t>(utf16Count), &outVal);
-                    JS_ParseJSON(cx, JS::RootedString(cx, temp.toString()), &outVal);
+                    JS_ParseJSON(cx, JS_GetStringCharsZ(cx, JSVAL_TO_STRING(temp)), static_cast<uint32_t>(larg1.size()), &outVal);
                     largv[1] = outVal.get();
                     
-                    JS::RootedValue rval(cx);
-                    bool succeed = func->invoke(2, &largv[0], &rval);
+                    jsval rval;
+                    bool succeed = func->invoke(2, &largv[0], rval);
                     if (!succeed && JS_IsExceptionPending(cx)) {
                         JS_ReportPendingException(cx);
                     }
@@ -1058,7 +1048,7 @@ bool js_pluginx_FacebookAgent_dialog(JSContext *cx, uint32_t argc, jsval *vp)
             
             if (!ok) { ok = true; break; }
             cobj->dialog(arg0, arg1);
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             return true;
         }
     } while(0);

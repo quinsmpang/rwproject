@@ -167,29 +167,21 @@ void Helper::doLayout(cocos2d::Node *rootNode)
         if (nullptr != com && nullptr != parent) {
             LayoutComponent* layoutComponent = (LayoutComponent*)com;
 
-            layoutComponent->refreshLayout();
+            if (layoutComponent->isUsingPercentPosition())
+            {
+                layoutComponent->setPercentPosition(layoutComponent->getPercentPosition());
+            }
+            else if (layoutComponent->getReferencePoint() != LayoutComponent::ReferencePoint::BOTTOM_LEFT)
+            {
+                layoutComponent->setRelativePosition(layoutComponent->getRelativePosition());
+            }
+
+            if (layoutComponent->isUsingPercentContentSize())
+            {
+                layoutComponent->setPercentContentSize(layoutComponent->getPercentContentSize());
+            }
         }
     }
-}
-    
-Rect Helper::restrictCapInsetRect(const cocos2d::Rect &capInsets, const Size& textureSize )
-{
-    float x = capInsets.origin.x;
-    float y = capInsets.origin.y;
-    float width = capInsets.size.width;
-    float height = capInsets.size.height;
-    
-    if (textureSize.width < width)
-    {
-        x = 0.0f;
-        width = 0.0f;
-    }
-    if (textureSize.height < height)
-    {
-        y = 0.0f;
-        height = 0.0f;
-    }
-    return Rect(x, y, width, height);
 }
 }
 

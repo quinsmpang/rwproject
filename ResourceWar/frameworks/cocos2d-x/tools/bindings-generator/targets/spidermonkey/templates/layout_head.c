@@ -1,25 +1,16 @@
 \#include "${out_file}.hpp"
-#if $macro_judgement
-$macro_judgement
-#end if 
 \#include "cocos2d_specifics.hpp"
 #for header in $headers
 \#include "${os.path.basename(header)}"
 #end for
-#if $cpp_headers
-#for header in $cpp_headers
-\#include "${header}"
-#end for
-#end if 
 
 template<class T>
 static bool dummy_constructor(JSContext *cx, uint32_t argc, jsval *vp) {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
     JS::RootedValue initializing(cx);
     bool isNewValid = true;
 #if not $script_control_cpp
-    JS::RootedObject global(cx, ScriptingCore::getInstance()->getGlobalObject());
-    isNewValid = JS_GetProperty(cx, global, "initializing", &initializing) && initializing.toBoolean();
+    JSObject* global = ScriptingCore::getInstance()->getGlobalObject();
+    isNewValid = JS_GetProperty(cx, global, "initializing", &initializing) && JSVAL_TO_BOOLEAN(initializing);
 #end if
     if (isNewValid)
     {
@@ -31,16 +22,13 @@ static bool dummy_constructor(JSContext *cx, uint32_t argc, jsval *vp) {
         typeClass = typeMapIter->second;
         CCASSERT(typeClass, "The value is null.");
 
-        JS::RootedObject proto(cx, typeClass->proto.get());
-        JS::RootedObject parent(cx, typeClass->parentProto.get());
-        JS::RootedObject _tmp(cx, JS_NewObject(cx, typeClass->jsclass, proto, parent));
-        
+        JSObject *_tmp = JS_NewObject(cx, typeClass->jsclass, typeClass->proto, typeClass->parentProto);
     #if $script_control_cpp
         T* cobj = new T();
         js_proxy_t *pp = jsb_new_proxy(cobj, _tmp);
-        AddObjectRoot(cx, &pp->obj);
+        JS_AddObjectRoot(cx, &pp->obj);
     #end if
-        args.rval().set(OBJECT_TO_JSVAL(_tmp));
+        JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(_tmp));
         return true;
     }
 
@@ -54,9 +42,8 @@ static bool empty_constructor(JSContext *cx, uint32_t argc, jsval *vp) {
     return false;
 }
 
-static bool js_is_native_obj(JSContext *cx, uint32_t argc, jsval *vp)
+static bool js_is_native_obj(JSContext *cx, JS::HandleObject obj, JS::HandleId id, JS::MutableHandleValue vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
-    args.rval().setBoolean(true);
+    vp.set(BOOLEAN_TO_JSVAL(true));
     return true;    
 }

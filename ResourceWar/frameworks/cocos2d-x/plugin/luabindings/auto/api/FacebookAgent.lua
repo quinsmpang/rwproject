@@ -48,4 +48,10 @@
 -- @function [parent=#FacebookAgent] destroyInstance 
 -- @param self
         
+--------------------------------
+--  Get singleton of FacebookAgent 
+-- @function [parent=#FacebookAgent] getInstance 
+-- @param self
+-- @return plugin::FacebookAgent#plugin::FacebookAgent ret (return value: cc.plugin::FacebookAgent)
+        
 return nil

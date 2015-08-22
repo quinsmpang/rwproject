@@ -7,8 +7,8 @@
 //   Includes all necessary GL headers and definitions for ANGLE.
 //
 
-#ifndef ANGLEGL_H_
-#define ANGLEGL_H_
+#ifndef ANGLE_GL_H_
+#define ANGLE_GL_H_
 
 #include "GLES2/gl2.h"
 #include "GLES2/gl2ext.h"
@@ -20,4 +20,4 @@
 #define GL_SAMPLER_2D_RECT_ARB 0x8B63
 #endif
 
-#endif // ANGLEGL_H_
+#endif // ANGLE_GL_H_

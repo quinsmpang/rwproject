@@ -2215,17 +2215,13 @@ static int lua_cocos2dx_LabelBMFont_setBlendFunc(lua_State* tolua_S)
 #endif
     
     argc = lua_gettop(tolua_S)-1;
-    
     if (argc == 1)
     {
         cocos2d::BlendFunc arg0;
         
-        ok &= luaval_to_blendfunc(tolua_S, 2, &arg0, "cc.LabelBMFont:setBlendFunc");
+#pragma warning NO CONVERSION TO NATIVE FOR BlendFunc;
         if(!ok)
-        {
-            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_LabelBMFont_setBlendFunc'", nullptr);
             return 0;
-        }
         cobj->setBlendFunc(arg0);
         return 0;
     }
@@ -3894,12 +3890,9 @@ static int lua_cocos2dx_LabelTTF_setBlendFunc(lua_State* tolua_S)
     {
         cocos2d::BlendFunc arg0;
         
-        ok &= luaval_to_blendfunc(tolua_S, 2, &arg0, "cc.LabelTTF:setBlendFunc");
+#pragma warning NO CONVERSION TO NATIVE FOR BlendFunc;
         if(!ok)
-        {
-            tolua_error(tolua_S,"invalid arguments in function 'lua_cocos2dx_LabelTTF_setBlendFunc'", nullptr);
             return 0;
-        }
         cobj->setBlendFunc(arg0);
         return 0;
     }

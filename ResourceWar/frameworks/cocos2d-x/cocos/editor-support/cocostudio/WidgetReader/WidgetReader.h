@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  Copyright (c) 2014 cocos2d-x.org
  
  http://www.cocos2d-x.org
@@ -46,9 +46,7 @@ namespace cocostudio
         virtual ~WidgetReader();
         
         static WidgetReader* getInstance();
-        /** @deprecated Use method destroyInstance() instead */
-        CC_DEPRECATED_ATTRIBUTE static void purge();
-        static void destroyInstance();
+        static void purge();
         
         virtual void setPropsFromJsonDictionary(cocos2d::ui::Widget* widget,
                                                 const rapidjson::Value& options);
@@ -62,7 +60,6 @@ namespace cocostudio
         flatbuffers::Offset<flatbuffers::Table> createOptionsWithFlatBuffers(const tinyxml2::XMLElement* objectData,
                                                                              flatbuffers::FlatBufferBuilder* builder);
         void setPropsWithFlatBuffers(cocos2d::Node* node, const flatbuffers::Table* widgetOptions);
-        void setLayoutComponentPropsWithFlatBuffers(cocos2d::Node* node, const flatbuffers::Table* widgetOptions);
         cocos2d::Node* createNodeWithFlatBuffers(const flatbuffers::Table* widgetOptions);
         /**/
         

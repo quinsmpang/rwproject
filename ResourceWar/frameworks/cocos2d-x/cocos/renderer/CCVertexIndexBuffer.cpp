@@ -30,22 +30,22 @@
 
 NS_CC_BEGIN
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WP8 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 bool VertexBuffer::_enableShadowCopy = true;
 #else
 bool VertexBuffer::_enableShadowCopy = false;
 #endif
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WP8 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 bool IndexBuffer::_enableShadowCopy = true;
 #else
 bool IndexBuffer::_enableShadowCopy = false;
 #endif
 
-VertexBuffer* VertexBuffer::create(int sizePerVertex, int vertexNumber, GLenum usage/* = GL_STATIC_DRAW*/)
+VertexBuffer* VertexBuffer::create(int sizePerVertex, int vertexNumber)
 {
     auto result = new (std::nothrow) VertexBuffer();
-    if(result && result->init(sizePerVertex, vertexNumber, usage))
+    if(result && result->init(sizePerVertex, vertexNumber))
     {
         result->autorelease();
         return result;
@@ -62,7 +62,7 @@ VertexBuffer::VertexBuffer()
 , _vertexNumber(0)
 {
     
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WP8 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
     auto callBack = [this](EventCustom* event)
     {
         this->recreateVBO();
@@ -80,18 +80,17 @@ VertexBuffer::~VertexBuffer()
         glDeleteBuffers(1, &_vbo);
         _vbo = 0;
     }
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WP8 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
     Director::getInstance()->getEventDispatcher()->removeEventListener(_recreateVBOEventListener);
 #endif
 }
 
-bool VertexBuffer::init(int sizePerVertex, int vertexNumber, GLenum usage/* = GL_STATIC_DRAW*/)
+bool VertexBuffer::init(int sizePerVertex, int vertexNumber)
 {
     if(0 == sizePerVertex || 0 == vertexNumber)
         return false;
     _sizePerVertex = sizePerVertex;
     _vertexNumber = vertexNumber;
-    _usage = usage;
     
     if(isShadowCopyEnabled())
     {
@@ -100,7 +99,7 @@ bool VertexBuffer::init(int sizePerVertex, int vertexNumber, GLenum usage/* = GL
     
     glGenBuffers(1, &_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-    glBufferData(GL_ARRAY_BUFFER, getSize(), nullptr, _usage);
+    glBufferData(GL_ARRAY_BUFFER, getSize(), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     return true;
 }
@@ -159,7 +158,7 @@ void VertexBuffer::recreateVBO() const
         buffer = &_shadowCopy[0];
     }
     CCLOG("recreate IndexBuffer with size %d %d", getSizePerVertex(), _vertexNumber);
-    glBufferData(GL_ARRAY_BUFFER, _sizePerVertex * _vertexNumber, buffer, _usage);
+    glBufferData(GL_ARRAY_BUFFER, _sizePerVertex * _vertexNumber, buffer, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     if(!glIsBuffer(_vbo))
     {
@@ -172,10 +171,10 @@ int VertexBuffer::getSize() const
     return _sizePerVertex * _vertexNumber;
 }
 
-IndexBuffer* IndexBuffer::create(IndexType type, int number, GLenum usage/* = GL_STATIC_DRAW*/)
+IndexBuffer* IndexBuffer::create(IndexType type, int number)
 {
     auto result = new (std::nothrow) IndexBuffer();
-    if(result && result->init(type, number, usage))
+    if(result && result->init(type, number))
     {
         result->autorelease();
         return result;
@@ -190,7 +189,7 @@ IndexBuffer::IndexBuffer()
 , _indexNumber(0)
 , _recreateVBOEventListener(nullptr)
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WP8 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
     auto callBack = [this](EventCustom* event)
     {
         this->recreateVBO();
@@ -207,22 +206,21 @@ IndexBuffer::~IndexBuffer()
         glDeleteBuffers(1, &_vbo);
         _vbo = 0;
     }
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WP8 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
     Director::getInstance()->getEventDispatcher()->removeEventListener(_recreateVBOEventListener);
 #endif
 }
 
-bool IndexBuffer::init(IndexBuffer::IndexType type, int number, GLenum usage/* = GL_STATIC_DRAW*/)
+bool IndexBuffer::init(IndexBuffer::IndexType type, int number)
 {
     if(number <=0 ) return false;
     
     _type = type;
     _indexNumber = number;
-    _usage = usage;
     
     glGenBuffers(1, &_vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, getSize(), nullptr, _usage);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, getSize(), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
     if(isShadowCopyEnabled())
@@ -297,7 +295,7 @@ void IndexBuffer::recreateVBO() const
         buffer = &_shadowCopy[0];
     }
     CCLOG("recreate IndexBuffer with size %d %d ", getSizePerIndex(), _indexNumber);
-    glBufferData(GL_ARRAY_BUFFER, getSize(), buffer, _usage);
+    glBufferData(GL_ARRAY_BUFFER, getSize(), buffer, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     if(!glIsBuffer(_vbo))
     {

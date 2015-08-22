@@ -196,3 +196,4 @@ Texture2D* SpriteFrame::getTexture()
 }
 
 NS_CC_END
+

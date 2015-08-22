@@ -7,9 +7,5 @@ $macro_judgement
 #end for
 \#include "tolua_fix.h"
 \#include "LuaBasicConversions.h"
-#if $cpp_headers
-#for header in $cpp_headers
-\#include "${header}"
-#end for
-#end if 
+
 

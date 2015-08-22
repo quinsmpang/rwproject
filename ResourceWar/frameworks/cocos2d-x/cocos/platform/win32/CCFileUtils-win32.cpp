@@ -29,7 +29,6 @@ THE SOFTWARE.
 #include "CCFileUtils-win32.h"
 #include "platform/CCCommon.h"
 #include <Shlobj.h>
-#include <cstdlib>
 
 using namespace std;
 
@@ -60,16 +59,14 @@ static void _checkPath()
 {
     if (0 == s_resourcePath.length())
     {
-        WCHAR *pUtf16ExePath = nullptr;
-        _get_wpgmptr(&pUtf16ExePath);
+        WCHAR utf16Path[CC_MAX_PATH] = {0};
+        GetCurrentDirectoryW(sizeof(utf16Path)-1, utf16Path);
+        
+        char utf8Path[CC_MAX_PATH] = {0};
+        int nNum = WideCharToMultiByte(CP_UTF8, 0, utf16Path, -1, utf8Path, sizeof(utf8Path), nullptr, nullptr);
 
-        // We need only directory part without exe
-        WCHAR *pUtf16DirEnd = wcsrchr(pUtf16ExePath, L'\\');
-
-        char utf8ExeDir[CC_MAX_PATH] = { 0 };
-        int nNum = WideCharToMultiByte(CP_UTF8, 0, pUtf16ExePath, pUtf16DirEnd-pUtf16ExePath+1, utf8ExeDir, sizeof(utf8ExeDir), nullptr, nullptr);
-
-        s_resourcePath = convertPathFormatToUnixStyle(utf8ExeDir);
+        s_resourcePath = convertPathFormatToUnixStyle(utf8Path);
+        s_resourcePath.append("/");
     }
 }
 
@@ -123,57 +120,13 @@ bool FileUtilsWin32::isFileExistInternal(const std::string& strFilePath) const
 
 bool FileUtilsWin32::isAbsolutePath(const std::string& strPath) const
 {
-    if (   (strPath.length() > 2 
+    if (   strPath.length() > 2 
         && ( (strPath[0] >= 'a' && strPath[0] <= 'z') || (strPath[0] >= 'A' && strPath[0] <= 'Z') )
-        && strPath[1] == ':') || (strPath[0] == '/' && strPath[1] == '/'))
+        && strPath[1] == ':')
     {
         return true;
     }
     return false;
-}
-
-// Because windows is case insensitive, so we should check the file names.
-static bool checkFileName(const std::string& fullPath, const std::string& filename)
-{
-    std::string tmpPath=convertPathFormatToUnixStyle(fullPath);
-    size_t len = tmpPath.length();
-    size_t nl = filename.length();
-    std::string realName;
-    
-    while (tmpPath.length() >= len - nl && tmpPath.length()>2)
-	{
-        //CCLOG("%s", tmpPath.c_str());
-        WIN32_FIND_DATAA data;
-        HANDLE h = FindFirstFileA(tmpPath.c_str(), &data);
-        FindClose(h);
-        if (h != INVALID_HANDLE_VALUE)
-        {
-            int fl = strlen(data.cFileName);
-            if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            {
-                realName = "/" + realName;
-            }
-            realName = data.cFileName + realName;
-            if (0 != strcmp(&tmpPath.c_str()[tmpPath.length() - fl], data.cFileName))
-            {
-                std::string msg = "File path error: \"";
-                msg.append(filename).append("\" the real name is: ").append(realName);
-            
-                log("%s", msg.c_str());
-                return false;
-            }
-        }
-        else
-        {
-            break;
-        }
-
-        do
-        {
-            tmpPath = tmpPath.substr(0, tmpPath.rfind("/"));
-        } while (tmpPath.back() == '.');
-    }
-	return true;
 }
 
 static Data getData(const std::string& filename, bool forString)
@@ -191,13 +144,10 @@ static Data getData(const std::string& filename, bool forString)
         // read the file from hardware
         std::string fullPath = FileUtils::getInstance()->fullPathForFilename(filename);
 
-        // check if the filename uses correct case characters
-        checkFileName(fullPath, filename);
-
         WCHAR wszBuf[CC_MAX_PATH] = {0};
         MultiByteToWideChar(CP_UTF8, 0, fullPath.c_str(), -1, wszBuf, sizeof(wszBuf)/sizeof(wszBuf[0]));
 
-        HANDLE fileHandle = ::CreateFileW(wszBuf, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, NULL, nullptr);
+        HANDLE fileHandle = ::CreateFileW(wszBuf, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, NULL, nullptr);
         CC_BREAK_IF(fileHandle == INVALID_HANDLE_VALUE);
         
         size = ::GetFileSize(fileHandle, nullptr);
@@ -218,12 +168,8 @@ static Data getData(const std::string& filename, bool forString)
 
         if (!successed)
         {
-            // should determine buffer value, or it will cause memory leak
-            if (buffer)
-            {
-                free(buffer);
-                buffer = nullptr;
-            }    
+            free(buffer);
+            buffer = nullptr;
         }
     } while (0);
     
@@ -239,9 +185,6 @@ static Data getData(const std::string& filename, bool forString)
 
         msg = msg + filename + ") failed, error code is " + errorCodeBuffer;
         CCLOG("%s", msg.c_str());
-
-        if (buffer)
-            free(buffer);
     }
     else
     {
@@ -276,13 +219,10 @@ unsigned char* FileUtilsWin32::getFileData(const std::string& filename, const ch
         // read the file from hardware
         std::string fullPath = fullPathForFilename(filename);
 
-         // check if the filename uses correct case characters
-        checkFileName(fullPath, filename);
-
         WCHAR wszBuf[CC_MAX_PATH] = {0};
         MultiByteToWideChar(CP_UTF8, 0, fullPath.c_str(), -1, wszBuf, sizeof(wszBuf)/sizeof(wszBuf[0]));
 
-        HANDLE fileHandle = ::CreateFileW(wszBuf, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, NULL, nullptr);
+        HANDLE fileHandle = ::CreateFileW(wszBuf, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, NULL, nullptr);
         CC_BREAK_IF(fileHandle == INVALID_HANDLE_VALUE);
         
         *size = ::GetFileSize(fileHandle, nullptr);
@@ -314,7 +254,7 @@ unsigned char* FileUtilsWin32::getFileData(const std::string& filename, const ch
     return pBuffer;
 }
 
-std::string FileUtilsWin32::getPathForFilename(const std::string& filename, const std::string& resolutionDirectory, const std::string& searchPath) const
+std::string FileUtilsWin32::getPathForFilename(const std::string& filename, const std::string& resolutionDirectory, const std::string& searchPath)
 {
     std::string unixFileName = convertPathFormatToUnixStyle(filename);
     std::string unixResolutionDirectory = convertPathFormatToUnixStyle(resolutionDirectory);
@@ -323,7 +263,7 @@ std::string FileUtilsWin32::getPathForFilename(const std::string& filename, cons
     return FileUtils::getPathForFilename(unixFileName, unixResolutionDirectory, unixSearchPath);
 }
 
-std::string FileUtilsWin32::getFullPathForDirectoryAndFilename(const std::string& strDirectory, const std::string& strFilename) const
+std::string FileUtilsWin32::getFullPathForDirectoryAndFilename(const std::string& strDirectory, const std::string& strFilename)
 {
     std::string unixDirectory = convertPathFormatToUnixStyle(strDirectory);
     std::string unixFilename = convertPathFormatToUnixStyle(strFilename);
@@ -333,11 +273,6 @@ std::string FileUtilsWin32::getFullPathForDirectoryAndFilename(const std::string
 
 string FileUtilsWin32::getWritablePath() const
 {
-    if (_writablePath.length())
-    {
-        return _writablePath;
-    }
-
     // Get full path of executable, e.g. c:\Program Files (x86)\My Game Folder\MyGame.exe
     char full_path[CC_MAX_PATH + 1];
     ::GetModuleFileNameA(nullptr, full_path, CC_MAX_PATH + 1);

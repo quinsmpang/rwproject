@@ -1,13 +1,13 @@
 ## ===== instance function implementation template - for overloaded functions
 bool ${signature_name}(JSContext *cx, uint32_t argc, jsval *vp)
 {
-    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    jsval *argv = JS_ARGV(cx, vp);
     bool ok = true;
 
-    JS::RootedObject obj(cx);
+    JSObject *obj = NULL;
     ${namespaced_class_name}* cobj = NULL;
 #if not $is_constructor
-    obj = args.thisv().toObjectOrNull();
+    obj = JS_THIS_OBJECT(cx, vp);
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
     cobj = (${namespaced_class_name} *)(proxy ? proxy->ptr : NULL);
     JSB_PRECONDITION2( cobj, cx, false, "${signature_name} : Invalid Native Object");
@@ -28,7 +28,7 @@ bool ${signature_name}(JSContext *cx, uint32_t argc, jsval *vp)
             #set $arg_type = arg.to_string($generator)
             ${arg_type} arg${count};
             ${arg.to_native({"generator": $generator,
-                             "in_value": "args.get(" + str(count) + ")",
+                             "in_value": "argv[" + str(count) + "]",
                              "out_value": "arg" + str(count),
                              "class_name": $class_name,
                              "level": 3,
@@ -56,14 +56,10 @@ bool ${signature_name}(JSContext *cx, uint32_t argc, jsval *vp)
             CCASSERT(typeMapIter != _js_global_type_map.end(), "Can't find the class type!");
             typeClass = typeMapIter->second;
             CCASSERT(typeClass, "The value is null.");
-            // obj = JS_NewObject(cx, typeClass->jsclass, typeClass->proto, typeClass->parentProto);
-            JS::RootedObject proto(cx, typeClass->proto.get());
-            JS::RootedObject parent(cx, typeClass->parentProto.get());
-            obj = JS_NewObject(cx, typeClass->jsclass, proto, parent);
-
+            obj = JS_NewObject(cx, typeClass->jsclass, typeClass->proto, typeClass->parentProto);
             js_proxy_t* p = jsb_new_proxy(cobj, obj);
 #if not $generator.script_control_cpp
-            AddNamedObjectRoot(cx, &p->obj, "${namespaced_class_name}");
+            JS_AddNamedObjectRoot(cx, &p->obj, "${namespaced_class_name}");
 #end if
         #else
             #if str($func.ret_type) != "void"
@@ -78,10 +74,10 @@ bool ${signature_name}(JSContext *cx, uint32_t argc, jsval *vp)
                                                       "out_value": "jsret",
                                                       "ntype": str($func.ret_type),
                                                       "level": 2})};
-            args.rval().set(jsret);
+            JS_SET_RVAL(cx, vp, jsret);
             #else
             cobj->${func.func_name}($arg_list);
-            args.rval().setUndefined();
+            JS_SET_RVAL(cx, vp, JSVAL_VOID);
             #end if
             return true;
         #end if
@@ -95,9 +91,9 @@ bool ${signature_name}(JSContext *cx, uint32_t argc, jsval *vp)
 #if $is_constructor
     if (cobj) {
         if (JS_HasProperty(cx, obj, "_ctor", &ok) && ok)
-                ScriptingCore::getInstance()->executeFunctionWithOwner(OBJECT_TO_JSVAL(obj), "_ctor", args);
+                ScriptingCore::getInstance()->executeFunctionWithOwner(OBJECT_TO_JSVAL(obj), "_ctor", argc, argv);
 
-        args.rval().set(OBJECT_TO_JSVAL(obj));
+        JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(obj));
         return true;
     }
 #end if

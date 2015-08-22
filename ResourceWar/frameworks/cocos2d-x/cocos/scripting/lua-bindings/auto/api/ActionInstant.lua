@@ -5,11 +5,10 @@
 -- @parent_module cc
 
 --------------------------------
--- param dt In seconds.
+-- 
 -- @function [parent=#ActionInstant] step 
 -- @param self
 -- @param #float dt
--- @return ActionInstant#ActionInstant self (return value: cc.ActionInstant)
         
 --------------------------------
 -- 
@@ -30,10 +29,9 @@
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
--- param time In seconds.
+-- 
 -- @function [parent=#ActionInstant] update 
 -- @param self
 -- @param #float time
--- @return ActionInstant#ActionInstant self (return value: cc.ActionInstant)
         
 return nil

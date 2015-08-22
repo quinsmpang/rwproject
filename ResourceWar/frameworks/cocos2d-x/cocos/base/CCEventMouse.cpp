@@ -36,7 +36,6 @@ EventMouse::EventMouse(MouseEventType mouseEventCode)
 , _y(0.0f)
 , _scrollX(0.0f)
 , _scrollY(0.0f)
-, _startPointCaptured(false)
 {
 };
 

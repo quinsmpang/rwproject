@@ -24,15 +24,9 @@
 -- @function [parent=#TextAtlas] setString 
 -- @param self
 -- @param #string value
--- @return TextAtlas#TextAtlas self (return value: ccui.TextAtlas)
         
 --------------------------------
---  Initializes the LabelAtlas with a string, a char map file(the atlas), the width and height of each element and the starting char of the atlas.<br>
--- param stringValue A given string needs to be displayed.<br>
--- param charMapFile A given char map file name.<br>
--- param itemWidth The element width.<br>
--- param itemHeight The element height.<br>
--- param startCharMap The starting char of the atlas.
+--  initializes the LabelAtlas with a string, a char map file(the atlas), the width and height of each element and the starting char of the atlas 
 -- @function [parent=#TextAtlas] setProperty 
 -- @param self
 -- @param #string stringValue
@@ -40,13 +34,11 @@
 -- @param #int itemWidth
 -- @param #int itemHeight
 -- @param #string startCharMap
--- @return TextAtlas#TextAtlas self (return value: ccui.TextAtlas)
         
 --------------------------------
--- js NA
+-- 
 -- @function [parent=#TextAtlas] adaptRenderers 
 -- @param self
--- @return TextAtlas#TextAtlas self (return value: ccui.TextAtlas)
         
 --------------------------------
 -- @overload self, string, string, int, int, string         
@@ -85,10 +77,8 @@
 -- @return size_table#size_table ret (return value: size_table)
         
 --------------------------------
--- Default constructor.<br>
--- lua new
+-- Default constructor
 -- @function [parent=#TextAtlas] TextAtlas 
 -- @param self
--- @return TextAtlas#TextAtlas self (return value: ccui.TextAtlas)
         
 return nil

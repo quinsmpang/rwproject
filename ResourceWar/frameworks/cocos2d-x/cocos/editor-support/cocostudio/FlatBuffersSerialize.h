@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
  
  http://www.cocos2d-x.org
@@ -28,6 +28,7 @@
 #include "cocos2d.h"
 #include "ExtensionMacros.h"
 #include "cocostudio/CocosStudioExport.h"
+#include "tinyxml2/tinyxml2.h"
 
 namespace flatbuffers
 {
@@ -65,19 +66,16 @@ namespace flatbuffers
     
     struct TextAtlasOptions;
     
+    
     struct NodeAction;
-    struct AnimationInfo;
     struct TimeLine;
     struct Frame;
-    struct PointFrame;
-    struct ScaleFrame;
-    struct ColorFrame;
-    struct TextureFrame;
-    struct EventFrame;
-    struct IntFrame;
-    struct BoolFrame;
-    struct InnerActionFrame;
-    struct EasingData;
+    struct TimeLineBoolFrame;
+    struct TimeLineIntFrame;
+    struct TimeLineStringFrame;
+    struct TimeLinePointFrame;
+    struct TimeLineColorFrame;
+    struct TimeLineTextureFrame;
 }
 
 namespace tinyxml2
@@ -92,9 +90,7 @@ class CC_STUDIO_DLL FlatBuffersSerialize
     
 public:
     static FlatBuffersSerialize* getInstance();
-    /** @deprecated Use method destroyInstance() instead */
-    CC_DEPRECATED_ATTRIBUTE static void purge();
-    static void destroyInstance();
+    static void purge();
     
     FlatBuffersSerialize();
     ~FlatBuffersSerialize();
@@ -114,20 +110,13 @@ public:
     
     // NodeAction
     flatbuffers::Offset<flatbuffers::NodeAction> createNodeAction(const tinyxml2::XMLElement* objectData);
-    flatbuffers::Offset<flatbuffers::TimeLine> createTimeLine(const tinyxml2::XMLElement* objectData);    
-    flatbuffers::Offset<flatbuffers::PointFrame> createPointFrame(const tinyxml2::XMLElement* objectData);
-    flatbuffers::Offset<flatbuffers::ScaleFrame> createScaleFrame(const tinyxml2::XMLElement* objectData);    
-    flatbuffers::Offset<flatbuffers::ColorFrame> createColorFrame(const tinyxml2::XMLElement* objectData);
-    flatbuffers::Offset<flatbuffers::TextureFrame> createTextureFrame(const tinyxml2::XMLElement* objectData);
-    flatbuffers::Offset<flatbuffers::EventFrame> createEventFrame(const tinyxml2::XMLElement* objectData);
-    flatbuffers::Offset<flatbuffers::IntFrame> createIntFrame(const tinyxml2::XMLElement* objectData);
-    flatbuffers::Offset<flatbuffers::BoolFrame> createBoolFrame(const tinyxml2::XMLElement* objectData);
-    flatbuffers::Offset<flatbuffers::InnerActionFrame> createInnerActionFrame(const tinyxml2::XMLElement* objectData);
-    
-    flatbuffers::Offset<flatbuffers::EasingData> createEasingData(const tinyxml2::XMLElement* objectData);
-
-    //Animation Info
-    flatbuffers::Offset<flatbuffers::AnimationInfo> createAnimationInfo(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::TimeLine> createTimeLine(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::TimeLineBoolFrame> createTimeLineBoolFrame(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::TimeLineIntFrame> createTimeLineIntFrame(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::TimeLineStringFrame> createTimeLineStringFrame(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::TimeLinePointFrame> createTimeLinePointFrame(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::TimeLineColorFrame> createTimeLineColorFrame(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::TimeLineTextureFrame> createTimeLineTextureFrame(const tinyxml2::XMLElement* objectData);
     /**/
     
     int getResourceType(std::string key);
@@ -138,9 +127,8 @@ public:
     flatbuffers::FlatBufferBuilder* createFlatBuffersWithXMLFileForSimulator(const std::string& xmlFileName);
     flatbuffers::Offset<flatbuffers::NodeTree> createNodeTreeForSimulator(const tinyxml2::XMLElement* objectData,
                                                                           std::string classType);
-    flatbuffers::Offset<flatbuffers::ProjectNodeOptions> createProjectNodeOptionsForSimulator(const tinyxml2::XMLElement* objectData);
+    flatbuffers::Offset<flatbuffers::ProjectNodeOptions> createProjectNodeOptionsForSimulator(const tinyxml2::XMLElement* objectData);	
 	/**/
-    std::string getCsdVersion() { return _csdVersion; }
     
 public:
     std::vector<flatbuffers::Offset<flatbuffers::String>> _textures;
@@ -150,7 +138,7 @@ public:
 private:
     flatbuffers::FlatBufferBuilder* _builder;
     flatbuffers::Offset<flatbuffers::CSParseBinary>* _csparsebinary;
-    std::string _csdVersion;
+    
 };
 }
 

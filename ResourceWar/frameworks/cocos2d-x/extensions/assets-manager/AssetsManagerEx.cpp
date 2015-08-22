@@ -264,6 +264,9 @@ const std::string& AssetsManagerEx::getStoragePath() const
 
 void AssetsManagerEx::setStoragePath(const std::string& storagePath)
 {
+    if (_storagePath.size() > 0)
+        _fileUtils->removeDirectory(_storagePath);
+
     _storagePath = storagePath;
     adjustPath(_storagePath);
     _fileUtils->createDirectory(_storagePath);
@@ -355,7 +358,7 @@ bool AssetsManagerEx::decompress(const std::string &zip)
             }
             
             // Create a file to store current file.
-            FILE *out = fopen(FileUtils::getInstance()->getSuitableFOpen(fullPath).c_str(), "wb");
+            FILE *out = fopen(fullPath.c_str(), "wb");
             if (!out)
             {
                 CCLOG("AssetsManagerEx : can not create decompress destination file %s\n", fullPath.c_str());
@@ -820,7 +823,7 @@ void AssetsManagerEx::onProgress(double total, double downloaded, const std::str
 {
     if (customId == VERSION_ID || customId == MANIFEST_ID)
     {
-        _percent = 100 * downloaded / total;
+        _percent = 100 * (total - downloaded) / total;
         // Notify progression event
         dispatchUpdateEvent(EventAssetsManagerEx::EventCode::UPDATE_PROGRESSION, customId);
         return;
@@ -862,7 +865,7 @@ void AssetsManagerEx::onProgress(double total, double downloaded, const std::str
             if ((int)currentPercent != (int)_percent) {
                 _percent = currentPercent;
                 // Notify progression event
-                dispatchUpdateEvent(EventAssetsManagerEx::EventCode::UPDATE_PROGRESSION, customId);
+                dispatchUpdateEvent(EventAssetsManagerEx::EventCode::UPDATE_PROGRESSION, "");
             }
         }
     }

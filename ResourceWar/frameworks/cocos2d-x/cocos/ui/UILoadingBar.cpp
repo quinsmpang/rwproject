@@ -23,7 +23,6 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "ui/UILoadingBar.h"
-#include "ui/UIHelper.h"
 #include "ui/UIScale9Sprite.h"
 #include "2d/CCSprite.h"
 
@@ -45,6 +44,7 @@ _barRendererTextureSize(Size::ZERO),
 _scale9Enabled(false),
 _prevIgnoreSize(true),
 _capInsets(Rect::ZERO),
+_textureFile(""),
 _barRendererAdaptDirty(true)
 {
 }
@@ -68,18 +68,10 @@ LoadingBar* LoadingBar::create()
     
 LoadingBar* LoadingBar::create(const std::string &textureName, float percentage)
 {
-    return LoadingBar::create(textureName, TextureResType::LOCAL, percentage);
-}
-    
-LoadingBar* LoadingBar::create(const std::string &textureName,
-                               TextureResType texType,
-                               float percentage)
-{
     LoadingBar* widget = new (std::nothrow) LoadingBar;
-    if (widget && widget->init())
-    {
+    if (widget && widget->init()) {
         widget->autorelease();
-        widget->loadTexture(textureName,texType);
+        widget->loadTexture(textureName);
         widget->setPercent(percentage);
         return widget;
     }
@@ -147,6 +139,7 @@ void LoadingBar::loadTexture(const std::string& texture,TextureResType texType)
         return;
     }
     _renderBarTexType = texType;
+    _textureFile = texture;
     switch (_renderBarTexType)
     {
         case TextureResType::LOCAL:
@@ -158,19 +151,9 @@ void LoadingBar::loadTexture(const std::string& texture,TextureResType texType)
         default:
             break;
     }
-    this->setupTexture();
-}
-
-void LoadingBar::loadTexture(SpriteFrame* spriteframe)
-{
-    this->_barRenderer->initWithSpriteFrame(spriteframe);
-    this->setupTexture();
-}
-
-void LoadingBar::setupTexture()
-{
+    
     _barRendererTextureSize = _barRenderer->getContentSize();
-
+    
     switch (_direction)
     {
         case Direction::LEFT:
@@ -201,8 +184,6 @@ void LoadingBar::setupTexture()
 
     barRendererScaleChangedWithSize();
     updateContentSizeWithTextureSize(_barRendererTextureSize);
-
-    this->updateProgressBar();
     _barRendererAdaptDirty = true;
 }
 
@@ -226,8 +207,7 @@ void LoadingBar::setScale9Enabled(bool enabled)
         ignoreContentAdaptWithSize(_prevIgnoreSize);
     }
     setCapInsets(_capInsets);
-    this->updateProgressBar();
-    _barRendererAdaptDirty = true;
+    setPercent(_percent);
 }
 
 bool LoadingBar::isScale9Enabled()const
@@ -237,12 +217,12 @@ bool LoadingBar::isScale9Enabled()const
     
 void LoadingBar::setCapInsets(const Rect &capInsets)
 {
-    _capInsets = ui::Helper::restrictCapInsetRect(capInsets, _barRendererTextureSize);
+    _capInsets = capInsets;
     if (!_scale9Enabled)
     {
         return;
     }
-    _barRenderer->setCapInsets(_capInsets);
+    _barRenderer->setCapInsets(capInsets);
 }
 
 const Rect& LoadingBar::getCapInsets()const
@@ -265,24 +245,18 @@ void LoadingBar::setPercent(float percent)
         return;
     }
      _percent = percent;
-    
     if (_totalLength <= 0)
     {
         return;
     }
+    float res = _percent / 100.0f;
     
-    this->updateProgressBar();
-}
-    
-void LoadingBar::updateProgressBar()
-{
     if (_scale9Enabled)
     {
         setScale9Scale();
     }
     else
     {
-        float res = _percent / 100.0f;
         Sprite* spriteRenderer = _barRenderer->getSprite();
         Rect rect = spriteRenderer->getTextureRect();
         rect.size.width = _barRendererTextureSize.width * res;
@@ -350,8 +324,7 @@ void LoadingBar::barRendererScaleChangedWithSize()
         _totalLength = _contentSize.width;
         if (_scale9Enabled)
         {
-            this->setScale9Scale();
-            _barRenderer->setScale(1.0f);
+            setScale9Scale();
         }
         else
         {
@@ -404,11 +377,7 @@ void LoadingBar::copySpecialProperties(Widget *widget)
     {
         _prevIgnoreSize = loadingBar->_prevIgnoreSize;
         setScale9Enabled(loadingBar->_scale9Enabled);
-        auto barSprite = loadingBar->_barRenderer->getSprite();
-        if(nullptr != barSprite)
-        {
-            loadTexture(barSprite->getSpriteFrame());
-        }
+        loadTexture(loadingBar->_textureFile, loadingBar->_renderBarTexType);
         setCapInsets(loadingBar->_capInsets);
         setPercent(loadingBar->_percent);
         setDirection(loadingBar->_direction);

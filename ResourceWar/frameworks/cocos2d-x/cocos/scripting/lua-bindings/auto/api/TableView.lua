@@ -10,27 +10,23 @@
 -- @function [parent=#TableView] updateCellAtIndex 
 -- @param self
 -- @param #long idx
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- determines how cell is ordered and filled in the view.
 -- @function [parent=#TableView] setVerticalFillOrder 
 -- @param self
 -- @param #int order
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- 
 -- @function [parent=#TableView] scrollViewDidZoom 
 -- @param self
 -- @param #cc.ScrollView view
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- 
 -- @function [parent=#TableView] _updateContentSize 
 -- @param self
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- 
@@ -44,7 +40,6 @@
 -- @function [parent=#TableView] removeCellAtIndex 
 -- @param self
 -- @param #long idx
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- 
@@ -59,13 +54,11 @@
 -- @function [parent=#TableView] scrollViewDidScroll 
 -- @param self
 -- @param #cc.ScrollView view
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- reloads data from data source.  the view will be refreshed.
 -- @function [parent=#TableView] reloadData 
 -- @param self
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- Inserts a new cell at a given index<br>
@@ -73,7 +66,6 @@
 -- @function [parent=#TableView] insertCellAtIndex 
 -- @param self
 -- @param #long idx
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- Returns an existing cell at a given index. Returns nil if a cell is nonexistent at the moment of query.<br>
@@ -97,7 +89,6 @@
 -- @param self
 -- @param #cc.Touch pTouch
 -- @param #cc.Event pEvent
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- 
@@ -105,7 +96,6 @@
 -- @param self
 -- @param #cc.Touch pTouch
 -- @param #cc.Event pEvent
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- 
@@ -113,7 +103,6 @@
 -- @param self
 -- @param #cc.Touch pTouch
 -- @param #cc.Event pEvent
--- @return TableView#TableView self (return value: cc.TableView)
         
 --------------------------------
 -- 
@@ -124,10 +113,8 @@
 -- @return bool#bool ret (return value: bool)
         
 --------------------------------
--- js ctor<br>
--- lua new
+-- js ctor
 -- @function [parent=#TableView] TableView 
 -- @param self
--- @return TableView#TableView self (return value: cc.TableView)
         
 return nil

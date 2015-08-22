@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'simulator' target in the 'simulator' project
+// Prefix header for all source files of the 'ResourceWar' target in the 'ResourceWar' project
 //
 
 #ifdef __OBJC__

@@ -65,12 +65,11 @@ void AutoreleasePool::clear()
 #if defined(COCOS2D_DEBUG) && (COCOS2D_DEBUG > 0)
     _isClearing = true;
 #endif
-    std::vector<Ref*> releasings;
-    releasings.swap(_managedObjectArray);
-    for (const auto &obj : releasings)
+    for (const auto &obj : _managedObjectArray)
     {
         obj->release();
     }
+    _managedObjectArray.clear();
 #if defined(COCOS2D_DEBUG) && (COCOS2D_DEBUG > 0)
     _isClearing = false;
 #endif

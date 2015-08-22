@@ -38,189 +38,112 @@ Ray::~Ray()
 {
 }
 
-bool Ray::intersects(const AABB& box, float* distance) const
+bool Ray::intersects(const AABB& aabb) const
 {
-    float lowt = 0.0f;
+    Vec3 ptOnPlane;
+    Vec3 min = aabb._min;
+    Vec3 max = aabb._max;
+    
+    const Vec3& origin = _origin;
+    const Vec3& dir = _direction;
+    
     float t;
-    bool hit = false;
-    Vec3 hitpoint;
-    const Vec3& min = box._min;
-    const Vec3& max = box._max;
-    const Vec3& rayorig = _origin;
-    const Vec3& raydir = _direction;
     
-    // Check origin inside first
-    if (rayorig > min && rayorig < max)
-        return true;
+    if (dir.x != 0.f)
+    {
+        if (dir.x > 0)
+            t = (min.x - origin.x) / dir.x;
+        else
+            t = (max.x - origin.x) / dir.x;
+        
+        if (t > 0.f)
+        {
+            ptOnPlane = origin + t * dir;
+
+            if (min.y < ptOnPlane.y && ptOnPlane.y < max.y && min.z < ptOnPlane.z && ptOnPlane.z < max.z)
+            {
+                return true;
+            }
+        }
+    }
     
-    // Check each face in turn, only check closest 3
-    // Min x
-    if (rayorig.x <= min.x && raydir.x > 0)
+    if (dir.y != 0.f)
     {
-        t = (min.x - rayorig.x) / raydir.x;
-        if (t >= 0)
+        if (dir.y > 0)
+            t = (min.y - origin.y) / dir.y;
+        else
+            t = (max.y - origin.y) / dir.y;
+        
+        if (t > 0.f)
         {
-            // Substitute t back into ray and check bounds and dist
-            hitpoint = rayorig + raydir * t;
-            if (hitpoint.y >= min.y && hitpoint.y <= max.y &&
-                hitpoint.z >= min.z && hitpoint.z <= max.z &&
-                (!hit || t < lowt))
+            ptOnPlane = origin + t * dir;
+
+            if (min.z < ptOnPlane.z && ptOnPlane.z < max.z && min.x < ptOnPlane.x && ptOnPlane.x < max.x)
             {
-                hit = true;
-                lowt = t;
+                return true;
             }
         }
     }
-    // Max x
-    if (rayorig.x >= max.x && raydir.x < 0)
-    {
-        t = (max.x - rayorig.x) / raydir.x;
-        if (t >= 0)
+    
+	if (dir.z != 0.f)
+	{
+        if (dir.z > 0)
+            t = (min.z - origin.z) / dir.z;
+        else
+            t = (max.z - origin.z) / dir.z;
+        
+        if (t > 0.f)
         {
-            // Substitute t back into ray and check bounds and dist
-            hitpoint = rayorig + raydir * t;
-            if (hitpoint.y >= min.y && hitpoint.y <= max.y &&
-                hitpoint.z >= min.z && hitpoint.z <= max.z &&
-                (!hit || t < lowt))
-            {
-                hit = true;
-                lowt = t;
-            }
-        }
-    }
-    // Min y
-    if (rayorig.y <= min.y && raydir.y > 0)
-    {
-        t = (min.y - rayorig.y) / raydir.y;
-        if (t >= 0)
-        {
-            // Substitute t back into ray and check bounds and dist
-            hitpoint = rayorig + raydir * t;
-            if (hitpoint.x >= min.x && hitpoint.x <= max.x &&
-                hitpoint.z >= min.z && hitpoint.z <= max.z &&
-                (!hit || t < lowt))
-            {
-                hit = true;
-                lowt = t;
-            }
-        }
-    }
-    // Max y
-    if (rayorig.y >= max.y && raydir.y < 0)
-    {
-        t = (max.y - rayorig.y) / raydir.y;
-        if
+            ptOnPlane = origin + t * dir;
             
-            
-            (t >= 0)
-        {
-            // Substitute t back into ray and check bounds and dist
-            hitpoint = rayorig + raydir * t;
-            if (hitpoint.x >= min.x && hitpoint.x <= max.x &&
-                hitpoint.z >= min.z && hitpoint.z <= max.z &&
-                (!hit || t < lowt))
+            if (min.x < ptOnPlane.x && ptOnPlane.x < max.x && min.y < ptOnPlane.y && ptOnPlane.y < max.y)
             {
-                hit = true;
-                lowt = t;
-            }
-        }
-    }
-    // Min z
-    if (rayorig.z <= min.z && raydir.z > 0)
-    {
-        t = (min.z - rayorig.z) / raydir.z;
-        if (t >= 0)
-        {
-            // Substitute t back into ray and check bounds and dist
-            hitpoint = rayorig + raydir * t;
-            if (hitpoint.x >= min.x && hitpoint.x <= max.x &&
-                hitpoint.y >= min.y && hitpoint.y <= max.y &&
-                (!hit || t < lowt))
-            {
-                hit = true;
-                lowt = t;
-            }
-        }
-    }
-    // Max z
-    if (rayorig.z >= max.z && raydir.z < 0)
-    {
-        t = (max.z - rayorig.z) / raydir.z;
-        if (t >= 0)
-        {
-            // Substitute t back into ray and check bounds and dist
-            hitpoint = rayorig + raydir * t;
-            if (hitpoint.x >= min.x && hitpoint.x <= max.x &&
-                hitpoint.y >= min.y && hitpoint.y <= max.y &&
-                (!hit || t < lowt))
-            {
-                hit = true;
-                lowt = t;
+                return true;
             }
         }
     }
     
-    if (distance)
-        *distance = lowt;
-    
-    return hit;
+    return false;
 }
 
-bool Ray::intersects(const OBB& obb, float* distance) const
+bool Ray::intersects(const OBB& obb) const
 {
     AABB aabb;
     aabb._min = - obb._extents;
     aabb._max = obb._extents;
-    
+
     Ray ray;
     ray._direction = _direction;
     ray._origin = _origin;
-    
+
     Mat4 mat = Mat4::IDENTITY;
     mat.m[0] = obb._xAxis.x;
     mat.m[1] = obb._xAxis.y;
     mat.m[2] = obb._xAxis.z;
-    
+
     mat.m[4] = obb._yAxis.x;
     mat.m[5] = obb._yAxis.y;
     mat.m[6] = obb._yAxis.z;
-    
+
     mat.m[8] = obb._zAxis.x;
     mat.m[9] = obb._zAxis.y;
     mat.m[10] = obb._zAxis.z;
-    
+
     mat.m[12] = obb._center.x;
     mat.m[13] = obb._center.y;
     mat.m[14] = obb._center.z;
-    
+
     mat = mat.getInversed();
-    
+
     ray.transform(mat);
-    
-    return ray.intersects(aabb, distance);
-    
-}
 
-float Ray::dist(const Plane& plane) const
-{
-    float ndd = Vec3::dot(plane.getNormal(), _direction);
-    if(ndd == 0)
-        return 0.0f;
-    float ndo = Vec3::dot(plane.getNormal(), _origin);
-    return (plane.getDist() - ndo) / ndd;
-}
-
-Vec3 Ray::intersects(const Plane& plane) const
-{
-    float dis = this->dist(plane);
-    return _origin + dis * _direction;
+    return ray.intersects(aabb);
 }
 
 void Ray::set(const Vec3& origin, const Vec3& direction)
 {
     _origin = origin;
     _direction = direction;
-    _direction.normalize();
 }
 
 void Ray::transform(const Mat4& matrix)

@@ -15,7 +15,6 @@
 -- @function [parent=#BillBoard] setMode 
 -- @param self
 -- @param #int mode
--- @return BillBoard#BillBoard self (return value: cc.BillBoard)
         
 --------------------------------
 -- @overload self, string, int         
@@ -38,20 +37,5 @@
 -- @param #cc.Texture2D texture
 -- @param #int mode
 -- @return BillBoard#BillBoard ret (return value: cc.BillBoard)
-        
---------------------------------
---  update billboard's transform and turn it towards camera 
--- @function [parent=#BillBoard] visit 
--- @param self
--- @param #cc.Renderer renderer
--- @param #mat4_table parentTransform
--- @param #unsigned int parentFlags
--- @return BillBoard#BillBoard self (return value: cc.BillBoard)
-        
---------------------------------
--- 
--- @function [parent=#BillBoard] BillBoard 
--- @param self
--- @return BillBoard#BillBoard self (return value: cc.BillBoard)
         
 return nil

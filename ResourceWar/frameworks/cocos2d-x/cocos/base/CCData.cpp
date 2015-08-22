@@ -24,7 +24,6 @@
  ****************************************************************************/
 
 #include "base/CCData.h"
-#include "base/CCConsole.h"
 
 NS_CC_BEGIN
 

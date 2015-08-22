@@ -337,11 +337,6 @@ FileUtils* FileUtils::getInstance()
 
 std::string FileUtilsApple::getWritablePath() const
 {
-    if (_writablePath.length())
-    {
-        return _writablePath;
-    }
-
     // save to document folder
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -392,7 +387,7 @@ bool FileUtilsApple::isFileExistInternal(const std::string& filePath) const
     return ret;
 }
 
-std::string FileUtilsApple::getFullPathForDirectoryAndFilename(const std::string& directory, const std::string& filename) const
+std::string FileUtilsApple::getFullPathForDirectoryAndFilename(const std::string& directory, const std::string& filename)
 {
     if (directory[0] != '/')
     {

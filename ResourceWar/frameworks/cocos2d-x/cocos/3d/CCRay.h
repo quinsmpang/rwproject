@@ -28,32 +28,19 @@
 #include "math/CCMath.h"
 #include "3d/CCAABB.h"
 #include "3d/CCOBB.h"
-#include "3d/CCPlane.h"
 
 NS_CC_BEGIN
 
-/**
- * @addtogroup _3d
- * @{
- */
-
-/**
- * @brief Ray is a line with one end. usually use it to check intersects with some object,such as Plane, OBB, AABB
- * @js NA
- **/
 class CC_DLL Ray
 {
 public:
     /**
      * Constructor.
-     *
-     * @lua new
      */
     Ray();
 
     /**
      * Constructor.
-     * @lua NA
      */
     Ray(const Ray& ray);
     
@@ -62,29 +49,24 @@ public:
      *
      * @param origin The ray's origin.
      * @param direction The ray's direction.
-     * @lua new
      */
     Ray(const Vec3& origin, const Vec3& direction);
 
     /**
      * Destructor.
-     * @lua NA
      */
     ~Ray();
 
     /**
-     * Check whether this ray intersects with the specified AABB.
+     * Check whether this ray intersects the specified bounding box.
      */
-    bool intersects(const AABB& aabb, float* distance = nullptr) const;
-    
-    /**
-     * Check whether this ray intersects with the specified OBB.
-     */
-    bool intersects(const OBB& obb, float* distance = nullptr) const;
+    bool intersects(const AABB& aabb) const;
 
-    float dist(const Plane& plane) const;
-    Vec3 intersects(const Plane& plane) const;
-    
+    /**
+     * Check whether this ray intersects the specified obb.
+     */
+    bool intersects(const OBB& obb) const;
+
     /**
      * Sets this ray to the specified values.
      *
@@ -103,9 +85,6 @@ public:
     Vec3 _origin;        // The ray origin position.
     Vec3 _direction;     // The ray direction vector.
 };
-
-// end of 3d group
-/// @}
 
 NS_CC_END
 

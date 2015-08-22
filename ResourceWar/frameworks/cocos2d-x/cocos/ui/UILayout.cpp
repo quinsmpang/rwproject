@@ -28,7 +28,6 @@ THE SOFTWARE.
 #include "renderer/CCGLProgram.h"
 #include "renderer/CCGLProgramCache.h"
 #include "renderer/ccGLStateCache.h"
-#include "renderer/CCRenderState.h"
 #include "base/CCDirector.h"
 #include "2d/CCDrawingPrimitives.h"
 #include "renderer/CCRenderer.h"
@@ -336,34 +335,17 @@ void Layout::onBeforeVisitStencil()
     glGetIntegerv(GL_STENCIL_PASS_DEPTH_PASS, (GLint *)&_currentStencilPassDepthPass);
     
     glEnable(GL_STENCIL_TEST);
-//    RenderState::StateBlock::_defaultState->setStencilTest(true);
-
     CHECK_GL_ERROR_DEBUG();
     glStencilMask(mask_layer);
-//    RenderState::StateBlock::_defaultState->setStencilWrite(mask_layer);
-
     glGetBooleanv(GL_DEPTH_WRITEMASK, &_currentDepthWriteMask);
-
     glDepthMask(GL_FALSE);
-    RenderState::StateBlock::_defaultState->setDepthWrite(false);
-
     glStencilFunc(GL_NEVER, mask_layer, mask_layer);
     glStencilOp(GL_ZERO, GL_KEEP, GL_KEEP);
-
 
     this->drawFullScreenQuadClearStencil();
     
     glStencilFunc(GL_NEVER, mask_layer, mask_layer);
-//    RenderState::StateBlock::_defaultState->setStencilFunction(
-//                                                               RenderState::STENCIL_NEVER,
-//                                                               mask_layer,
-//                                                               mask_layer);
-
     glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP);
-//    RenderState::StateBlock::_defaultState->setStencilOperation(
-//                                                                RenderState::STENCIL_OP_REPLACE,
-//                                                                RenderState::STENCIL_OP_KEEP,
-//                                                                RenderState::STENCIL_OP_KEEP);
 }
     
 void Layout::drawFullScreenQuadClearStencil()
@@ -377,8 +359,7 @@ void Layout::drawFullScreenQuadClearStencil()
     director->pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     director->loadIdentityMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     
-    Vec2 vertices[] =
-    {
+    Vec2 vertices[] = {
         Vec2(-1, -1),
         Vec2(1, -1),
         Vec2(1, 1),
@@ -410,42 +391,19 @@ void Layout::drawFullScreenQuadClearStencil()
 void Layout::onAfterDrawStencil()
 {
     glDepthMask(_currentDepthWriteMask);
-    RenderState::StateBlock::_defaultState->setDepthWrite(_currentDepthWriteMask);
-
     glStencilFunc(GL_EQUAL, _mask_layer_le, _mask_layer_le);
-//    RenderState::StateBlock::_defaultState->setStencilFunction(
-//                                                                RenderState::STENCIL_EQUAL,
-//                                                               _mask_layer_le,
-//                                                               _mask_layer_le);
-
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-//    RenderState::StateBlock::_defaultState->setStencilOperation(
-//                                                                RenderState::STENCIL_OP_KEEP,
-//                                                                RenderState::STENCIL_OP_KEEP,
-//                                                                RenderState::STENCIL_OP_KEEP);
-
 }
 
 
 void Layout::onAfterVisitStencil()
 {
     glStencilFunc(_currentStencilFunc, _currentStencilRef, _currentStencilValueMask);
-//    RenderState::StateBlock::_defaultState->setStencilFunction(
-//                                                               (RenderState::StencilFunction)_currentStencilFunc,
-//                                                               _currentStencilRef,
-//                                                               _currentStencilValueMask);
-
     glStencilOp(_currentStencilFail, _currentStencilPassDepthFail, _currentStencilPassDepthPass);
-//    RenderState::StateBlock::_defaultState->setStencilOperation(
-//                                                                (RenderState::StencilOperation)_currentStencilFail,
-//                                                                (RenderState::StencilOperation)_currentStencilPassDepthFail,
-//                                                                (RenderState::StencilOperation)_currentStencilPassDepthPass);
-
     glStencilMask(_currentStencilWriteMask);
     if (!_currentStencilEnabled)
     {
         glDisable(GL_STENCIL_TEST);
-//        RenderState::StateBlock::_defaultState->setStencilTest(false);
     }
     s_layer--;
 }
@@ -543,11 +501,11 @@ void Layout::setStencilClippingSize(const Size &size)
     if (_clippingEnabled && _clippingType == ClippingType::STENCIL)
     {
         Vec2 rect[4];
-        // rect[0].setZero(); Zero default
-        rect[1].set(_contentSize.width, 0.0f);
-        rect[2].set(_contentSize.width, _contentSize.height);
-        rect[3].set(0.0f, _contentSize.height);
-        Color4F green(0.0f, 1.0f, 0.0f, 1.0f);
+        rect[0] = Vec2::ZERO;
+        rect[1] = Vec2(_contentSize.width, 0);
+        rect[2] = Vec2(_contentSize.width, _contentSize.height);
+        rect[3] = Vec2(0, _contentSize.height);
+        Color4F green(0, 1, 0, 1);
         _clippingStencil->clear();
         _clippingStencil->drawPolygon(rect, 4, green, 0, green);
     }
@@ -1170,30 +1128,25 @@ float Layout::calculateNearestDistance(Widget* baseWidget)
     
     Vec2 widgetPosition =  this->getWorldCenterPoint(baseWidget);
     
-    for (Node* node : _children)
-    {
+    for (Node* node : _children) {
         Layout *layout = dynamic_cast<Layout*>(node);
         int length;
-        if (layout)
-        {
+        if (layout) {
             length = layout->calculateNearestDistance(baseWidget);
         }
         else
         {
             Widget* w = dynamic_cast<Widget*>(node);
-            if (w && w->isFocusEnabled())
-            {
+            if (w && w->isFocusEnabled()) {
                 Vec2 wPosition = this->getWorldCenterPoint(w);
                 length = (wPosition - widgetPosition).length();
             }
-            else
-            {
+            else {
                 continue;
             }
         }
         
-        if (length < distance)
-        {
+        if (length < distance) {
             distance = length;
         }
         
@@ -1208,12 +1161,10 @@ float Layout::calculateFarthestDistance(cocos2d::ui::Widget *baseWidget)
     
     Vec2 widgetPosition =  this->getWorldCenterPoint(baseWidget);
     
-    for (Node* node : _children)
-    {
+    for (Node* node : _children) {
         Layout *layout = dynamic_cast<Layout*>(node);
         int length;
-        if (layout)
-        {
+        if (layout) {
             length = layout->calculateFarthestDistance(baseWidget);
         }
         else
@@ -1223,14 +1174,12 @@ float Layout::calculateFarthestDistance(cocos2d::ui::Widget *baseWidget)
                 Vec2 wPosition = this->getWorldCenterPoint(w);
                 length = (wPosition - widgetPosition).length();
             }
-            else
-            {
+            else {
                 continue;
             }
         }
         
-        if (length > distance)
-        {
+        if (length > distance) {
             distance = length;
         }
     }
@@ -1241,11 +1190,9 @@ int Layout::findFirstFocusEnabledWidgetIndex()
 {
     ssize_t index = 0;
     ssize_t count = this->getChildren().size();
-    while (index < count)
-    {
+    while (index < count) {
         Widget* w =  dynamic_cast<Widget*>(_children.at(index));
-        if (w && w->isFocusEnabled())
-        {
+        if (w && w->isFocusEnabled()) {
             return (int)index;
         }
         index++;
@@ -1374,19 +1321,15 @@ Widget *Layout::findFirstNonLayoutWidget()
     for(Node *node : _children)
     {
         Layout* layout = dynamic_cast<Layout*>(node);
-        if (layout)
-        {
+        if (layout) {
             widget = layout->findFirstNonLayoutWidget();
-            if (widget != nullptr)
-            {
+            if (widget != nullptr) {
                 return widget;
             }
         }
-        else
-        {
+        else{
             Widget *w = dynamic_cast<Widget*>(node);
-            if (w)
-            {
+            if (w) {
                 widget = w;
                 break;
             }
@@ -1399,8 +1342,7 @@ Widget *Layout::findFirstNonLayoutWidget()
     
 void Layout::findProperSearchingFunctor(FocusDirection dir, Widget* baseWidget)
 {
-    if (baseWidget == nullptr)
-    {
+    if (baseWidget == nullptr) {
         return;
     }
     
@@ -1408,52 +1350,33 @@ void Layout::findProperSearchingFunctor(FocusDirection dir, Widget* baseWidget)
     
     Vec2 widgetPosition = this->getWorldCenterPoint(this->findFirstNonLayoutWidget());
     
-    if (dir == FocusDirection::LEFT)
-    {
-        if (previousWidgetPosition.x > widgetPosition.x)
-        {
+    if (dir == FocusDirection::LEFT) {
+        if (previousWidgetPosition.x > widgetPosition.x) {
             onPassFocusToChild = CC_CALLBACK_2(Layout::findNearestChildWidgetIndex, this);
         }
-        else
-        {
+        else{
             onPassFocusToChild = CC_CALLBACK_2(Layout::findFarthestChildWidgetIndex, this);
         }
-    }
-    else if(dir == FocusDirection::RIGHT)
-    {
-        if (previousWidgetPosition.x > widgetPosition.x)
-        {
+    }else if(dir == FocusDirection::RIGHT){
+        if (previousWidgetPosition.x > widgetPosition.x) {
             onPassFocusToChild = CC_CALLBACK_2(Layout::findFarthestChildWidgetIndex, this);
         }
-        else
-        {
+        else{
             onPassFocusToChild = CC_CALLBACK_2(Layout::findNearestChildWidgetIndex, this);
         }
-    }
-    else if(dir == FocusDirection::DOWN)
-    {
-        if (previousWidgetPosition.y > widgetPosition.y)
-        {
+    }else if(dir == FocusDirection::DOWN){
+        if (previousWidgetPosition.y > widgetPosition.y) {
             onPassFocusToChild = CC_CALLBACK_2(Layout::findNearestChildWidgetIndex, this);
-        }
-        else
-        {
+        }else{
             onPassFocusToChild = CC_CALLBACK_2(Layout::findFarthestChildWidgetIndex, this);
         }
-    }
-    else if(dir == FocusDirection::UP)
-    {
-        if (previousWidgetPosition.y < widgetPosition.y)
-        {
+    }else if(dir == FocusDirection::UP){
+        if (previousWidgetPosition.y < widgetPosition.y) {
             onPassFocusToChild = CC_CALLBACK_2(Layout::findNearestChildWidgetIndex, this);
-        }
-        else
-        {
+        }else{
             onPassFocusToChild = CC_CALLBACK_2(Layout::findFarthestChildWidgetIndex, this);
         }
-    }
-    else
-    {
+    }else{
         CCASSERT(0, "invalid direction!");
     }
 
@@ -1553,6 +1476,8 @@ Widget* Layout::getPreviousFocusedWidget(FocusDirection direction, Widget *curre
         nextWidget = this->getChildWidgetByIndex(previousWidgetPos);
         if (nextWidget->isFocusEnabled())
         {
+            
+            
             Layout* layout = dynamic_cast<Layout*>(nextWidget);
             if (layout)
             {
@@ -1567,8 +1492,7 @@ Widget* Layout::getPreviousFocusedWidget(FocusDirection direction, Widget *curre
             //handling the disabled widget, there is no actual focus lose or get, so we don't need any envet
             return this->getPreviousFocusedWidget(direction, nextWidget);
         }
-    }
-    else
+    }else
     {
         if (_loopFocus)
         {
@@ -1597,8 +1521,7 @@ Widget* Layout::getPreviousFocusedWidget(FocusDirection direction, Widget *curre
             }
             else
             {
-                if (dynamic_cast<Layout*>(current))
-                {
+                if (dynamic_cast<Layout*>(current)) {
                     return current;
                 }
                 else
@@ -1615,8 +1538,7 @@ Widget* Layout::getPreviousFocusedWidget(FocusDirection direction, Widget *curre
                 {
                     return Widget::findNextFocusedWidget(direction, this);
                 }
-                if (dynamic_cast<Layout*>(current))
-                {
+                if (dynamic_cast<Layout*>(current)) {
                     return current;
                 }
                 else
@@ -1645,6 +1567,7 @@ Widget* Layout::getNextFocusedWidget(FocusDirection direction, Widget *current)
         {
             if (nextWidget->isFocusEnabled())
             {
+                
                 Layout* layout = dynamic_cast<Layout*>(nextWidget);
                 if (layout)
                 {
@@ -1666,8 +1589,7 @@ Widget* Layout::getNextFocusedWidget(FocusDirection direction, Widget *current)
         {
             return current;
         }
-    }
-    else
+    }else
     {
         if (_loopFocus)
         {
@@ -1677,6 +1599,7 @@ Widget* Layout::getNextFocusedWidget(FocusDirection direction, Widget *current)
                 nextWidget = this->getChildWidgetByIndex(previousWidgetPos);
                 if (nextWidget->isFocusEnabled())
                 {
+                    
                     Layout* layout = dynamic_cast<Layout*>(nextWidget);
                     if (layout)
                     {
@@ -1705,8 +1628,7 @@ Widget* Layout::getNextFocusedWidget(FocusDirection direction, Widget *current)
                 }
             }
         }
-        else
-        {
+        else{
             if (isLastWidgetInContainer(current, direction))
             {
                 if (isWidgetAncestorSupportLoopFocus(this, direction))
@@ -1737,12 +1659,11 @@ bool  Layout::isLastWidgetInContainer(Widget* widget, FocusDirection direction)c
         return true;
     }
     
-    auto& container = parent->getChildren();
+    auto container = parent->getChildren();
     ssize_t index = container.getIndex(widget);
     if (parent->getLayoutType() == Type::HORIZONTAL)
     {
-        if (direction == FocusDirection::LEFT)
-        {
+        if (direction == FocusDirection::LEFT) {
             if (index == 0)
             {
                 return isLastWidgetInContainer(parent, direction);
@@ -1752,8 +1673,7 @@ bool  Layout::isLastWidgetInContainer(Widget* widget, FocusDirection direction)c
                 return false;
             }
         }
-        if (direction == FocusDirection::RIGHT)
-        {
+        if (direction == FocusDirection::RIGHT) {
             if (index == container.size()-1)
             {
                 return isLastWidgetInContainer(parent, direction);
@@ -1871,10 +1791,8 @@ Widget* Layout::findNextFocusedWidget(FocusDirection direction, Widget* current)
         if (_passFocusToChild)
         {
             Widget * w = this->passFocusToChild(direction, current);
-            if (dynamic_cast<Layout*>(w))
-            {
-                if (parent)
-                {
+            if (dynamic_cast<Layout*>(w)) {
+                if (parent) {
                     parent->_isFocusPassing = true;
                     return parent->findNextFocusedWidget(direction, this);
                 }
@@ -1882,8 +1800,7 @@ Widget* Layout::findNextFocusedWidget(FocusDirection direction, Widget* current)
             return w;
         }
         
-        if (nullptr == parent)
-        {
+        if (nullptr == parent) {
             return this;
         }
         parent->_isFocusPassing = true;
@@ -1915,8 +1832,7 @@ Widget* Layout::findNextFocusedWidget(FocusDirection direction, Widget* current)
                         }
                         return current;
                     }
-                    else
-                    {
+                    else{
                         return Widget::findNextFocusedWidget(direction, this);
                     }
                 }break;

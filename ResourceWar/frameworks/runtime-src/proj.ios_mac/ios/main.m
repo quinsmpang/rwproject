@@ -1,6 +1,6 @@
 //
 //  main.m
-//  simulator
+//  ResourceWar
 //
 //  Copyright __MyCompanyName__ 2011. All rights reserved.
 //

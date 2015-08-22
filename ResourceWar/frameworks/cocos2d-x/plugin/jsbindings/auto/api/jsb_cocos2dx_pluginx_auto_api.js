@@ -636,10 +636,10 @@ destroyInstance : function (
 },
 
 /**
- * @method getInstanceJs
+ * @method getInstance
  * @return {cc.plugin::FacebookAgent}
  */
-getInstanceJs : function (
+getInstance : function (
 )
 {
     return cc.plugin::FacebookAgent;

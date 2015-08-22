@@ -197,7 +197,7 @@ void Bone3D::updateLocalMat()
 {
     if (_blendStates.size())
     {
-        Vec3 translate, scale;
+        Vec3 translate(Vec3::ZERO), scale(Vec3::ZERO);
         Quaternion quat(Quaternion::ZERO);
         
         float total = 0.f;
@@ -275,7 +275,7 @@ ssize_t Skeleton3D::getBoneCount() const
 //get bone
 Bone3D* Skeleton3D::getBoneByIndex(unsigned int index) const
 {
-    if (index < static_cast<unsigned int>(_bones.size()))
+    if (index < _bones.size())
         return _bones.at(index);
     
     return nullptr;

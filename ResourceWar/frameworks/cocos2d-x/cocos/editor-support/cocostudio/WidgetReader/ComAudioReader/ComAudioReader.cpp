@@ -28,7 +28,7 @@
 #include "cocostudio/CSParseBinary_generated.h"
 #include "cocostudio/WidgetReader/NodeReader/NodeReader.h"
 
-#include "tinyxml2.h"
+#include "tinyxml2/tinyxml2.h"
 #include "flatbuffers/flatbuffers.h"
 
 USING_NS_CC;
@@ -59,11 +59,6 @@ namespace cocostudio
     }
     
     void ComAudioReader::purge()
-    {
-        CC_SAFE_DELETE(_instanceComAudioReader);
-    }
-    
-    void ComAudioReader::destroyInstance()
     {
         CC_SAFE_DELETE(_instanceComAudioReader);
     }
@@ -186,10 +181,11 @@ namespace cocostudio
                 break;
         }
         
-        bool loop = options->loop() != 0;
+        bool loop = options->loop();
         audio->setLoop(loop);
         
         audio->setName(options->name()->c_str());
+        audio->setLoop(options->loop());
         
         return component;
     }

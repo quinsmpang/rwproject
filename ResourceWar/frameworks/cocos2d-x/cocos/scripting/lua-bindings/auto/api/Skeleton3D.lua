@@ -5,19 +5,6 @@
 -- @parent_module cc
 
 --------------------------------
--- remove all bones
--- @function [parent=#Skeleton3D] removeAllBones 
--- @param self
--- @return Skeleton3D#Skeleton3D self (return value: cc.Skeleton3D)
-        
---------------------------------
--- add bone
--- @function [parent=#Skeleton3D] addBone 
--- @param self
--- @param #cc.Bone3D bone
--- @return Skeleton3D#Skeleton3D self (return value: cc.Skeleton3D)
-        
---------------------------------
 -- 
 -- @function [parent=#Skeleton3D] getBoneByName 
 -- @param self
@@ -35,7 +22,6 @@
 -- refresh bone world matrix
 -- @function [parent=#Skeleton3D] updateBoneMatrix 
 -- @param self
--- @return Skeleton3D#Skeleton3D self (return value: cc.Skeleton3D)
         
 --------------------------------
 -- get bone
@@ -62,11 +48,5 @@
 -- @function [parent=#Skeleton3D] getBoneCount 
 -- @param self
 -- @return long#long ret (return value: long)
-        
---------------------------------
--- 
--- @function [parent=#Skeleton3D] Skeleton3D 
--- @param self
--- @return Skeleton3D#Skeleton3D self (return value: cc.Skeleton3D)
         
 return nil
