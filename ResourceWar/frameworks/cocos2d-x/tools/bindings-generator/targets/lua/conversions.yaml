@@ -46,6 +46,7 @@ conversions:
     "std::string": "ok &= luaval_to_std_string(tolua_S, ${arg_idx},&${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "String*": "std::string ${out_value}_tmp; ok &= luaval_to_std_string(tolua_S, ${arg_idx}, &${out_value}_tmp, \"${lua_namespaced_class_name}:${func_name}\"); ${out_value} = cocos2d::String::create(${out_value}_tmp)"
     "char*": "std::string ${out_value}_tmp; ok &= luaval_to_std_string(tolua_S, ${arg_idx}, &${out_value}_tmp, \"${lua_namespaced_class_name}:${func_name}\"); ${out_value} = ${out_value}_tmp.c_str()"
+    "void*": "ok &= luaval_to_void(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "Point": "ok &= luaval_to_point(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "Vec2": "ok &= luaval_to_vec2(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "Vec3": "ok &= luaval_to_vec3(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
@@ -70,10 +71,12 @@ conversions:
     "@vector<int.*>": "ok &= luaval_to_std_vector_int(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "kmMat4": "ok &= luaval_to_kmMat4(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "Mat4": "ok &= luaval_to_mat4(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
+    "BlendFunc": "ok &= luaval_to_blendfunc(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "_ttfConfig": "ok &= luaval_to_ttfconfig(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "MeshVertexAttrib": "ok &= luaval_to_mesh_vertex_attrib(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "@vector<float.*>": "ok &= luaval_to_std_vector_float(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
     "@vector<unsigned short.*>": "ok &= luaval_to_std_vector_ushort(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
+    "AnimationInfo": "ok &= luaval_to_animationInfo(tolua_S, ${arg_idx}, &${out_value}, \"${lua_namespaced_class_name}:${func_name}\")"
 
     object: "ok &= luaval_to_object<${arg.to_string($generator).replace(\"*\", \"\")}>(tolua_S, ${arg_idx}, \"${scriptname}\",&${out_value})"
   from_native:
@@ -87,6 +90,7 @@ conversions:
     "long long": "tolua_pushnumber(tolua_S,(lua_Number)${in_value})"
     "std::string": "tolua_pushcppstring(tolua_S,${in_value})"
     "char*": "tolua_pushstring(tolua_S,(const char*)${in_value})"
+    "void*": "tolua_pushuserdata(tolua_S,(void*)${in_value})"
     "String*": "tolua_pushstring(tolua_S, ${in_value}->getCString())"
     bool: "tolua_pushboolean(tolua_S,(bool)${in_value})"
     float: "tolua_pushnumber(tolua_S,(lua_Number)${in_value})"
@@ -124,6 +128,7 @@ conversions:
     "MeshVertexAttrib": "mesh_vertex_attrib_to_luaval(tolua_S, ${in_value})"
     "@vector<float.*>": "ccvector_float_to_luaval(tolua_S, ${in_value})"
     "@vector<unsigned short.*>": "ccvector_ushort_to_luaval(tolua_S, ${in_value})"
+    "AnimationInfo": "animationInfo_to_luaval(tolua_S, ${in_value})"
 
     object: "object_to_luaval<${ntype.replace(\"*\", \"\").replace(\"const \", \"\")}>(tolua_S, \"${scriptname}\",(${ntype.replace(\"const \", \"\")})${in_value})"
 

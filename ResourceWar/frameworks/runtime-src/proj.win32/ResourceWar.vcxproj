@@ -167,11 +167,41 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\ByteBuffer.h" />
+    <ClInclude Include="..\Classes\ClientMessage.h" />
+    <ClInclude Include="..\Classes\GlobalSchedule.h" />
+    <ClInclude Include="..\Classes\IniUtil.h" />
+    <ClInclude Include="..\Classes\LaunchScene.h" />
+    <ClInclude Include="..\Classes\lua_oneself_auto.hpp" />
+    <ClInclude Include="..\Classes\lua_oneself_manual.hpp" />
+    <ClInclude Include="..\Classes\PlatformUtils.h" />
+    <ClInclude Include="..\Classes\ScrollViewEx.h" />
+    <ClInclude Include="..\Classes\Shake.h" />
+    <ClInclude Include="..\Classes\TableUtil.h" />
+    <ClInclude Include="..\Classes\TcpClient.h" />
+    <ClInclude Include="..\Classes\TcpManager.h" />
+    <ClInclude Include="..\Classes\thread.h" />
+    <ClInclude Include="..\Classes\utils.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\ByteBuffer.cpp" />
+    <ClCompile Include="..\Classes\ClientMessage.cpp" />
+    <ClCompile Include="..\Classes\GlobalSchedule.cpp" />
+    <ClCompile Include="..\Classes\IniUtil.cpp" />
+    <ClCompile Include="..\Classes\LaunchScene.cpp" />
+    <ClCompile Include="..\Classes\lua_oneself_auto.cpp" />
+    <ClCompile Include="..\Classes\lua_oneself_manual.cpp" />
+    <ClCompile Include="..\Classes\PlatformUtils.cpp" />
+    <ClCompile Include="..\Classes\ScrollViewEx.cpp" />
+    <ClCompile Include="..\Classes\Shake.cpp" />
+    <ClCompile Include="..\Classes\TableUtil.cpp" />
+    <ClCompile Include="..\Classes\TcpClient.cpp" />
+    <ClCompile Include="..\Classes\TcpManager.cpp" />
+    <ClCompile Include="..\Classes\thread.cpp" />
+    <ClCompile Include="..\Classes\utils.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

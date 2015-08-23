@@ -29,6 +29,9 @@ import java.util.Locale;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.lang.Runnable;
+import java.util.UUID;
+import java.lang.reflect.Method;
+import java.security.MessageDigest;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,6 +45,7 @@ import android.preference.PreferenceManager.OnActivityResultListener;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+import android.telephony.TelephonyManager;
 
 public class Cocos2dxHelper {
     // ===========================================================
@@ -415,5 +419,58 @@ public class Cocos2dxHelper {
         public void showEditTextDialog(final String pTitle, final String pMessage, final int pInputMode, final int pInputFlag, final int pReturnType, final int pMaxLength);
 
         public void runOnGLThread(final Runnable pRunnable);
+    }
+    
+    public static String getMyUUID()
+    {
+        TelephonyManager tm = (TelephonyManager) sActivity.getSystemService(Context.TELEPHONY_SERVICE);
+        String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = ""+ android.provider.Settings.Secure.getString( sActivity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID );
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String uniqueId = deviceUuid.toString();
+        return uniqueId;
+    }
+    
+    public static String GetDeviceID()
+    {
+        TelephonyManager tm = (TelephonyManager) sActivity.getSystemService(Context.TELEPHONY_SERVICE);
+    		String imei = tm.getDeviceId();
+        if (imei == null || imei.equals("000000000000000")) {
+           imei = getMyUUID();
+        }
+
+        MessageDigest md5 = null;  
+        try  
+        {  
+            md5 = MessageDigest.getInstance("MD5"); 
+        }
+        catch(Exception e)  
+        {  
+            e.printStackTrace();  
+            return "";  
+        }  
+          
+        char[] charArray = imei.toCharArray();  
+        byte[] byteArray = new byte[charArray.length];  
+          
+        for(int i = 0; i < charArray.length; i++)  
+        {  
+            byteArray[i] = (byte)charArray[i];  
+        }  
+        byte[] md5Bytes = md5.digest(byteArray);  
+          
+        StringBuffer hexValue = new StringBuffer();  
+        for( int i = 0; i < md5Bytes.length; i++)  
+        {  
+            int val = ((int)md5Bytes[i])&0xff;  
+            if(val < 16)  
+            {  
+                hexValue.append("0");  
+            }  
+            hexValue.append(Integer.toHexString(val));  
+        }  
+        return hexValue.toString();  
     }
 }

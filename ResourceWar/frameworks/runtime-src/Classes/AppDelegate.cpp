@@ -2,8 +2,8 @@
 #include "CCLuaEngine.h"
 #include "SimpleAudioEngine.h"
 #include "cocos2d.h"
-#include "lua_module_register.h"
-
+#include "TcpManager.h"
+#include "LaunchScene.h"
 using namespace CocosDenshion;
 
 USING_NS_CC;
@@ -31,17 +31,14 @@ void AppDelegate::initGLContextAttrs()
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
-    auto engine = LuaEngine::getInstance();
-    ScriptEngineManager::getInstance()->setScriptEngine(engine);
-    lua_State* L = engine->getLuaStack()->getLuaState();
-    lua_module_register(L);
+	Director::getInstance()->getOpenGLView()->setDesignResolutionSize( 640, 960, ResolutionPolicy::NO_BORDER );
 
-    // If you want to use Quick-Cocos2d-X, please uncomment below code
-    // register_all_quick_manual(L);
-
-    if (engine->executeScriptFile("src/main.lua")) {
-        return false;
-    }
+	// Æô¶¯³¡¾°
+	LaunchScene *launchScene = LaunchScene::create();
+	if ( Director::getInstance()->getRunningScene() )
+		Director::getInstance()->replaceScene( launchScene );
+	else
+		Director::getInstance()->runWithScene( launchScene );
 
     return true;
 }

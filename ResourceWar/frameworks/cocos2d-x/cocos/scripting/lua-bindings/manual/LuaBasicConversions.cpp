@@ -78,6 +78,30 @@ bool luaval_is_usertype(lua_State* L,int lo,const char* type, int def)
     return false;
 }
 
+bool luaval_to_void( lua_State* L, int lo, void** outValue, const char* funcName )
+{
+	if ( nullptr == L || nullptr == outValue )
+		return false;
+
+	bool ok = true;
+
+	tolua_Error tolua_err;
+	if ( !tolua_isuserdata( L, lo, 0, &tolua_err ) )
+	{
+#if COCOS2D_DEBUG >=1
+		luaval_to_native_err( L, "#ferror:", &tolua_err, funcName );
+#endif
+		ok = false;
+	}
+
+	if ( ok )
+	{
+		*outValue = (void *)tolua_touserdata( L, lo, 0 );
+	}
+
+	return ok;
+}
+
 bool luaval_to_ushort(lua_State* L, int lo, unsigned short* outValue, const char* funcName)
 {
     if (nullptr == L || nullptr == outValue)

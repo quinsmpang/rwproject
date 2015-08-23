@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-up" width="1" height="1" tilewidth="4096" tileheight="2880" nextobjectid="22">
+ <tileset firstgid="1" name="human_ground" tilewidth="264" tileheight="141" tilecount="1">
+  <tile id="0">
+   <image width="264" height="141" source="human_ground.png"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="2" name="map" tilewidth="4096" tileheight="2880" tilecount="1">
+  <image source="human_map.jpg" trans="ff00ff" width="4096" height="2880"/>
+ </tileset>
+ <layer name="back" width="1" height="1">
+  <data encoding="base64" compression="zlib">
+   eJxjYmBgAAAADAAD
+  </data>
+ </layer>
+ <objectgroup name="object">
+  <object id="1" gid="1" x="3095" y="561" width="264" height="141">
+   <properties>
+    <property name="buildindex" value="0"/>
+   </properties>
+  </object>
+  <object id="2" gid="1" x="2264" y="648" width="264" height="141">
+   <properties>
+    <property name="buildindex" value="1"/>
+   </properties>
+  </object>
+  <object id="3" gid="1" x="1628" y="874" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="2"/>
+   </properties>
+  </object>
+  <object id="4" gid="1" x="1842" y="768" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="3"/>
+   </properties>
+  </object>
+  <object id="5" gid="1" x="2018" y="896" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="4"/>
+   </properties>
+  </object>
+  <object id="6" gid="1" x="1848" y="1064" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="5"/>
+   </properties>
+  </object>
+  <object id="7" gid="1" x="1296" y="866" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="6"/>
+   </properties>
+  </object>
+  <object id="8" gid="1" x="1382" y="1306" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="7"/>
+   </properties>
+  </object>
+  <object id="9" gid="1" x="1658" y="1436" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="8"/>
+   </properties>
+  </object>
+  <object id="10" gid="1" x="3078" y="1230" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="9"/>
+   </properties>
+  </object>
+  <object id="11" gid="1" x="2800" y="1310" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="10"/>
+   </properties>
+  </object>
+  <object id="12" gid="1" x="3008" y="1416" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="11"/>
+   </properties>
+  </object>
+  <object id="13" gid="1" x="3444" y="1438" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="12"/>
+   </properties>
+  </object>
+  <object id="14" gid="1" x="3380" y="1766" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="13"/>
+   </properties>
+  </object>
+  <object id="15" gid="1" x="2584" y="1612" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="14"/>
+   </properties>
+  </object>
+  <object id="16" gid="1" x="2760" y="1700" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="15"/>
+   </properties>
+  </object>
+  <object id="17" gid="1" x="2326" y="1852" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="16"/>
+   </properties>
+  </object>
+  <object id="18" gid="1" x="2608" y="1998" width="264" height="141">
+     <properties>
+    <property name="buildindex" value="17"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
