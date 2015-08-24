@@ -31,7 +31,17 @@ void AppDelegate::initGLContextAttrs()
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
+	Size viewSize = Size( 640, 960 );
+	string title = "ResourceWar";
+	auto director = Director::getInstance();
+	auto glview = director->getOpenGLView();
+	glview = cocos2d::GLViewImpl::createWithRect( title.c_str(), Rect( 0, 0, viewSize.width, viewSize.height ) );
+	director->setOpenGLView( glview );
+	Director::getInstance()->setAnimationInterval(1.0 / 60.0f);
 	Director::getInstance()->getOpenGLView()->setDesignResolutionSize( 640, 960, ResolutionPolicy::NO_BORDER );
+
+	FileUtils::getInstance()->addSearchPath( "res" );
+	FileUtils::getInstance()->addSearchPath( "src" );
 
 	// Æô¶¯³¡¾°
 	LaunchScene *launchScene = LaunchScene::create();

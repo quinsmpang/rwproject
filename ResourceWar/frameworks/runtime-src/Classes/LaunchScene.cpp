@@ -34,8 +34,6 @@ bool LaunchScene::init()
 void LaunchScene::onEnterTransitionDidFinish()
 {
 	Scene::onEnterTransitionDidFinish();
-
-	FileUtils::getInstance()->addSearchPath( "res" );
 	auto mainPage = Sprite::create( "launch/main_page.jpg" );
 	mainPage->setPosition( Director::getInstance()->getWinSize().width / 2, Director::getInstance()->getWinSize().height / 2 );
 	addChild( mainPage );

@@ -1,0 +1,241 @@
+﻿id	zh	en
+1	王城	Town Center
+2	城墙	Wall
+3	酒馆	Drunkery
+4	市场	Market
+5	赌场	Gambling House
+6	图书馆	Library
+7	许愿池	Wall
+8	大使馆	Embassy
+9	铁匠铺	Smithy
+10	校场	Drill Ground
+11	仓库	Store House
+12	木材厂	Wood Factory
+13	农田	Farm
+14	铁矿厂	Iron Factory
+15	秘银穴	Mithril
+16	民居	House
+17	兵营	Barracks
+18	马厩	Stable
+19	靶场	Shooting Range
+20	塔楼	Tower
+21	法师营地	Magician
+22	工匠坊	Craftsman
+101	决定城池等级，同时决定了其他建筑的等级上限	xxx
+501	连接服务器失败	Connect server failed
+502	已与服务器断开连接	Has been disconnected from the server
+503	重试	Try Again
+507	是否退出游戏	Are you out of the game?
+508	继续游戏	Continue Play
+509	退出	Exit
+510	背包已满	The backpack was full
+511	此类物品不可丢弃	Do not throw away
+601	只能同时建造或升级2个建筑	xxx
+1001	建造	Build
+1002	世界地图	World Map
+1003	活动	Activity
+1004	邮件	Mail
+1005	任务	Mission
+1006	成就	Achieve
+1007	英雄	Hero
+1008	暂停	Pause
+1009	继续	Continue
+1010	退出	Exit
+1011	等级	Level
+1012	信息	Info
+1013	升级	Upgrade
+1014	立即完成	Finish
+1033	步兵	Warrior
+1034	弓兵	Archer
+1035	骑兵	Cavalry
+1036	飞兵	Airman
+1037	法师	Mage
+1038	返回城池	City
+1039	攻击	Attack
+1040	侦查	Spy
+1041	迁城	MoveCity
+1042	占领	Occupy
+1048	城外	Outside The City
+1049	我的城池	My City
+1050	背包	Storage
+1051	物资	Item
+1052	材料	Stuff
+1053	装备	Equipment
+1054	宝石	Gem
+1055	使用	Use
+1056	数量	Count
+1060	联盟	League
+1070	翻译	Translation
+1071	原文	Origin
+1072	取消	Cancel
+1073	立即建造	Finish
+1074	立即升级	Finish
+1075	升级	LevelUp
+1076	点击使用加速道具	Press to use item
+1077	放弃建造将只返回50%资源	Only 50% resouces will be refunded to Cancel
+1078	详情	Detail
+1079	背包	Packet
+1080	加速	SpeedUp
+1081	训练	Train
+1200	民兵	Soldier
+1201	民兵	Soldier
+1202	步兵	Soldier
+1203	步兵	Soldier
+1204	步兵	Soldier
+1205	步兵	Soldier
+1206	步兵	Soldier
+1207	步兵	Soldier
+1208	步兵	Soldier
+1209	步兵	Soldier
+1220	骑兵	Cavalry
+1221	骑兵	Cavalry
+1222	骑兵	Cavalry
+1223	骑兵	Cavalry
+1224	骑兵	Cavalry
+1225	骑兵	Cavalry
+1226	骑兵	Cavalry
+1227	骑兵	Cavalry
+1228	骑兵	Cavalry
+1229	骑兵	Cavalry
+1240	飞兵	Fly Soldier
+1241	飞兵	Fly Soldier
+1242	飞兵	Fly Soldier
+1243	飞兵	Fly Soldier
+1244	飞兵	Fly Soldier
+1245	飞兵	Fly Soldier
+1246	飞兵	Fly Soldier
+1247	飞兵	Fly Soldier
+1248	飞兵	Fly Soldier
+1249	飞兵	Fly Soldier
+1260	法师	Magic Soldier
+1261	法师	Magic Soldier
+1262	法师	Magic Soldier
+1263	法师	Magic Soldier
+1264	法师	Magic Soldier
+1265	法师	Magic Soldier
+1266	法师	Magic Soldier
+1267	法师	Magic Soldier
+1268	法师	Magic Soldier
+1269	法师	Magic Soldier
+1280	弓兵	Bowman
+1281	弓兵	Bowman
+1282	弓兵	Bowman
+1283	弓兵	Bowman
+1284	弓兵	Bowman
+1285	弓兵	Bowman
+1286	弓兵	Bowman
+1287	弓兵	Bowman
+1288	弓兵	Bowman
+1289	弓兵	Bowman
+1300	攻城车	Siege Vehicles
+1301	攻城车	Siege Vehicles
+1302	攻城车	Siege Vehicles
+1303	攻城车	Siege Vehicles
+1304	攻城车	Siege Vehicles
+1305	攻城车	Siege Vehicles
+1306	攻城车	Siege Vehicles
+1307	攻城车	Siege Vehicles
+1308	攻城车	Siege Vehicles
+1309	攻城车	Siege Vehicles
+1400	亡灵民兵	Soldier
+1401	亡灵民兵	Soldier
+1402	亡灵步兵	Soldier
+1403	亡灵步兵	Soldier
+1404	亡灵步兵	Soldier
+1405	亡灵步兵	Soldier
+1406	亡灵步兵	Soldier
+1407	亡灵步兵	Soldier
+1408	亡灵步兵	Soldier
+1409	亡灵步兵	Soldier
+1420	亡灵骑兵	Cavalry
+1421	亡灵骑兵	Cavalry
+1422	亡灵骑兵	Cavalry
+1423	亡灵骑兵	Cavalry
+1424	亡灵骑兵	Cavalry
+1425	亡灵骑兵	Cavalry
+1426	亡灵骑兵	Cavalry
+1427	亡灵骑兵	Cavalry
+1428	亡灵骑兵	Cavalry
+1429	亡灵骑兵	Cavalry
+1440	亡灵飞兵	Fly Soldier
+1441	亡灵飞兵	Fly Soldier
+1442	亡灵飞兵	Fly Soldier
+1443	亡灵飞兵	Fly Soldier
+1444	亡灵飞兵	Fly Soldier
+1445	亡灵飞兵	Fly Soldier
+1446	亡灵飞兵	Fly Soldier
+1447	亡灵飞兵	Fly Soldier
+1448	亡灵飞兵	Fly Soldier
+1449	亡灵飞兵	Fly Soldier
+1460	亡灵法师	Magic Soldier
+1461	亡灵法师	Magic Soldier
+1462	亡灵法师	Magic Soldier
+1463	亡灵法师	Magic Soldier
+1464	亡灵法师	Magic Soldier
+1465	亡灵法师	Magic Soldier
+1466	亡灵法师	Magic Soldier
+1467	亡灵法师	Magic Soldier
+1468	亡灵法师	Magic Soldier
+1469	亡灵法师	Magic Soldier
+1480	亡灵弓兵	Bowman
+1481	亡灵弓兵	Bowman
+1482	亡灵弓兵	Bowman
+1483	亡灵弓兵	Bowman
+1484	亡灵弓兵	Bowman
+1485	亡灵弓兵	Bowman
+1486	亡灵弓兵	Bowman
+1487	亡灵弓兵	Bowman
+1488	亡灵弓兵	Bowman
+1489	亡灵弓兵	Bowman
+1500	亡灵攻城车	Siege Vehicles
+1501	亡灵攻城车	Siege Vehicles
+1502	亡灵攻城车	Siege Vehicles
+1503	亡灵攻城车	Siege Vehicles
+1504	亡灵攻城车	Siege Vehicles
+1505	亡灵攻城车	Siege Vehicles
+1506	亡灵攻城车	Siege Vehicles
+1507	亡灵攻城车	Siege Vehicles
+1508	亡灵攻城车	Siege Vehicles
+1509	亡灵攻城车	Siege Vehicles
+2001	农田是生产并储存粮食的地方	The farm is the place where food produced and stored
+2005	攻击城市战报	邮件界面文字范围2005-2060
+2006	攻击NPC战报	lol
+2007	采集报告	lol
+2008	侦查城市	lol
+2009	侦查部队	lol
+2010	侦查资源	lol
+2011	收取	Gain
+2012	取消	Cancel
+2013	回合%s 部队%s 移动%s格	Troop
+2014	回合%s 部队%s 攻击部队%s,部队%s死亡%s个士兵	Fight
+2015	回合%s 部队%s 远程射击部队%s,部队%s死亡%s个士兵	Fight
+2016	战报	Fight
+2017	系统	System
+2018	邮件	Mail
+2019	全选	All
+2020	领取	Receive
+2021	删除	Delete
+2022	胜利	Victory
+2023	失败	Fail
+2024	写信	SendMail
+2025	发送	Send
+2026	收件人	Recipient
+2027	内容	Content
+2028	战力	Power
+2029	释放加载数据...	lol
+2030	回复	lol
+2031	回放	Replay
+2060	屏蔽	聊天界面文字范围2060-2100
+2061	取消	聊天界面文字范围2060-2100
+2062	查看	聊天界面
+2069	邀请	Invite
+2063	王国	Kingdom
+2064	翻译	Translation
+2065	原文	Origin
+2066	发送事件公告将消耗一个喇叭	balabalabalabala
+2067	点此处输入聊天内容...	lol
+2068	聊天	Chat
+2101	替换	英雄界面文字 范围2101-2130
+2102	装备	英雄界面文字 范围2101-2130
+2103	属性	英雄界面文字 范围2101-2130
+2104	已装备	英雄界面文字 范围2101-2130

@@ -5,33 +5,42 @@ end)
 
 -- 构造函数
 function TimeProgressBar:ctor()
-	self._totalSec = 0;
-	self._sec = 0;
+	self._schedulerEntry = nil;
+	self._callbackFun = nil;
+	self._finishSec = 0;
+	self._needSec = 0
 end
 
 -- 初始化
 function TimeProgressBar:init()
 	
+	-- 时间逻辑
+	local function timer()
+		-- 还差多少秒 = 完成时间-当前时间
+		local diffSec = self._finishSec - GetServerTime();
+		if diffSec < 0 then
+			if self._callbackFun then
+				self._callbackFun();
+			end
+			self:removeFromParent();
+			return;
+		end
+		self._uiText:setString( GetTimeFomat( diffSec ) );
+		self._uiProgress:setPercent( (self._needSec-diffSec)/self._needSec*100 )
+	end
+
 	 -- 监听对象事件
     local function onNodeEvent(event)
         if event == "enter" then
-           
+           self._schedulerEntry = scheduler:scheduleScriptFunc(timer, 1, false)
         elseif event == "exit" then
-		
+			if self._schedulerEntry ~= nil then
+                scheduler:unscheduleScriptEntry(self._schedulerEntry)
+            end
         end
     end
     self:registerScriptHandler(onNodeEvent)
-	
-	-- 每秒调用
-	schedule( self, function(dt)  
-		self._sec = self._sec - 1;
-		if self._sec >= 0 then
-			return;
-		end
-		self._uiText:setString( GetTimeFomat( self._sec ) );
-		self._uiProgress:setPercent( (self._totalSec-self._sec)/self._totalSec*100 )
-	end, 1 );
-	
+		
 	-- 进度条
     self._uiProgress = ccui.LoadingBar:create()
     self._uiProgress:loadTexture("UI_zaobing_lantiao.png")
@@ -50,10 +59,11 @@ function TimeProgressBar:init()
     return true;
 end
 
--- 设置倒计时
-function TimeProgressBar:setCountdown( totalsec, sec )
-	self._totalSec = totalsec;
-	self._sec = sec;
+-- 设置完成时间
+function TimeProgressBar:setFinishTime( finish_sec, callback )
+	self._finishSec = finish_sec;
+	self._needSec = finish_sec - GetServerTime();
+	self._callbackFun = callback;
 end
 
 

@@ -102,7 +102,10 @@ end
 function proc_citybuildinglist_C( recvValue )
 	-- process.
 	-- EventProtocol.addEventListener( "proc_citybuildinglist_C", function( recvValue ) end )
-	EventProtocol.dispatchEvent( "proc_citybuildinglist_C", recvValue );
+	-- EventProtocol.dispatchEvent( "proc_citybuildinglist_C", recvValue );
+	for tmpi=1, recvValue.m_count, 1 do
+		GetCacheCity():AddBuilding( recvValue.m_list[tmpi] );
+	end
 end
 
 -- m_unit_index=0,m_type=0,m_shape=0,m_stat=0,m_lastway=0,m_posx=0,m_posy=0,m_tposx=0,m_tposy=0,m_namelen=0,m_name="[m_namelen]",m_level=0,m_underfire_count=0,m_underfire_frompos={m_unit_index=0,m_posx=0,m_posy=0,[m_underfire_count]},
@@ -172,35 +175,60 @@ end
 function proc_buildtimeinfo_C( recvValue )
 	-- process.
 	-- EventProtocol.addEventListener( "proc_buildtimeinfo_C", function( recvValue ) end )
-	EventProtocol.dispatchEvent( "proc_buildtimeinfo_C", recvValue );
+	-- EventProtocol.dispatchEvent( "proc_buildtimeinfo_C", recvValue );
+	GetCacheCity():SetBuildingTimeInfo( recvValue )
 end
 
 -- m_count=0,m_timeinfo={m_offset=0,m_time=0,m_state=0,[m_count]},m_servertime=0,
 function proc_buildtimeinfolist_C( recvValue )
 	-- process.
 	-- EventProtocol.addEventListener( "proc_buildtimeinfolist_C", function( recvValue ) end )
-	EventProtocol.dispatchEvent( "proc_buildtimeinfolist_C", recvValue );
+	-- EventProtocol.dispatchEvent( "proc_buildtimeinfolist_C", recvValue );
+	GetCacheCity():SetServerTime( recvValue.m_servertime )
+	for tmpi=1, recvValue.m_count, 1 do
+		GetCacheCity():SetBuildingTimeInfo( recvValue.m_timeinfo[tmpi] )
+	end
 end
 
 -- m_restype=0,m_resvalue=0,m_path=0,
 function proc_cityreschangeinfo_C( recvValue )
 	-- process.
 	-- EventProtocol.addEventListener( "proc_cityreschangeinfo_C", function( recvValue ) end )
-	EventProtocol.dispatchEvent( "proc_cityreschangeinfo_C", recvValue );
+	-- EventProtocol.dispatchEvent( "proc_cityreschangeinfo_C", recvValue );
+	if recvValue.m_restype == 1 then
+		GetCacheCity():ChangeWood( recvValue.m_resvalue, recvValue.m_path );
+	elseif recvValue.m_restype == 2 then
+		GetCacheCity():ChangeFood( recvValue.m_resvalue, recvValue.m_path );
+	elseif recvValue.m_restype == 3 then
+		GetCacheCity():ChangeIron( recvValue.m_resvalue, recvValue.m_path );
+	elseif recvValue.m_restype == 4 then
+		GetCacheCity():ChangeMithril( recvValue.m_resvalue, recvValue.m_path );
+	elseif recvValue.m_restype == 5 then
+		GetCacheCity():ChangeGold( recvValue.m_resvalue, recvValue.m_path );
+	end
 end
 
 -- m_kind=0,m_level=0,m_offset=0,
 function proc_buildingbaseinfo_C( recvValue )
 	-- process.
 	-- EventProtocol.addEventListener( "proc_buildingbaseinfo_C", function( recvValue ) end )
-	EventProtocol.dispatchEvent( "proc_buildingbaseinfo_C", recvValue );
+	-- EventProtocol.dispatchEvent( "proc_buildingbaseinfo_C", recvValue );
+	-- 更新建筑基本信息
+	if recvValue.m_kind > 0 then
+		GetCacheCity():AddBuilding( recvValue )
+		
+	-- 删除这个建筑
+	else
+		GetCacheCity():DelBuilding( recvValue )
+	end
 end
 
 -- m_offset=0,m_value={[4]},
 function proc_buildingabilityinfo_C( recvValue )
 	-- process.
 	-- EventProtocol.addEventListener( "proc_buildingabilityinfo_C", function( recvValue ) end )
-	EventProtocol.dispatchEvent( "proc_buildingabilityinfo_C", recvValue );
+	 -- EventProtocol.dispatchEvent( "proc_buildingabilityinfo_C", recvValue );
+	GetCacheCity():SetBuildingAbility( recvValue );
 end
 
 -- m_map_width=0,m_map_height=0,m_area_width=0,m_area_height=0,m_map_area_xnum=0,m_map_area_ynum=0,m_my_city_posx=0,m_my_city_posy=0,m_my_city_unit_index=0,
@@ -277,7 +305,10 @@ end
 function proc_buildingabilitylist_C( recvValue )
 	-- process.
 	-- EventProtocol.addEventListener( "proc_buildingabilitylist_C", function( recvValue ) end )
-	EventProtocol.dispatchEvent( "proc_buildingabilitylist_C", recvValue );
+	-- EventProtocol.dispatchEvent( "proc_buildingabilitylist_C", recvValue );
+	for tmpi = 1, recvValue.m_count, 1 do
+		GetCacheCity():SetBuildingAbility( recvValue.m_list[tmpi] );
+	end
 end
 
 -- m_count=0,m_chat_mask_list={}[m_count],

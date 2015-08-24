@@ -96,34 +96,34 @@ end
 function Building:setBaseInfo( kind, level )
 	self._kind = kind;
 	self._sprite:setTexture( BuildingResList[kind]["res"][1] );
-	
-	if self._timeProgress == nil then
-		-- 创建进度条
-		self._timeProgress = TimeProgressBar.create()
-		local s = self._sprite:getContentSize();
-		self._timeProgress:setPosition( cc.p(0, 0-s.height/2) )
-		self._timeProgress:setCountdown(100, 86);
-		self:addChild( self._timeProgress, 10 );
-	end
 end
 
 -- 设置时间信息
-function Building:setTimeInfo( state, time, sec )
---[[	if self._timeProgress == nil then
-		-- 创建进度条
-		self._timeProgress = CreateTimeProgressBar.create()
-		self._timeProgress:setProgressString( ""..time )
-		local s = self._sprite:getContentSize();
-		self._timeProgress:setPosition( cc.p(0, s.height + 40) )
-		self:addChild( self._timeProgress, 1 );
-	end--]]
-	
+function Building:setTimeInfo( state, time )
+	if state == BUILDING_STATE_NORMAL then
+		if self._timeProgress ~= nil then
+			--self._timeProgress:removeFromParent();
+		end
+		return;
+	end
+	-- 创建时间进度条
+	if state == BUILDING_STATE_CREATE_ING or state == BUILDING_STATE_UPGRADE_ING or state == BUILDING_STATE_DELETE_ING then
+		if self._timeProgress == nil then
+			self._timeProgress = TimeProgressBar.create()
+			self._timeProgress:setPosition( cc.p(0, 0-self._sprite:getContentSize().height/2) )
+			self:addChild( self._timeProgress, 1 );
+			self._timeProgress:setFinishTime( time, function() 
+				
+			end );
+		end
+	end
 end
 
 -- 设置属性信息
 function Building:setAbilityInfo( abilitys )
 	
 end
+
 
 -- 创建
 function Building.create()

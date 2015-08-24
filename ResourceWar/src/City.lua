@@ -31,8 +31,9 @@ function City:init()
 	
 	-- 创建地图
 	self._cityTmxMap = ccexp.TMXTiledMap:create("human_map.tmx")
-	local objectLayer = cc.Node:create();
-	local group = self._cityTmxMap:getObjectGroup("object")
+	-- 创建建筑层
+	self._buildingLayer = cc.Node:create();
+	local group = self._cityTmxMap:getObjectGroup("building_layer")
     local objects = group:getObjects()
 	for i = 1, #objects, 1 do
 		local dict = objects[i]
@@ -44,16 +45,16 @@ function City:init()
         local y = dict["y"]
         local width = dict["width"]
         local height = dict["height"]
-		local buildindex = dict["buildindex"]
+		local buildingindex = dict["buildingindex"]
 
-		-- 建筑
-		local building = Building.create( buildindex )
-		building:setTag( buildindex );
-		building:setPosition(cc.p (x+width/2, y+height+height/2))
-		objectLayer:addChild(building)
+		-- 创建默认建筑
+		local building = Building.create()
+		building:setTag( buildingindex );
+		building:setPosition( cc.p (x+width/2, y+height+height/2) )
+		self._buildingLayer:addChild( building )
 
 	end
-	self._cityTmxMap:addChild( objectLayer );
+	self._cityTmxMap:addChild( self._buildingLayer );
 
 	-- 设置滑动层
 	self._scrollViewProxy:setContainer( self._cityTmxMap )
@@ -66,7 +67,7 @@ function City:init()
 	self._scrollViewProxy:setContentOffsetInDuration(cc.p(-1200, -800), 1);
 	self._scrollViewProxy:setZoomScaleInDuration( 1.0, 1 );
 	-- 1秒后重设缩放范围
-	schedule( self, function(dt)  
+	performWithDelay( self, function(dt)  
 		self._scrollViewProxy:setMinScale(0.9)
 		self._scrollViewProxy:setMaxScale(1.1)
 	end, 1 );

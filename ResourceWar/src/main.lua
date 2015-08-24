@@ -61,6 +61,8 @@ TableUtil = my.TableUtil
 ScrollViewEx = my.ScrollViewEx
 PlatformUtils = my.PlatformUtils
 
+-- 计时器
+scheduler = cc.Director:getInstance():getScheduler()
 -- 屏幕分辨率
 FRAME_SIZE = cc.Director:getInstance():getOpenGLView():getFrameSize()
 -- 屏幕大小

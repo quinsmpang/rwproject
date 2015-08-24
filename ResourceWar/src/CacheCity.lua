@@ -190,7 +190,7 @@ function CacheCity:SetBuildingTimeInfo( info )
 	if GameManager.gameScence then
 		local building = GameManager.gameScence._city._buildingLayer:getChildByTag( info.m_offset )
 		if building then
-			building:setTimeInfo( info.m_state, info.m_time, Data.building_upgrade[id][level].sec )
+			building:setTimeInfo( info.m_state, info.m_time )
 		end
 	end
 end
