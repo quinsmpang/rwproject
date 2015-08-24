@@ -1,4 +1,4 @@
--- 警示框（单按钮）
+-- 建筑建造
 BuildingCreateDlg = {}
 local this = BuildingCreateDlg;
 local m_dlg = nil;
@@ -52,7 +52,7 @@ function BuildingCreateDlg.init()
 				if m_selectBuilding == nil then
 					return;
 				end 
-				system_askinfo( ASKINFO_BUILDING, "", 0, m_openBuildingindex, m_selectBuilding["kind"], 0, 0 );
+				system_askinfo( ASKINFO_BUILDING, "", 0, m_openBuildingindex, m_selectBuilding["kind"] );
 				this.close()
 			elseif name == "createex" then -- 立即建造
 				this.close()
@@ -79,7 +79,7 @@ function BuildingCreateDlg.init()
 	m_uiCreateBtn:setScale9Enabled(true)
 	m_uiCreateBtn:loadTextures("ui_button_normal_1.png", "ui_button_click_1.png", "")
 	m_uiCreateBtn:setContentSize(cc.size(220, 60))
-	m_uiCreateBtn:setPosition( cc.p( VisibleRect:center().x + 180, VisibleRect:rightBottom().y+100) )
+	m_uiCreateBtn:setPosition( cc.p( VisibleRect:center().x + 160, VisibleRect:rightBottom().y+100) )
 	m_uiCreateBtn:addTouchEventListener(buttonEvent)
 	backImageNode:addChild(m_uiCreateBtn)
 	
@@ -91,7 +91,7 @@ function BuildingCreateDlg.init()
 	m_uiCreateBtnEx:setScale9Enabled(true)
 	m_uiCreateBtnEx:loadTextures("ui_button_normal_1.png", "ui_button_click_1.png", "")
 	m_uiCreateBtnEx:setContentSize(cc.size(220, 60))
-	m_uiCreateBtnEx:setPosition( cc.p( VisibleRect:center().x - 180, VisibleRect:rightBottom().y+100) )
+	m_uiCreateBtnEx:setPosition( cc.p( VisibleRect:center().x - 160, VisibleRect:rightBottom().y+100) )
 	m_uiCreateBtnEx:addTouchEventListener(buttonEvent)
 	backImageNode:addChild(m_uiCreateBtnEx)
 	
@@ -168,6 +168,7 @@ end
 function BuildingCreateDlg.destroy()
 	if m_dlg then
 		m_dlg:removeFromParent();
+		m_dlg = nil;
 	end
 end
 

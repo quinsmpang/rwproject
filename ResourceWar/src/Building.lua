@@ -1,4 +1,4 @@
--- 建筑
+-- 建筑基础信息
 Building = class("Building",function()
     return cc.Node:create()
 end)
@@ -34,8 +34,9 @@ BuildingResList = {
 function Building:ctor()
 	self._kind = 0;
 	self._timeProgress = nil;
+	self._privateNode = nil;
 end
-
+ 
 -- 初始化
 function Building:init()
 	
@@ -43,6 +44,18 @@ function Building:init()
 	self._sprite = cc.Sprite:create( "building_human_Ground.png" )
     self._sprite:setPosition( cc.p(0, 0) )
     self:addChild( self._sprite )
+	
+	-- 等级背景
+	self._levelSprite = cc.Sprite:create( "building_human_levelback.png" )
+    self._levelSprite:setPosition( cc.p(-60, -60) )
+	self._levelSprite:setScale( 0.4 )
+	self._levelSprite:setVisible( false )
+    self:addChild( self._levelSprite )
+	-- 等级
+	self._levelLabel = cc.Label:createWithSystemFont("", "Marker Felt", 32)
+    self._levelLabel:setAnchorPoint(cc.p(0.5, 0.5))
+	self._levelLabel:setPosition(cc.p(36, 60))
+	self._levelSprite:addChild(self._levelLabel)
 	
 	-- 建筑点击事件
     local function onTouchBegan(touch, event)
@@ -53,7 +66,8 @@ function Building:init()
 			self._beganHit = true;
             return true
         end
-        self._sprite:setColor(cc.c3b(255, 255, 255))
+        --self._sprite:setColor(cc.c3b(255, 255, 255))
+		self:setLocalZOrder(0)
         return false
     end
 	local function onTouchMoved( touch, event )
@@ -77,7 +91,9 @@ function Building:init()
 			if self._kind == 0 then
 				BuildingCreateDlg.open( self:getTag() );
 			else
-				self._sprite:setColor(cc.c3b(255, 0, 0))
+				--self._sprite:setColor(cc.c3b(255, 0, 0))
+				self:setLocalZOrder(1)
+				BuildingOpDlg.open( self, self:getTag() )
 			end
         end
 	end
@@ -96,6 +112,12 @@ end
 function Building:setBaseInfo( kind, level )
 	self._kind = kind;
 	self._sprite:setTexture( BuildingResList[kind]["res"][1] );
+	if level <= 1 then
+		self._levelSprite:setVisible( false )
+	else
+		self._levelSprite:setVisible( true )
+	end
+	self._levelLabel:setString(level)
 end
 
 -- 设置时间信息
@@ -103,6 +125,7 @@ function Building:setTimeInfo( state, time )
 	if state == BUILDING_STATE_NORMAL then
 		if self._timeProgress ~= nil then
 			--self._timeProgress:removeFromParent();
+			self._timeProgress = nil;
 		end
 		return;
 	end

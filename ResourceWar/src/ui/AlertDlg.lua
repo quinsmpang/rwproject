@@ -112,6 +112,7 @@ end
 function AlertDlg.destroy()
 	if m_dlg then
 		m_dlg:removeFromParent();
+		m_dlg = nil;
 	end
 end
 
