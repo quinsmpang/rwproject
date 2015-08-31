@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{135C3B51-C621-4C54-A1F9-2969368C7FCB}</ProjectGuid>
+    <RootNamespace>LKGameServer</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.21005.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\Exec\</OutDir>
+    <IntDir>..\..\Public\IntDir\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)D</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>../Exec\</OutDir>
+    <IntDir>../../Public/IntDir/$(ProjectName)/$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)R</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>./;include;./AutoS/include;../../LKEngine/Lua/src;../../LKEngine/LKUtils/include;../../LKEngine/LKNetServer/include;../../LKEngine/Mysql/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;LOCAL_FILE1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <EnablePREfast>false</EnablePREfast>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Ws2_32.lib;Winmm.lib;libMysql.lib;Lua.lib;LKUtils.lib;LKNetServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)D.exe</OutputFile>
+      <AdditionalLibraryDirectories>../../Public/Lib/$(Configuration);../../LKEngine/Mysql/lib/opt;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>./;include;./AutoS/include;../../LKEngine/Lua/src;../../LKEngine/LKUtils/include;../../LKEngine/LKNetServer/include;../../LKEngine/Mysql/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;LOCAL_SERVER;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Ws2_32.lib;Winmm.lib;libMysql.lib;Lua.lib;LKUtils.lib;LKNetServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../Public/Lib/$(Configuration);../../LKEngine/Mysql/lib/opt;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AutoS\src\auto_actor.cpp" />
+    <ClCompile Include="AutoS\src\auto_actor_hero.cpp" />
+    <ClCompile Include="AutoS\src\auto_actor_item.cpp" />
+    <ClCompile Include="AutoS\src\server_netrecv_auto.cpp" />
+    <ClCompile Include="AutoS\src\server_netsend_auto.cpp" />
+    <ClCompile Include="AutoS\src\server_process_auto.cpp" />
+    <ClCompile Include="AutoS\src\server_structrecv_auto.cpp" />
+    <ClCompile Include="AutoS\src\server_structsend_auto.cpp" />
+    <ClCompile Include="src\account.cpp" />
+    <ClCompile Include="src\actor.cpp" />
+    <ClCompile Include="src\actor_func.cpp" />
+    <ClCompile Include="src\actor_gmcmd.cpp" />
+    <ClCompile Include="src\actor_send.cpp" />
+    <ClCompile Include="src\actor_notify.cpp" />
+    <ClCompile Include="src\area.cpp" />
+    <ClCompile Include="src\army.cpp" />
+    <ClCompile Include="src\building.cpp" />
+    <ClCompile Include="src\city.cpp" />
+    <ClCompile Include="src\city_send.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./;include;./AutoS/include;../../LKEngine/Lua/src;../../LKEngine/LKUtils/include;../../LKEngine/LKNetServer/include;../../LKEngine/Mysql/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="src\client.cpp" />
+    <ClCompile Include="src\club.cpp" />
+    <ClCompile Include="src\db.cpp" />
+    <ClCompile Include="src\fight.cpp" />
+    <ClCompile Include="src\fight_calc.cpp" />
+    <ClCompile Include="src\fight_msg.cpp" />
+    <ClCompile Include="src\fight_recode.cpp" />
+    <ClCompile Include="src\fight_send.cpp" />
+    <ClCompile Include="src\gamelog.cpp" />
+    <ClCompile Include="src\gameproc.cpp" />
+    <ClCompile Include="src\global.cpp" />
+    <ClCompile Include="src\gmcmd.cpp" />
+    <ClCompile Include="src\hero.cpp" />
+    <ClCompile Include="src\item.cpp" />
+    <ClCompile Include="src\item_equip.cpp" />
+    <ClCompile Include="src\item_proc.cpp" />
+    <ClCompile Include="src\item_send.cpp" />
+    <ClCompile Include="src\login_user.cpp" />
+    <ClCompile Include="src\login_net.cpp" />
+    <ClCompile Include="src\mail_msg.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\mapunit.cpp" />
+    <ClCompile Include="src\robot.cpp" />
+    <ClCompile Include="src\system.cpp" />
+    <ClCompile Include="src\system_askinfo.cpp" />
+    <ClCompile Include="src\plat.cpp" />
+    <ClCompile Include="src\script.cpp" />
+    <ClCompile Include="src\script_auto.cpp" />
+    <ClCompile Include="src\script_reg_auto.cpp" />
+    <ClCompile Include="src\troop.cpp" />
+    <ClCompile Include="src\wildsite.cpp" />
+    <ClCompile Include="src\worldmap.cpp" />
+    <ClCompile Include="src\wqueue.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AutoS\include\auto_actor_hero.h" />
+    <ClInclude Include="AutoS\include\auto_actor_item.h" />
+    <ClInclude Include="include\account.h" />
+    <ClInclude Include="include\actor.h" />
+    <ClInclude Include="include\actor_send.h" />
+    <ClInclude Include="include\actor_notify.h" />
+    <ClInclude Include="include\area.h" />
+    <ClInclude Include="include\army.h" />
+    <ClInclude Include="include\building.h" />
+    <ClInclude Include="include\city.h" />
+    <ClInclude Include="include\client.h" />
+    <ClInclude Include="include\club.h" />
+    <ClInclude Include="include\db.h" />
+    <ClInclude Include="include\define.h" />
+    <ClInclude Include="include\fight.h" />
+    <ClInclude Include="include\fight_calc.h" />
+    <ClInclude Include="include\fight_msg.h" />
+    <ClInclude Include="include\fight_recode.h" />
+    <ClInclude Include="include\fight_send.h" />
+    <ClInclude Include="include\gamelog.h" />
+    <ClInclude Include="include\gameproc.h" />
+    <ClInclude Include="include\global.h" />
+    <ClInclude Include="include\gmcmd.h" />
+    <ClInclude Include="include\hero.h" />
+    <ClInclude Include="include\item.h" />
+    <ClInclude Include="include\mail_msg.h" />
+    <ClInclude Include="include\mapunit.h" />
+    <ClInclude Include="include\robot.h" />
+    <ClInclude Include="include\system.h" />
+    <ClInclude Include="include\system_askinfo.h" />
+    <ClInclude Include="include\login.h" />
+    <ClInclude Include="include\plat.h" />
+    <ClInclude Include="include\script.h" />
+    <ClInclude Include="include\script_auto.h" />
+    <ClInclude Include="include\troop.h" />
+    <ClInclude Include="include\wildsite.h" />
+    <ClInclude Include="include\worldmap.h" />
+    <ClInclude Include="include\wqueue.h" />
+    <ClInclude Include="AutoS\include\auto_actor.h" />
+    <ClInclude Include="AutoS\include\server_netrecv_auto.h" />
+    <ClInclude Include="AutoS\include\server_netsend_auto.h" />
+    <ClInclude Include="AutoS\include\server_process_auto.h" />
+    <ClInclude Include="AutoS\include\server_struct_auto.h" />
+    <ClInclude Include="AutoS\include\server_structrecv_auto.h" />
+    <ClInclude Include="AutoS\include\server_structsend_auto.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Makefile" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

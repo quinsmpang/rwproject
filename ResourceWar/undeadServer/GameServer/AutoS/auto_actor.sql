@@ -1,0 +1,20 @@
+CREATE TABLE `actor` (
+  `actorid` int(11) NOT NULL DEFAULT 0 COMMENT '角色编号',
+  `userid` bigint(20) NOT NULL DEFAULT 0 COMMENT '账号编号',
+  `username` varbinary(51) NOT NULL DEFAULT '' COMMENT '账号名',
+  `admin` smallint(6) NOT NULL DEFAULT 0 COMMENT '管理员级别',
+  `lastip` varbinary(16) NOT NULL DEFAULT '' COMMENT '上次登陆ip',
+  `createtime` int(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
+  `forbidtime` int(11) NOT NULL DEFAULT 0 COMMENT '禁言时间',
+  `name` varbinary(22) NOT NULL DEFAULT '' COMMENT '角色名称',
+  `aclass` tinyint(4) NOT NULL DEFAULT 0 COMMENT '角色种类',
+  `shape` tinyint(4) NOT NULL DEFAULT 0 COMMENT '形象',
+  `level` tinyint(4) NOT NULL DEFAULT 0 COMMENT '级别',
+  `experience` bigint(20) NOT NULL DEFAULT 0 COMMENT '经验',
+  `leadership` smallint(6) NOT NULL DEFAULT 0 COMMENT '领导力',
+  `token` int(11) NOT NULL DEFAULT 0 COMMENT '钻石',
+  `total_charge` int(11) NOT NULL DEFAULT 0 COMMENT '总充值',
+  `itemext` tinyint(4) NOT NULL DEFAULT 0 COMMENT '扩展的背包栏位数',
+  `chat_mask_list` varbinary(256) NOT NULL DEFAULT '' COMMENT '聊天屏蔽列表',
+  PRIMARY KEY (`actorid`)
+) ENGINE=MyISAM;

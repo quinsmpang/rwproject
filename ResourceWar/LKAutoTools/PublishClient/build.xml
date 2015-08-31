@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?> 
+<project name ="CompileServer" default="start" basedir=".">
+	
+	<!-- 开始发布任务 -->
+	<target name="start" depends ="local_upload_201">
+			
+		<echo message="OK!"/>
+					 
+	</target>
+	
+	
+	<target name="local_upload_201" description="Upload NxClient to 192.168.1.201 server">
+		
+			<copy todir="\\192.168.1.201\xmclient\XmWindowsDebug" overwrite="true">
+					 <fileset file="../../XmClient/Exec/LKGameD.exe"></fileset>
+           <fileset file="../../XmClient/Exec/nj.ini"></fileset>
+           <fileset file="../../XmClient/Exec/user.ini"></fileset>
+           <fileset file="../../XmClient/Exec/png.dll"></fileset>
+           <fileset file="../../XmClient/Exec/zlib1.dll"></fileset>
+           <fileset file="../../XmClient/Exec/default.dat"></fileset>
+           <fileset dir="../../XmClient/Exec/">
+              <include name="*.bin" />
+           </fileset>
+           <fileset dir="../../XmClient/Exec/">
+              <include name="res/" />
+           </fileset>
+      </copy>
+			
+	</target>
+
+
+</project>

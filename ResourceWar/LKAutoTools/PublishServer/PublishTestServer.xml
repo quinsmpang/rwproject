@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name ="PublishTestServer" default="start" basedir=".">
+	
+
+	<target name="start" depends="local_upload,server_op">
+			
+			 
+	</target>
+
+
+	<target name="local_upload">
+			
+		<scp todir="root:1dd066f7@114.215.190.229:/usr/local/xmgame/" port="22" trust="true">
+		   <fileset file="./xmserver.tar.gz"/>
+		</scp>
+
+		<scp todir="root:1dd066f7@114.215.190.229:/usr/local/xmgame/" port="22" trust="true">
+		   <fileset file="./xmsql.tar.gz"/>
+		</scp>
+		
+		<scp todir="root:1dd066f7@114.215.190.229:/usr/local/xmgame/sql" port="22" trust="true">
+		   <fileset file="./xmgame_patch.sql"/>
+		</scp>
+		 
+	</target>
+
+
+	<target name="server_op" >  
+			
+      		<sshexec host="114.215.190.229" port="22" username="root"  password="1dd066f7"  
+         		trust="true" command="cd /usr/local/xmgame;./stop_shell;./sql_shell;./start_shell"/>
+		
+	</target>
+
+</project>
+

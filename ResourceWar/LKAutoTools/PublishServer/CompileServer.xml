@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?> 
+<project name ="CompileServer" default="start" basedir=".">
+	
+	<!-- 开始编译打包任务 -->
+	<target name="start" depends ="local_upload_101, sshexec101, 101_download_local, checksql_game, local_upload_135, sshexec135">
+			
+					 
+	</target>
+	
+	
+	<!-- 本地取到的代码上传到101 -->
+	<target name="local_upload_101">
+			
+		<scp todir="root:kkdd@192.168.16.101:/root/undead/compile" trust="true">
+		   <fileset dir="./undeadServer"/>
+		</scp>
+					 
+	</target>
+	
+	
+	<!-- 编译打包 -->
+	<target name="sshexec101" >  
+			
+      		<sshexec host="192.168.16.101" username="root"  password="kkdd"  
+         		trust="true" command="cd /root/undead/compile;make clean;make;./n"/>
+		
+	</target>
+
+	
+	<!-- 101打好的包下载到本地 -->
+	<target name="101_download_local" >
+			
+		<scp file="root:kkdd@192.168.16.101:/root/undead/undeadServer.tar.gz" todir="./"  trust="true"/>
+		<scp file="root:kkdd@192.168.16.101:/root/undead/undeadSql.tar.gz" todir="./"  trust="true"/>
+		<delete dir="undeadServer"/>
+			
+	</target>
+	
+	
+	<!-- 执行比较game表的批处理,将有变化的数据取出来 -->
+	<target name="checksql_game">  
+    		<exec dir="../PublishSQL/CompareGame" executable="cmd.exe">
+						<arg line="/c 101_check_135.bat" />
+        		<arg line="/c exit" />
+    		</exec> 
+
+				<move file="../PublishSQL/CompareGame/f_game_patch.sql" todir="./" />
+	</target>
+	
+	
+	<!-- 将本地包上传到外网135服务器 -->
+	<target name="local_upload_135">
+			
+		<scp todir="root:kkdddd@192.168.1.135:/usr/local/undead/" trust="true">
+		   <fileset file="./undeadServer.tar.gz"/>
+		</scp>
+
+		<scp todir="root:kkdddd@192.168.1.135:/usr/local/undead/" trust="true">
+		   <fileset file="./undeadSql.tar.gz"/>
+		</scp>
+		
+		<scp todir="root:kkdddd@192.168.1.135:/usr/local/undead/sql" trust="true">
+		   <fileset file="./f_game_patch.sql"/>
+		</scp>
+		 
+	</target>
+
+	<!-- 将上传135的数据库和服务器包解压，停服开服等操作 -->
+	<target name="sshexec135" >  
+			
+      		<sshexec host="192.168.1.135" username="root"  password="kkdddd"  
+         		trust="true" command="cd /usr/local/undead;./stop_shell;./sql_shell;./start_shell"/>
+		
+	</target>
+
+</project>

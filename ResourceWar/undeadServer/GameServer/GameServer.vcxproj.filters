@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="源文件\Auto">
+      <UniqueIdentifier>{2a4ba856-9031-4c67-8b7a-1f7024be5928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="头文件\Auto">
+      <UniqueIdentifier>{e1f033cc-ab29-48f7-a557-fc52bfdc4bed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Makefile">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AutoS\src\auto_actor.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\server_netrecv_auto.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\server_netsend_auto.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\server_process_auto.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\server_structrecv_auto.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\server_structsend_auto.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\account.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actor_func.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actor_send.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actor_notify.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\client.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\db.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gamelog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameproc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\login_net.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\login_user.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\plat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script_auto.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\script_reg_auto.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wqueue.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system_askinfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actor_gmcmd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\building.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_actor_hero.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\army.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gmcmd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hero.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\troop.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fight_recode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\item.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\item_equip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\item_proc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\item_send.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\city.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoS\src\auto_actor_item.cpp">
+      <Filter>源文件\Auto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\area.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\worldmap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\city_send.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fight_calc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fight_send.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\robot.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mapunit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wildsite.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mail_msg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fight_msg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\club.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\client.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\db.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\define.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameproc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wqueue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_actor.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\server_netrecv_auto.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\server_netsend_auto.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\server_process_auto.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\server_struct_auto.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\server_structrecv_auto.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\server_structsend_auto.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="include\actor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\actor_send.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gamelog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\script_auto.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\account.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\login.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\plat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\actor_notify.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system_askinfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gmcmd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\building.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_actor_hero.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="include\army.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hero.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\global.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\troop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fight_recode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\item.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\city.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoS\include\auto_actor_item.h">
+      <Filter>头文件\Auto</Filter>
+    </ClInclude>
+    <ClInclude Include="include\area.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\worldmap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fight_calc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fight_send.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\robot.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapunit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wildsite.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mail_msg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fight_msg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\club.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Makefile">
+      <Filter>头文件\Makefile</Filter>
+    </None>
+  </ItemGroup>
+</Project>

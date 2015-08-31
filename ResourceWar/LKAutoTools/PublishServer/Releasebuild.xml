@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?> 
+<project name ="CompileServer" default="release" basedir=".">
+	
+	<!-- 开始编译打包任务 -->
+	<target name="release" depends ="checksql_game, local_upload_net, sshexec_net">
+			
+					 
+	</target>
+
+	<!-- 执行比较game表的批处理,将有变化的数据取出来 -->
+	<target name="checksql_game">  
+    		<exec dir="../PublishSQL/CompareGame" executable="cmd.exe">
+						<arg line="/c 200_check_aliyuncs.bat" />
+        		<arg line="/c exit" />
+    		</exec> 
+
+				<move file="../PublishSQL/CompareGame/nxgame_patch.sql" todir="./" />
+	</target>
+	
+	
+	<!-- 将本地包上传到外网服务器 -->
+	<target name="local_upload_net">
+			
+		<scp todir="root:e9522aad@10.132.58.158:/usr/local/nxgame/" port="52122" trust="true">
+		   <fileset file="./nxserver.tar.gz"/>
+		</scp>
+
+		<scp todir="root:e9522aad@10.132.58.158:/usr/local/nxgame/" port="52122" trust="true">
+		   <fileset file="./nxsql.tar.gz"/>
+		</scp>
+		
+		<scp todir="root:e9522aad@10.132.58.158:/usr/local/nxgame/sql" port="52122" trust="true">
+		   <fileset file="./nxgame_patch.sql"/>
+		</scp>
+		 
+	</target>
+
+	<!-- 将上传的数据库和服务器包解压，停服开服等操作 -->
+	<target name="sshexec_net" >  
+			
+      		<sshexec host="10.132.58.158"  port="52122" username="root"  password="e9522aad"  
+         		trust="true" command="cd /usr/local/nxgame;"/>
+		
+	</target>
+
+</project>
