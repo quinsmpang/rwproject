@@ -2,11 +2,13 @@
 #include "base/CCDirector.h"
 #include "base/CCEventDispatcher.h"
 #include "ScrollViewEx.h"
-
+#include "LuaBasicConversions.h"
+#include "CCLuaValue.h"
+#include "CCLuaEngine.h"
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-
+#define ScriptHandler_ScrollViewExTouchEnd 9000010
 #define SCROLL_DEACCEL_RATE  0.95f
 #define SCROLL_DEACCEL_DIST  1.0f
 #define BOUNCE_DURATION      0.15f
@@ -29,7 +31,8 @@ ScrollViewEx::ScrollViewEx()
 
 ScrollViewEx::~ScrollViewEx()
 {
-
+	ScriptHandlerMgr::HandlerType handlerType = (ScriptHandlerMgr::HandlerType)(ScriptHandler_ScrollViewExTouchEnd);
+	ScriptHandlerMgr::getInstance()->removeObjectHandler( (void*)this, handlerType );
 }
 
 ScrollViewEx* ScrollViewEx::create(Size size, Node* container/* = nullptr*/)
@@ -260,6 +263,11 @@ void ScrollViewEx::onTouchEnded(Touch* touch, Event* event)
         _touches.erase(touchIter);
     } 
 
+	if ( !_dragging )
+	{ // 用于缩放的反弹
+		TouchEndCallFun();
+	}
+
     if (_touches.size() == 0)
     {
         _dragging = false;    
@@ -329,4 +337,29 @@ void ScrollViewEx::deaccelerateScrolling( float dt )
 		this->relocateContainer( true );
 	}
 	
+}
+
+void ScrollViewEx::TouchEndCallFun()
+{
+	int handler = ScriptHandlerMgr::getInstance()->getObjectHandler( (void*)this, (ScriptHandlerMgr::HandlerType)(ScriptHandler_ScrollViewExTouchEnd) );
+	if ( 0 != handler )
+	{
+		if ( NULL == ScriptEngineManager::getInstance()->getScriptEngine() ) {
+			return;
+		}
+
+		LuaStack *pStack = LuaEngine::getInstance()->getLuaStack();
+		if ( NULL == pStack ) {
+			return;
+		}
+
+		lua_State *tolua_s = pStack->getLuaState();
+		if ( NULL == tolua_s ) {
+			return;
+		}
+
+		int nRet = 0;
+		nRet = pStack->executeFunctionByHandler( handler, 0 );
+		pStack->clean();
+	}
 }

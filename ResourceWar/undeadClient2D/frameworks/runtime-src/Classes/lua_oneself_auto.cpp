@@ -2968,6 +2968,53 @@ int lua_oneself_ScrollViewEx_onTouchEnded(lua_State* tolua_S)
 
     return 0;
 }
+int lua_oneself_ScrollViewEx_TouchEndCallFun(lua_State* tolua_S)
+{
+    int argc = 0;
+    ScrollViewEx* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"ScrollViewEx",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (ScrollViewEx*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_oneself_ScrollViewEx_TouchEndCallFun'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_ScrollViewEx_TouchEndCallFun'", nullptr);
+            return 0;
+        }
+        cobj->TouchEndCallFun();
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "ScrollViewEx:TouchEndCallFun",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_ScrollViewEx_TouchEndCallFun'.",&tolua_err);
+#endif
+
+    return 0;
+}
 int lua_oneself_ScrollViewEx_onTouchCancelled(lua_State* tolua_S)
 {
     int argc = 0;
@@ -3284,6 +3331,7 @@ int lua_register_oneself_ScrollViewEx(lua_State* tolua_S)
         tolua_function(tolua_S,"new",lua_oneself_ScrollViewEx_constructor);
         tolua_function(tolua_S,"onTouchMoved",lua_oneself_ScrollViewEx_onTouchMoved);
         tolua_function(tolua_S,"onTouchEnded",lua_oneself_ScrollViewEx_onTouchEnded);
+        tolua_function(tolua_S,"TouchEndCallFun",lua_oneself_ScrollViewEx_TouchEndCallFun);
         tolua_function(tolua_S,"onTouchCancelled",lua_oneself_ScrollViewEx_onTouchCancelled);
         tolua_function(tolua_S,"onTouchBegan",lua_oneself_ScrollViewEx_onTouchBegan);
         tolua_function(tolua_S,"isTouchEnabled",lua_oneself_ScrollViewEx_isTouchEnabled);

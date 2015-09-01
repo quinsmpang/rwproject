@@ -47,7 +47,7 @@ public:
 
     void setTouchEnabled(bool enabled);
 	bool isTouchEnabled() const;
-
+	void TouchEndCallFun();
 
     virtual bool onTouchBegan(Touch *touch, Event *event);
     virtual void onTouchMoved(Touch *touch, Event *event);

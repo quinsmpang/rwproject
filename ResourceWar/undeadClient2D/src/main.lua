@@ -70,6 +70,9 @@ ScrollViewEx = my.ScrollViewEx
 PlatformUtils = my.PlatformUtils
 EventAnimate = my.EventAnimate
 
+ScriptHandler_FrameAnimEventCallFun         = 9000000  -- 帧事件回调
+ScriptHandler_ScrollViewExTouchEnd 			= 9000010
+
 -- 计时器
 scheduler = cc.Director:getInstance():getScheduler()
 -- 屏幕分辨率

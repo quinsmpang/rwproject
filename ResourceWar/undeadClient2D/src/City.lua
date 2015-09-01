@@ -28,13 +28,6 @@ function City:init()
     end
     self:registerScriptHandler(onNodeEvent)
 	
-	 -- 创建滑动层对象
-	local function scrollViewDidZoom()
-		--local scale = self._scrollViewProxy:getZoomScale()
-		--if scale == 0.9 or scale == 1.1 then
-			--self._scrollViewProxy:setZoomScaleInDuration( 1.0, 0.2 );
-		--end
-    end
     self._scrollViewProxy = ScrollViewEx:create()
     self._scrollViewProxy:setViewSize(SCREEN_SIZE)
     self._scrollViewProxy:setPosition(cc.p(0,0))
@@ -43,8 +36,17 @@ function City:init()
     self._scrollViewProxy:setClippingToBounds(true)
     self._scrollViewProxy:setBounceable(false)
 	self._scrollViewProxy:setDelegate()
-	self._scrollViewProxy:registerScriptHandler(scrollViewDidZoom,cc.SCROLLVIEW_SCRIPT_ZOOM)
     self:addChild(self._scrollViewProxy);
+	-- 监听缩放抬起事件,用于缩放的反弹
+	self._scrollViewProxy:registerScriptHandlerSelf( function() 
+	print("1111111111")
+		local scale = self._scrollViewProxy:getZoomScale()
+		if scale <= 0.41 then
+			self._scrollViewProxy:setZoomScaleInDuration( 0.45, 0.2 );
+		elseif scale <= 1.11 and scale >= 1.09 then
+			self._scrollViewProxy:setZoomScaleInDuration( 1.0, 0.2 );
+		end
+	end, ScriptHandler_ScrollViewExTouchEnd );
 	
 	-- 创建地图
 	self._cityTmxMap = ccexp.TMXTiledMap:create("human_map.tmx")
@@ -61,7 +63,7 @@ function City:init()
 	self._scrollViewProxy:setZoomScaleInDuration( 1.0, 1 );
 	-- 1秒后重设缩放范围
 	performWithDelay( self, function(dt)  
-		self._scrollViewProxy:setMinScale(0.9)
+		self._scrollViewProxy:setMinScale(0.4)
 		self._scrollViewProxy:setMaxScale(1.1)
 		-- 主界面显示
 		MainLayer.open( true )

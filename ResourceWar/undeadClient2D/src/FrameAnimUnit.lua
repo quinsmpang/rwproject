@@ -1,4 +1,3 @@
-ScriptHandler_FrameAnimEventCallFun        = 9000000  -- 帧事件回调
 
 -- 帧动画配置列表
 local FrameAnimInfoList = { 
