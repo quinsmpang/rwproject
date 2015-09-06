@@ -61,6 +61,7 @@ require "Building"
 require "CacheCity"
 require "CachePlayer"
 
+-- 自定义绑定的类
 ByteBuffer = my.ByteBuffer
 TcpManager = my.TcpManager
 GlobalSchedule = my.GlobalSchedule
@@ -69,7 +70,10 @@ TableUtil = my.TableUtil
 ScrollViewEx = my.ScrollViewEx
 PlatformUtils = my.PlatformUtils
 EventAnimate = my.EventAnimate
+Shake = my.Shake
+PixelSprite = my.PixelSprite
 
+-- 自定义回调事件
 ScriptHandler_FrameAnimEventCallFun         = 9000000  -- 帧事件回调
 ScriptHandler_ScrollViewExTouchEnd 			= 9000010
 

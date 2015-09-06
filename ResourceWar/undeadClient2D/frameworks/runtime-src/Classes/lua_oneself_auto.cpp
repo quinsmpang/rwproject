@@ -8,6 +8,8 @@
 #include "ScrollViewEx.h"
 #include "PlatformUtils.h"
 #include "EventAnimate.h"
+#include "Shake.h"
+#include "PixelSprite.h"
 #include "tolua_fix.h"
 #include "LuaBasicConversions.h"
 
@@ -3501,6 +3503,435 @@ int lua_register_oneself_EventAnimate(lua_State* tolua_S)
     g_typeCast["EventAnimate"] = "EventAnimate";
     return 1;
 }
+
+int lua_oneself_Shake_stop(lua_State* tolua_S)
+{
+    int argc = 0;
+    Shake* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"Shake",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (Shake*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_oneself_Shake_stop'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_Shake_stop'", nullptr);
+            return 0;
+        }
+        cobj->stop();
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "Shake:stop",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_Shake_stop'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_oneself_Shake_initWithDuration(lua_State* tolua_S)
+{
+    int argc = 0;
+    Shake* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"Shake",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (Shake*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_oneself_Shake_initWithDuration'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 3) 
+    {
+        double arg0;
+        double arg1;
+        double arg2;
+
+        ok &= luaval_to_number(tolua_S, 2,&arg0, "Shake:initWithDuration");
+
+        ok &= luaval_to_number(tolua_S, 3,&arg1, "Shake:initWithDuration");
+
+        ok &= luaval_to_number(tolua_S, 4,&arg2, "Shake:initWithDuration");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_Shake_initWithDuration'", nullptr);
+            return 0;
+        }
+        bool ret = cobj->initWithDuration(arg0, arg1, arg2);
+        tolua_pushboolean(tolua_S,(bool)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "Shake:initWithDuration",argc, 3);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_Shake_initWithDuration'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_oneself_Shake_create(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"Shake",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+
+    do 
+    {
+        if (argc == 3)
+        {
+            double arg0;
+            ok &= luaval_to_number(tolua_S, 2,&arg0, "Shake:create");
+            if (!ok) { break; }
+            double arg1;
+            ok &= luaval_to_number(tolua_S, 3,&arg1, "Shake:create");
+            if (!ok) { break; }
+            double arg2;
+            ok &= luaval_to_number(tolua_S, 4,&arg2, "Shake:create");
+            if (!ok) { break; }
+            Shake* ret = Shake::create(arg0, arg1, arg2);
+            object_to_luaval<Shake>(tolua_S, "Shake",(Shake*)ret);
+            return 1;
+        }
+    } while (0);
+    ok  = true;
+    do 
+    {
+        if (argc == 2)
+        {
+            double arg0;
+            ok &= luaval_to_number(tolua_S, 2,&arg0, "Shake:create");
+            if (!ok) { break; }
+            double arg1;
+            ok &= luaval_to_number(tolua_S, 3,&arg1, "Shake:create");
+            if (!ok) { break; }
+            Shake* ret = Shake::create(arg0, arg1);
+            object_to_luaval<Shake>(tolua_S, "Shake",(Shake*)ret);
+            return 1;
+        }
+    } while (0);
+    ok  = true;
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d", "Shake:create",argc, 2);
+    return 0;
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_Shake_create'.",&tolua_err);
+#endif
+    return 0;
+}
+int lua_oneself_Shake_constructor(lua_State* tolua_S)
+{
+    int argc = 0;
+    Shake* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 0) 
+    {
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_Shake_constructor'", nullptr);
+            return 0;
+        }
+        cobj = new Shake();
+        cobj->autorelease();
+        int ID =  (int)cobj->_ID ;
+        int* luaID =  &cobj->_luaID ;
+        toluafix_pushusertype_ccobject(tolua_S, ID, luaID, (void*)cobj,"Shake");
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "Shake:Shake",argc, 0);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_Shake_constructor'.",&tolua_err);
+#endif
+
+    return 0;
+}
+
+static int lua_oneself_Shake_finalize(lua_State* tolua_S)
+{
+    printf("luabindings: finalizing LUA object (Shake)");
+    return 0;
+}
+
+int lua_register_oneself_Shake(lua_State* tolua_S)
+{
+    tolua_usertype(tolua_S,"Shake");
+    tolua_cclass(tolua_S,"Shake","Shake","cc.ActionInterval",nullptr);
+
+    tolua_beginmodule(tolua_S,"Shake");
+        tolua_function(tolua_S,"new",lua_oneself_Shake_constructor);
+        tolua_function(tolua_S,"stop",lua_oneself_Shake_stop);
+        tolua_function(tolua_S,"initWithDuration",lua_oneself_Shake_initWithDuration);
+        tolua_function(tolua_S,"create", lua_oneself_Shake_create);
+    tolua_endmodule(tolua_S);
+    std::string typeName = typeid(Shake).name();
+    g_luaType[typeName] = "Shake";
+    g_typeCast["Shake"] = "Shake";
+    return 1;
+}
+
+int lua_oneself_PixelSprite_setTexture(lua_State* tolua_S)
+{
+    int argc = 0;
+    PixelSprite* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"PixelSprite",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (PixelSprite*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_oneself_PixelSprite_setTexture'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 1) 
+    {
+        std::string arg0;
+
+        ok &= luaval_to_std_string(tolua_S, 2,&arg0, "PixelSprite:setTexture");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_PixelSprite_setTexture'", nullptr);
+            return 0;
+        }
+        cobj->setTexture(arg0);
+        lua_settop(tolua_S, 1);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "PixelSprite:setTexture",argc, 1);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_PixelSprite_setTexture'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_oneself_PixelSprite_getAlphaAtPoint(lua_State* tolua_S)
+{
+    int argc = 0;
+    PixelSprite* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"PixelSprite",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (PixelSprite*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_oneself_PixelSprite_getAlphaAtPoint'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 1) 
+    {
+        cocos2d::Vec2 arg0;
+
+        ok &= luaval_to_vec2(tolua_S, 2, &arg0, "PixelSprite:getAlphaAtPoint");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_PixelSprite_getAlphaAtPoint'", nullptr);
+            return 0;
+        }
+        uint16_t ret = cobj->getAlphaAtPoint(arg0);
+        tolua_pushnumber(tolua_S,(lua_Number)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "PixelSprite:getAlphaAtPoint",argc, 1);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_PixelSprite_getAlphaAtPoint'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_oneself_PixelSprite_checkHit(lua_State* tolua_S)
+{
+    int argc = 0;
+    PixelSprite* cobj = nullptr;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertype(tolua_S,1,"PixelSprite",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    cobj = (PixelSprite*)tolua_tousertype(tolua_S,1,0);
+
+#if COCOS2D_DEBUG >= 1
+    if (!cobj) 
+    {
+        tolua_error(tolua_S,"invalid 'cobj' in function 'lua_oneself_PixelSprite_checkHit'", nullptr);
+        return 0;
+    }
+#endif
+
+    argc = lua_gettop(tolua_S)-1;
+    if (argc == 1) 
+    {
+        cocos2d::Vec2 arg0;
+
+        ok &= luaval_to_vec2(tolua_S, 2, &arg0, "PixelSprite:checkHit");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_PixelSprite_checkHit'", nullptr);
+            return 0;
+        }
+        bool ret = cobj->checkHit(arg0);
+        tolua_pushboolean(tolua_S,(bool)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d \n", "PixelSprite:checkHit",argc, 1);
+    return 0;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_PixelSprite_checkHit'.",&tolua_err);
+#endif
+
+    return 0;
+}
+int lua_oneself_PixelSprite_create(lua_State* tolua_S)
+{
+    int argc = 0;
+    bool ok  = true;
+
+#if COCOS2D_DEBUG >= 1
+    tolua_Error tolua_err;
+#endif
+
+#if COCOS2D_DEBUG >= 1
+    if (!tolua_isusertable(tolua_S,1,"PixelSprite",0,&tolua_err)) goto tolua_lerror;
+#endif
+
+    argc = lua_gettop(tolua_S) - 1;
+
+    if (argc == 1)
+    {
+        std::string arg0;
+        ok &= luaval_to_std_string(tolua_S, 2,&arg0, "PixelSprite:create");
+        if(!ok)
+        {
+            tolua_error(tolua_S,"invalid arguments in function 'lua_oneself_PixelSprite_create'", nullptr);
+            return 0;
+        }
+        PixelSprite* ret = PixelSprite::create(arg0);
+        object_to_luaval<PixelSprite>(tolua_S, "PixelSprite",(PixelSprite*)ret);
+        return 1;
+    }
+    luaL_error(tolua_S, "%s has wrong number of arguments: %d, was expecting %d\n ", "PixelSprite:create",argc, 1);
+    return 0;
+#if COCOS2D_DEBUG >= 1
+    tolua_lerror:
+    tolua_error(tolua_S,"#ferror in function 'lua_oneself_PixelSprite_create'.",&tolua_err);
+#endif
+    return 0;
+}
+static int lua_oneself_PixelSprite_finalize(lua_State* tolua_S)
+{
+    printf("luabindings: finalizing LUA object (PixelSprite)");
+    return 0;
+}
+
+int lua_register_oneself_PixelSprite(lua_State* tolua_S)
+{
+    tolua_usertype(tolua_S,"PixelSprite");
+    tolua_cclass(tolua_S,"PixelSprite","PixelSprite","cc.Sprite",nullptr);
+
+    tolua_beginmodule(tolua_S,"PixelSprite");
+        tolua_function(tolua_S,"setTexture",lua_oneself_PixelSprite_setTexture);
+        tolua_function(tolua_S,"getAlphaAtPoint",lua_oneself_PixelSprite_getAlphaAtPoint);
+        tolua_function(tolua_S,"checkHit",lua_oneself_PixelSprite_checkHit);
+        tolua_function(tolua_S,"create", lua_oneself_PixelSprite_create);
+    tolua_endmodule(tolua_S);
+    std::string typeName = typeid(PixelSprite).name();
+    g_luaType[typeName] = "PixelSprite";
+    g_typeCast["PixelSprite"] = "PixelSprite";
+    return 1;
+}
 TOLUA_API int register_all_oneself(lua_State* tolua_S)
 {
 	tolua_open(tolua_S);
@@ -3509,13 +3940,15 @@ TOLUA_API int register_all_oneself(lua_State* tolua_S)
 	tolua_beginmodule(tolua_S,"my");
 
 	lua_register_oneself_TcpManager(tolua_S);
-	lua_register_oneself_TableUtil(tolua_S);
+	lua_register_oneself_ByteBuffer(tolua_S);
 	lua_register_oneself_IniUtil(tolua_S);
+	lua_register_oneself_ScrollViewEx(tolua_S);
+	lua_register_oneself_PixelSprite(tolua_S);
+	lua_register_oneself_TableUtil(tolua_S);
 	lua_register_oneself_GlobalSchedule(tolua_S);
 	lua_register_oneself_PlatformUtils(tolua_S);
-	lua_register_oneself_ByteBuffer(tolua_S);
+	lua_register_oneself_Shake(tolua_S);
 	lua_register_oneself_EventAnimate(tolua_S);
-	lua_register_oneself_ScrollViewEx(tolua_S);
 
 	tolua_endmodule(tolua_S);
 	return 1;

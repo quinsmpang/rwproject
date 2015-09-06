@@ -42,7 +42,7 @@ end
 function Building:init()
 	
 	-- 建筑图片
-	self._sprite = cc.Sprite:create( "building_human_Ground.png" )
+	self._sprite = PixelSprite:create( "building_human_Ground.png" )
     self._sprite:setPosition( cc.p(0, 0) )
     self:addChild( self._sprite )
 	
@@ -60,10 +60,7 @@ function Building:init()
 	
 	-- 建筑点击事件
     local function onTouchBegan(touch, event)
-        local locationInNode = self._sprite:convertToNodeSpace(touch:getLocation())
-        local s = self._sprite:getContentSize()
-        local rect = cc.rect(0, 0, s.width, s.height)
-        if cc.rectContainsPoint(rect, locationInNode) then
+        if self._sprite:checkHit( touch:getLocation() ) then
 			self._beganHit = true;
             return true
         end
@@ -84,10 +81,7 @@ function Building:init()
 		if self._beganHit == false then
 			return
 		end
-		local locationInNode = self._sprite:convertToNodeSpace(touch:getLocation())
-        local s = self._sprite:getContentSize()
-        local rect = cc.rect(0, 0, s.width, s.height)
-        if cc.rectContainsPoint(rect, locationInNode) then
+        if self._sprite:checkHit( touch:getLocation() ) then
 			-- 已经确定点击的是这个建筑
 			if self._kind == 0 then
 				BuildingCreateDlg.open( self:getTag() );
@@ -141,6 +135,8 @@ function Building:setTimeInfo( state, time )
 				if self._worker then
 					self._worker:removeFromParent();
 				end
+				
+				self:runAction( Shake:create( 0.1, 0, 10 ) )
 			end );
 			
 			-- 工人

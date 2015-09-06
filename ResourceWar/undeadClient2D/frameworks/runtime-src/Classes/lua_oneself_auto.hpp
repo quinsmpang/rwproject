@@ -88,4 +88,14 @@ int register_all_oneself(lua_State* tolua_S);
 
 
 
+
+
+
+
+
+
+
+
+
+
 #endif // __oneself_h__
