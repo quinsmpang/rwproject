@@ -65,7 +65,8 @@ end
 function proc_notify_C( recvValue )
 	-- process.
 	-- EventProtocol.addEventListener( "proc_notify_C", function( recvValue ) end )
-	EventProtocol.dispatchEvent( "proc_notify_C", recvValue );
+	-- EventProtocol.dispatchEvent( "proc_notify_C", recvValue );
+	RecvActorNotify( recvValue )
 end
 
 -- m_type=0,m_actorid=0,m_name="[22]",m_msg_length=0,m_msg="[m_msg_length]",m_shape=0,m_sendtime=0,
