@@ -127,7 +127,10 @@ function MainLayer:createBottomNode()
         if eventType == ccui.TouchEventType.began then
         elseif eventType == ccui.TouchEventType.moved then
         elseif eventType == ccui.TouchEventType.ended then
-            if name == "worldmap" then
+			if name == "chat" then
+				ChatDlg.open()
+            elseif name == "worldmap" then
+				Notify("worldmap")
 			elseif name == "hero" then
 			elseif name == "quest" then
 			elseif name == "item" then
@@ -137,7 +140,26 @@ function MainLayer:createBottomNode()
         elseif eventType == ccui.TouchEventType.canceled then
         end
     end    
-
+	
+	-- 聊天框
+    local chatView = ccui.ImageView:create()
+	chatView:setName("chatView")
+    chatView:loadTexture( "UI_zhujiemian_tixingkuang.png" )
+	chatView:setScale9Enabled( true )
+	chatView:setContentSize( cc.size(VISIBLE_SIZE.width, chatView:getContentSize().height) )
+	chatView:setPosition( cc.p(VisibleRect:bottom().x, VisibleRect:bottom().y + chatView:getContentSize().height+100) )
+    self:addChild( chatView )
+	
+	-- 聊天按钮
+	local chatButton = ccui.Button:create()
+	chatButton:setName("chat")
+	chatButton:loadTextures("UI_zhujiemian_chat.png", "", "")
+	chatButton:setPressedActionEnabled(true)
+	chatButton:setPosition( cc.p( 30, 30 ) )
+	chatButton:addTouchEventListener(buttonEvent)
+	chatView:addChild( chatButton )
+	
+	
 	-- 下层按钮栏
     local buttonFieldView = ccui.ImageView:create()
     buttonFieldView:loadTexture( "UI_zhujiemian_caozuodi.png" )

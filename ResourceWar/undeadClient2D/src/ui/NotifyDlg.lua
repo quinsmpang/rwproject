@@ -11,7 +11,6 @@ end
 -- 初始化
 function NotifyDlg:init()
 	self:setName("NotifyDlg")
-	
 	self:setPosition(VisibleRect:center())
 	self:setScaleY(0.0)
 	
