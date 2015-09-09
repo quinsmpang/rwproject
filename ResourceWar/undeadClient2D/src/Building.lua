@@ -1,184 +1,77 @@
--- 建筑基础信息
+-- 建筑
 Building = class("Building",function()
     return cc.Node:create()
 end)
 
 -- 资源列表
 BuildingResList = {
-[0]={ res={"building_human_Ground.png"} },  --	空地
-[1]={ res={"building_human_TownCenter.png"} },  --	王城/圣殿
-[2]={ res={""} },  --	城墙/城墙
-[3]={ res={"building_human_Drunkery.png"} },  --  酒馆/灵堂
-[4]={ res={"building_human_Market.png"} },  --  市场/市场
-[5]={ res={"building_human_GamblingHouse.png"} },  --  赌场/赌场
-[6]={ res={"building_human_Library.png"} },  --  图书馆/神圣之地
-[7]={ res={"building_human_WishingPool.png"} },  --  许愿池/祭坛
-[8]={ res={"building_human_Embassy.png"} },  --  大使馆/幽堂
-[9]={ res={"building_human_Smithy.png"} },  --  铁匠铺/铁匠铺
-[10]={ res={"building_human_DrillGround.png"} }, --  校场/检阅场	
-[11]={ res={"building_human_StoreHouse.png"} }, --  仓库/地窖
-[12]={ res={"building_human_WoodFactory_canbe.png","building_human_WoodFactory_over.png"} }, --  木材厂/聚灵器
-[13]={ res={"building_human_Farm_ing.png","building_human_Farm_canbe.png","building_human_Farm_over.png"} }, --  农田/魂器
-[14]={ res={"building_human_IronFactory.png"} }, --  铁矿厂/炼化室
-[15]={ res={"building_human_Mithril.png"} }, --  秘银穴/深坑
-[16]={ res={"building_human_House.png"} }, --  民居/地穴
-[17]={ res={"building_human_Barracks.png"} }, --  兵营
-[18]={ res={"building_human_Stable.png"} }, --  马厩
-[19]={ res={"building_human_ShootingRange.png"} }, --  靶场
-[20]={ res={"building_human_Tower.png"} }, --  塔楼
-[21]={ res={"building_human_Magician.png"} }, --  法师营地
-[22]={ res={"building_human_Craftsman.png"} } --  工匠坊
+[0]={ filename="0_Human_Empty", res={"building_human_Ground.png"} },  --	空地
+[1]={ filename="1_Human_TownCenter", res={"building_human_TownCenter.png"} },  --	王城/圣殿
+[2]={ filename="2_Human_Wall", res={""} },  --	城墙/城墙
+[3]={ filename="3_Human_Drunkery", res={"building_human_Drunkery.png"} },  --  酒馆/灵堂
+[4]={ filename="4_Human_Market", res={"building_human_Market.png"} },  --  市场/市场
+[5]={ filename="5_Human_GamblingHouse", res={"building_human_GamblingHouse.png"} },  --  赌场/赌场
+[6]={ filename="6_Human_Library", res={"building_human_Library.png"} },  --  图书馆/神圣之地
+[7]={ filename="7_Human_WishingPool", res={"building_human_WishingPool.png"} },  --  许愿池/祭坛
+[8]={ filename="8_Human_Embassy", res={"building_human_Embassy.png"} },  --  大使馆/幽堂
+[9]={ filename="9_Human_Smithy", res={"building_human_Smithy.png"} },  --  铁匠铺/铁匠铺
+[10]={ filename="10_Human_DrillGround", res={"building_human_DrillGround.png"} }, --  校场/检阅场	
+[11]={ filename="11_Human_StoreHouse", res={"building_human_StoreHouse.png"} }, --  仓库/地窖
+[12]={ filename="12_Human_WoodFactory", res={"building_human_WoodFactory_canbe.png","building_human_WoodFactory_over.png"} }, --  木材厂/聚灵器
+[13]={ filename="13_Human_Farm", res={"building_human_Farm_ing.png","building_human_Farm_canbe.png","building_human_Farm_over.png"} }, --  农田/魂器
+[14]={ filename="14_Human_IronFactory", res={"building_human_IronFactory.png"} }, --  铁矿厂/炼化室
+[15]={ filename="15_Human_Mithril", res={"building_human_Mithril.png"} }, --  秘银穴/深坑
+[16]={ filename="16_Human_House", res={"building_human_House.png"} }, --  民居/地穴
+[17]={ filename="17_Human_Barracks", res={"building_human_Barracks.png"} }, --  兵营
+[18]={ filename="18_Human_Stable", res={"building_human_Stable.png"} }, --  马厩
+[19]={ filename="19_Human_ShootingRange", res={"building_human_ShootingRange.png"} }, --  靶场
+[20]={ filename="20_Human_Tower", res={"building_human_Tower.png"} }, --  塔楼
+[21]={ filename="21_Human_Magician", res={"building_human_Magician.png"} }, --  法师营地
+[22]={ filename="22_Human_Craftsman", res={"building_human_Craftsman.png"} } --  工匠坊
 }
 
 -- 构造函数
 function Building:ctor()
-	self._kind = 0;			  -- 建筑种类
-	self._timeProgress = nil; -- 时间进度条
-	self._privateNode = nil;  -- 私有节点，每种建筑特有
-	self._createAnim = nil;
+	self._object = nil
 end
  
 -- 初始化
 function Building:init()
-	
-	-- 建筑图片
-	self._sprite = PixelSprite:create( "building_human_Ground.png" )
-    self._sprite:setPosition( cc.p(0, 0) )
-    self:addChild( self._sprite )
-	
-	-- 等级背景
-	self._levelSprite = cc.Sprite:create( "building_human_levelback.png" )
-    self._levelSprite:setPosition( cc.p(-60, -60) )
-	self._levelSprite:setScale( 0.4 )
-	self._levelSprite:setVisible( false )
-    self:addChild( self._levelSprite )
-	-- 等级
-	self._levelLabel = cc.Label:createWithSystemFont("", "Marker Felt", 32)
-    self._levelLabel:setAnchorPoint(cc.p(0.5, 0.5))
-	self._levelLabel:setPosition(cc.p(36, 60))
-	self._levelSprite:addChild(self._levelLabel)
-	
-	-- 建筑点击事件
-    local function onTouchBegan(touch, event)
-        if self._sprite:checkHit( touch:getLocation() ) then
-			self._beganHit = true;
-            return true
-        end
-        --self._sprite:setColor(cc.c3b(255, 255, 255))
-		self:setLocalZOrder(0)
-        return false
-    end
-	local function onTouchMoved( touch, event )
-		if self._beganHit == true then
-			local distance = cc.pGetDistance( touch:getStartLocation(), touch:getLocation() )
-			if distance > 5 then -- 容差
-				self._beganHit = false
-			end
-		end
-		return
-	end 
-	local function onTouchEnded( touch, event )
-		if self._beganHit == false then
-			return
-		end
-        if self._sprite:checkHit( touch:getLocation() ) then
-			-- 已经确定点击的是这个建筑
-			if self._kind == 0 then
-				BuildingCreateDlg.open( self:getTag() );
-			else
-				--self._sprite:setColor(cc.c3b(255, 0, 0))
-				self:setLocalZOrder(1)
-				BuildingOpDlg.open( self, self:getTag() )
-			end
-        end
-	end
-	local listener = cc.EventListenerTouchOneByOne:create()
-	listener:setSwallowTouches(false)
-	listener:registerScriptHandler(onTouchBegan, cc.Handler.EVENT_TOUCH_BEGAN)
-	listener:registerScriptHandler(onTouchMoved, cc.Handler.EVENT_TOUCH_MOVED)
-	listener:registerScriptHandler(onTouchEnded, cc.Handler.EVENT_TOUCH_ENDED)
-	self:getEventDispatcher():addEventListenerWithSceneGraphPriority( listener, self )
-	
-    return true;
+	-- 初始创建空地表
+	local object = require( "building/"..BuildingResList[BUILDING_EMPTY]["filename"] )
+	self._object = object.create()
+	self:addChild( self._object );
+	return true;
+end
+
+-- 设置基础信息
+function Building:setBuildingIndex( buildingindex )
+	self:setTag( buildingindex );
+	self._object:setTag( buildingindex )
 end
 
 -- 设置基础信息
 function Building:setBaseInfo( kind, level )
-	self._kind = kind;
-	self._sprite:setTexture( BuildingResList[kind]["res"][1] );
-	if level <= 1 then
-		self._levelSprite:setVisible( false )
-	else
-		self._levelSprite:setVisible( true )
+	if self._object._kind ~= kind then
+		local object = require( "building/"..BuildingResList[kind]["filename"] )
+		if object then
+			self._object:removeFromParent();
+			self._object = object.create()
+			self._object:setTag( self:getTag() )
+			self:addChild( self._object );
+		end
 	end
-	self._levelLabel:setString(level)
+	self._object:setBaseInfo( level )
 end
 
 -- 设置时间信息
 function Building:setTimeInfo( state, time )
-	if state == BUILDING_STATE_NORMAL then
-		if self._timeProgress ~= nil then
-			--self._timeProgress:removeFromParent();
-			self._timeProgress = nil;
-		end
-		return;
-	end
-	
-	if state == BUILDING_STATE_CREATE_ING or state == BUILDING_STATE_UPGRADE_ING or state == BUILDING_STATE_DELETE_ING then
-		if self._timeProgress == nil then
-			-- 创建时间进度条
-			self._timeProgress = TimeProgressBar.create()
-			self._timeProgress:setPosition( cc.p(0, 0-self._sprite:getContentSize().height/2) )
-			self:addChild( self._timeProgress, 1 );
-			self._timeProgress:setFinishTime( time, function() 
-				-- 时间到，删除工人
-				if self._worker then
-					self._worker:removeFromParent();
-				end
-				
-				self:runAction( Shake:create( 0.1, 0, 10 ) )
-			end );
-			
-			-- 工人
-			self._worker = FrameAnimUnit.create( "WorkerStand", function(sender, frame, numberOfFrames)
-				
-			end )
-			self:addChild( self._worker );
-			self._worker:playLoop();
-		end
-	end
+	self._object:setTimeInfo( state, time )
 end
 
 -- 设置属性信息
 function Building:setAbilityInfo( abilitys )
-	if self._kind == BUILDING_WoodFactory or
-	   self._kind == BUILDING_Farm then
-	
-		local resTex = { [BUILDING_WoodFactory] = "UI_zhujiemian_mutou2.png", -- 木材厂
-						 [BUILDING_Farm] = "UI_zhujiemian_liangshi.png",	}  -- 农田
-						
-		if abilitys[1] > 0 and self._headerImage == nil then 
-			-- 资源拾取标示
-			self._headerImage = cc.Sprite:create( resTex[self._kind] )
-			self._headerImage:setPosition( self:getPosition() )
-			self._headerImage:runAction( cc.RepeatForever:create(action_heartbeat()) );
-			-- 添加到城市资源拾取层
-			GameManager.gameScence._city:addResPickupObject( self._headerImage, function()
-				-- 移除
-				self._headerImage:removeFromParent();
-				self._headerImage = nil
-				-- 发送收取
-				system_askinfo( ASKINFO_BUILDING, "", 4, self:getTag() );
-				-- 播放粒子
-				local particleSystem = cc.ParticleSystemQuad:create("res_pickup.plist")
-				particleSystem:setTexture( cc.Director:getInstance():getTextureCache():addImage( resTex[self._kind] ) )
-				particleSystem:setPositionType( cc.POSITION_TYPE_GROUPED )
-				particleSystem:setAutoRemoveOnFinish(true)
-				self:addChild(particleSystem)
-			end )
-		end
-	end
-	
+	self._object:setAbilityInfo( abilitys )
 end
 
 -- 创建

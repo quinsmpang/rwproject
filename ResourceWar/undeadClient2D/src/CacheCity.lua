@@ -2,6 +2,7 @@
 CityBuildingMax = 36
 
 -- 唯一建筑
+BUILDING_EMPTY				=	0	--	空地表
 BUILDING_TownCenter			=	1	--	王城/圣殿
 BUILDING_Wall				=	2	--	城墙/圣殿
 BUILDING_Drunkery			=	3	--	酒馆/灵堂
@@ -13,12 +14,14 @@ BUILDING_Embassy			=	8	--	大使馆/幽堂
 BUILDING_Smithy				=	9	--	铁匠铺/铁匠铺
 BUILDING_DrillGround		=	10	--	校场/检阅场
 BUILDING_StoreHouse			=	11	--	仓库/地窖
-BUILDING_House				=	16	--	民居/地穴
+
 -- 资源
 BUILDING_WoodFactory		=	12	--	木材厂/聚灵器
 BUILDING_Farm				=	13	--	农田/魂器
 BUILDING_IronFactory		=	14	--	铁矿厂/炼化室
 BUILDING_Mithril			=	15	--	秘银穴/深坑
+BUILDING_House				=	16	--	民居/地穴
+
 -- 部队
 BUILDING_Barracks			=	17	--	兵营
 BUILDING_Stable				=	18	--	马厩
@@ -90,7 +93,7 @@ function CacheCity:Set( recvValue )
 	self.m_gold				=	recvValue.m_gold;
 	self.m_towncenter_level	=	recvValue.m_towncenter_level;
 	self.m_enter_worldmap	=	recvValue.m_enter_worldmap;
-print( self.m_wood, self.m_food, self.m_iron, self.m_mithril )	
+
 	self:ChangeWood( recvValue.m_wood, 0 );
 	self:ChangeFood( recvValue.m_food, 0 );
 	self:ChangeIron( recvValue.m_iron, 0 );

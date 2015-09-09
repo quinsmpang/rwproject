@@ -77,10 +77,21 @@ end
 
 -- 连接服务器失败 
 function GameManager.onConnectFail()
+	if GameManager.status == 0 then
+		MsgBox( "连接服务器失败", 
+			"关闭", nil, 
+			"重试", function()
+			GameManager.tcpManager:ConnectServer( Data.curServerinfo["h"], Data.curServerinfo["p"] )
+		end )
+	
+	else
+		
+		Alert( "服务器连接失败", 
+			"重试", function() 
+			GameManager.tcpManager:ConnectServer( Data.curServerinfo["h"], Data.curServerinfo["p"] )
+		end )
+	end
 	GameManager.status = 0;
-	Alert( "连接服务器失败", "重试", function()
-		GameManager.tcpManager:ConnectServer( Data.curServerinfo["h"], Data.curServerinfo["p"] )
-	end )
 end
 
 -- 连接中断，或者被踢掉

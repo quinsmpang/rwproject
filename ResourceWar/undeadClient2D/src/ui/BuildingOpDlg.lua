@@ -108,7 +108,7 @@ function BuildingOpDlg.open( parent, index )
 		this.init();
 	end
 	m_openBuildingindex = index;
-	parent:addChild( m_dlg )
+	parent:addChild( m_dlg, 999 )
 	m_dlg:setPosition( cc.p( 100, 0 ) )
 	m_dlg:setVisible( true );
 end

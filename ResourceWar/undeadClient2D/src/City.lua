@@ -18,8 +18,8 @@ function City:init()
     local function onNodeEvent(event)
         if event == "enter" then
 			self._resSchedulerEntry = cc.Director:getInstance():getScheduler():scheduleScriptFunc(function() 
-				system_askinfo( ASKINFO_BUILDING, "", 7 );
-			end, 2, false)
+				system_askinfo( ASKINFO_BUILDING, "", 7 ); -- 每五分钟主动获取一次可领取资源
+			end, 5, false)
         elseif event == "exit" then
 			if self._resSchedulerEntry then
 				cc.Director:getInstance():getScheduler():unscheduleScriptEntry( self._resSchedulerEntry )
@@ -28,6 +28,7 @@ function City:init()
     end
     self:registerScriptHandler(onNodeEvent)
 	
+	-- 创建地图滑动容器
     self._scrollViewProxy = ScrollViewEx:create()
     self._scrollViewProxy:setViewSize(SCREEN_SIZE)
     self._scrollViewProxy:setPosition(cc.p(0,0))
@@ -37,9 +38,9 @@ function City:init()
     self._scrollViewProxy:setBounceable(false)
 	self._scrollViewProxy:setDelegate()
     self:addChild(self._scrollViewProxy);
+	
 	-- 监听缩放抬起事件,用于缩放的反弹
 	self._scrollViewProxy:registerScriptHandlerSelf( function() 
-	print("1111111111")
 		local scale = self._scrollViewProxy:getZoomScale()
 		if scale <= 0.41 then
 			self._scrollViewProxy:setZoomScaleInDuration( 0.45, 0.2 );
@@ -61,6 +62,7 @@ function City:init()
 	self._scrollViewProxy:setZoomScale( 0.5 );
 	self._scrollViewProxy:setContentOffsetInDuration(cc.p(-1200, -800), 1);
 	self._scrollViewProxy:setZoomScaleInDuration( 1.0, 1 );
+	
 	-- 1秒后重设缩放范围
 	performWithDelay( self, function(dt)  
 		self._scrollViewProxy:setMinScale(0.4)
@@ -103,7 +105,7 @@ function City:createBuilding()
 
 		-- 创建默认建筑
 		local building = Building.create()
-		building:setTag( buildingindex );
+		building:setBuildingIndex( buildingindex );
 		building:setPosition( cc.p (x+width/2, y+height+height/2) )
 		self._buildingLayer:addChild( building )
 	end
@@ -141,10 +143,10 @@ function City:createSky()
 	dragonShadowLogic()
 	
 	-- 雨
-	self._rainEmitter = cc.ParticleRain:create()
+--[[	self._rainEmitter = cc.ParticleRain:create()
 	self:addChild( self._rainEmitter )
 	self._rainEmitter:setTexture(cc.Director:getInstance():getTextureCache():addImage("rain.png"))
-    self._rainEmitter:setLife(6)
+    self._rainEmitter:setLife(6)--]]
 	
 	-- 云
 	
