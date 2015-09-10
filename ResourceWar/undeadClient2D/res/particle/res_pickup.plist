@@ -25,13 +25,13 @@
     <key>finishColorRed</key>
     <real>1</real>
     <key>finishColorVarianceAlpha</key>
-    <real>1</real>
+    <real>0</real>
     <key>finishColorVarianceBlue</key>
-    <real>1</real>
+    <real>0</real>
     <key>finishColorVarianceGreen</key>
-    <real>1</real>
+    <real>0</real>
     <key>finishColorVarianceRed</key>
-    <real>1</real>
+    <real>0</real>
     <key>rotationStart</key>
     <real>720</real>
     <key>rotationStartVariance</key>

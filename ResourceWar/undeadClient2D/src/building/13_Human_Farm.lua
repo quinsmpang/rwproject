@@ -15,7 +15,7 @@ function Human_Farm:init()
 end
 
 -- 设置属性信息（子类单独覆盖实现）
-function Human_Farm:setAbilityInfo( abilitys )	
+function Human_Farm:setAbilityInfo( abilitys )
 	if abilitys[1] > 0 and self._resImage == nil then 
 		-- 资源拾取标示
 		self._resImage = cc.Sprite:create( "UI_zhujiemian_liangshi.png" );

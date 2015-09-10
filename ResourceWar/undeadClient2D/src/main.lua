@@ -8,6 +8,7 @@ cc.FileUtils:getInstance():addSearchPath("res/city")
 cc.FileUtils:getInstance():addSearchPath("res/building")
 cc.FileUtils:getInstance():addSearchPath("res/anim")
 cc.FileUtils:getInstance():addSearchPath("res/particle")
+cc.FileUtils:getInstance():addSearchPath("res/actor")
 --CC_USE_FRAMEWORK = true
 
 -- for module display deviceUniqueIdentifier

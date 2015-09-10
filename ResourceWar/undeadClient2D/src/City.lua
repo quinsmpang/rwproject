@@ -142,6 +142,14 @@ function City:createSky()
 	end
 	dragonShadowLogic()
 	
+	local actor = require("actor/Soldier")
+	for i = 1, 500 , 1 do
+		local soldier = actor.create()
+		self._skyLayer:addChild( soldier );
+		soldier:play("attack")
+		soldier:changeWay(math.random(1,4))
+		soldier:setPosition( cc.p(math.random(50,4000), math.random(50,3000)) )
+	end
 	-- 雨
 --[[	self._rainEmitter = cc.ParticleRain:create()
 	self:addChild( self._rainEmitter )
