@@ -169,7 +169,7 @@ int actor_gethero( int actor_index, int herokind, char path )
 
 
 //发送给客户端 英雄列表
-int hero_list( int actor_index )
+int actor_hero_list( int actor_index )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;
@@ -192,7 +192,7 @@ int hero_list( int actor_index )
 }
 
 //发现详细的英雄信息
-int hero_info( int actor_index, int offset )
+int actor_hero_info( int actor_index, int offset )
 {
 	if ( actor_index < 0 || actor_index >= g_maxactornum )
 		return -1;

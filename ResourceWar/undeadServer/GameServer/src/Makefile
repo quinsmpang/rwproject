@@ -46,6 +46,8 @@ robot.cpp \
 script.cpp \
 script_auto.cpp \
 script_reg_auto.cpp \
+shm.cpp \
+shm_ao.cpp \
 system.cpp \
 system_askinfo.cpp \
 timecalc.cpp \
@@ -157,6 +159,10 @@ script.o: script.cpp
 script_auto.o: script_auto.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 script_reg_auto.o: script_reg_auto.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+shm.o: shm.cpp 
+	$(CC) $(CFLAGS) -c $(INCLUDE) $<
+shm_ao.o: shm_ao.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<
 system.o: system.cpp 
 	$(CC) $(CFLAGS) -c $(INCLUDE) $<

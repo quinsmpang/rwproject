@@ -177,6 +177,12 @@
     <ClCompile Include="src\club.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\shm_ao.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\client.h">
@@ -312,6 +318,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\club.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shm_ao.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shm.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

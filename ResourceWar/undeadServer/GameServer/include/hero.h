@@ -56,6 +56,6 @@ HeroAttr *actor_hero_getattr( int actor_index, int offset );
 int actor_gethero( int actor_index, int herokind, char path );
 
 
-int hero_list( int actor_index );
-int hero_info( int actor_index, int offset );
+int actor_hero_list( int actor_index );
+int actor_hero_info( int actor_index, int offset );
 #endif

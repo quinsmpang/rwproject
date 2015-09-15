@@ -663,3 +663,43 @@ int struct_NetS_HeroInfo_send( char **pptr, int *psize, SLK_NetS_HeroInfo *pValu
 	return 0;
 }
 
+int struct_NetS_CityBattleTroopList_send( char **pptr, int *psize, SLK_NetS_CityBattleTroopList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_WORD_SEND( (*pptr), &pValue->m_corps, (*psize) );
+	LKSET_BYTE_SEND( (*pptr), &pValue->m_level, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_count, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityBattleActorList_send( char **pptr, int *psize, SLK_NetS_CityBattleActorList *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_MEM_SEND( (*pptr), pValue->m_name, 22*sizeof(char), (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_actor_index, (*psize) );
+	return 0;
+}
+
+int struct_NetS_CityBattleInfo_send( char **pptr, int *psize, SLK_NetS_CityBattleInfo *pValue )
+{
+	int tmpi = 0;
+
+	LKSET_BYTE_SEND( (*pptr), &pValue->m_actor_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_actor_count; tmpi++ )
+	{
+		struct_NetS_CityBattleActorList_send( pptr, psize, &pValue->m_actor_list[tmpi] );
+	}
+	LKSET_BYTE_SEND( (*pptr), &pValue->m_troop_count, (*psize) );
+	for( tmpi = 0; tmpi < pValue->m_troop_count; tmpi++ )
+	{
+		struct_NetS_CityBattleTroopList_send( pptr, psize, &pValue->m_troop_list[tmpi] );
+	}
+	LKSET_WORD_SEND( (*pptr), &pValue->m_pos_x, (*psize) );
+	LKSET_WORD_SEND( (*pptr), &pValue->m_pos_y, (*psize) );
+	LKSET_DWORD_SEND( (*pptr), &pValue->m_remaining_time, (*psize) );
+	LKSET_BYTE_SEND( (*pptr), &pValue->m_type, (*psize) );
+	return 0;
+}
+

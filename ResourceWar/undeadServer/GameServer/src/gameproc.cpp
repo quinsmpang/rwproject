@@ -19,6 +19,7 @@
 #include "plat.h"
 #include "actor_notify.h"
 #include "system.h"
+#include "item.h"
 #include "city.h"
 #include "building.h"
 #include "hero.h"
@@ -30,6 +31,7 @@
 #include "mapunit.h"
 #include "mail_msg.h"
 #include "fight_msg.h"
+#include "shm.h"
 
 #ifndef WIN32 // 这些头文件用来看ulimit设置的
 #include <stdlib.h>
@@ -223,6 +225,14 @@ int process_init( int max_connection )
 	//}
 	//LOGI("%s-%d",__FUNCTION__,__LINE__);
 
+	// 道具数据初始化
+	if ( itemkind_init() < 0 )
+	{
+		printf_msg( "ItemKind Module Error!" );
+		return -1;
+	}
+	LOGI( "%s-%d", __FUNCTION__, __LINE__ );
+
 	// 建筑数据初始化
 	if ( building_upgrade_init() < 0 )
 	{
@@ -319,6 +329,10 @@ void process_close()
 	// 所有城池保存
 	city_save( NULL );
 	printf( "\n" );
+
+	// 关闭共享内存池
+	shm_pool_delall();
+	printf( "shm_pool_delall\n" );
 
 	db_closegame();
 	lua_exit();

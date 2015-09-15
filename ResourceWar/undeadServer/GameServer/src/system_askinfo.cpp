@@ -16,7 +16,6 @@
 #include "server_structsend_auto.h"
 #include "system.h"
 #include "actor_send.h"
-#include "item_send.h"
 #include "item.h"
 #include "hero.h"
 
@@ -194,24 +193,30 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 			//取消聊天屏蔽
 			actor_talk_chat_mask_list_del( actor_index, pvalue[1] );
 		}
+		else if ( pvalue[0] == 3 )
+		{
+			// 军情警报 
+			actor_city_underfire_info( actor_index );
+		}
+		
 		break;
 	case ASKINFO_STORAGE:
-		if ( pvalue[0] == 1 )
+		if ( pvalue[0] == ITEM_PROCESS_LIST )
 		{
 			//发送玩家背包列表
-			item_list( actor_index );
+			item_list_all( actor_index );
 		}
-		else if ( pvalue[0] == 2 )
+		else if ( pvalue[0] == ITEM_PROCESS_INFO )
 		{
 			//查询单个道具的详细信息
 			item_info( actor_index, pvalue[1] );
 		}
-		else if ( pvalue[0] == 3 )
+		else if ( pvalue[0] == ITEM_PROCESS_USE )
 		{
 			//使用某个道具
 			item_use( actor_index, pvalue[1], pvalue[2], pvalue[3], -1 );
 		}
-		else if ( pvalue[0] == 4 )
+		else if ( pvalue[0] == ITEM_PROCESS_DROP )
 		{
 			//背包 丢弃某个道具
 
@@ -220,18 +225,18 @@ int system_askinfo( int actor_index, int msgid, char *pstr, int *pvalue )
 	case ASKINFO_HERO:
 		if ( pvalue[0] == 1 )
 		{
-			//装备道具
-			item_equipup( actor_index, pvalue[1], pvalue[2] );
+			//英雄列表
+			actor_hero_list( actor_index );
 		}
 		if ( pvalue[0] == 2 )
 		{
-			//英雄列表
-			hero_list( actor_index );
-		}
-		if ( pvalue[0] == 3 )
-		{
 			//英雄详细信息
-			hero_info( actor_index, pvalue[1] );
+			actor_hero_info( actor_index, pvalue[1] );
+		}
+		if ( pvalue[0] == ITEM_PROCESS_EQUIP )
+		{
+			//装备道具
+			item_equipup( actor_index, pvalue[1], pvalue[2] );
 		}
 		if ( pvalue[0] == 4 )
 		{

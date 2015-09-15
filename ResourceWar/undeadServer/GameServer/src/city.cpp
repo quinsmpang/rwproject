@@ -19,6 +19,7 @@
 #include "actor_send.h"
 #include "actor_notify.h"
 #include "server_netsend_auto.h"
+#include "shm.h"
 
 extern SConfig g_Config;
 extern MYSQL *myGame;
@@ -45,16 +46,31 @@ extern int g_BuildingNewCount;
 City *g_city = NULL;
 int g_city_maxcount = 0;
 int g_city_maxindex = -1;
+char g_city_allinited = 0;
 
-char city_allinited = 0;
-// 服务器启动读取所有城池信息到内存
+// 服务器启动读取数据库所有城池信息到内存
 int city_load()
 {
 	// 提前分配好空间
-	city_allinited = 0;
+	g_city_allinited = 0;
 	g_city_maxcount = g_Config.max_citycount;
+#ifdef SHM_USE
+	int shmret = shm_pool_add( SHM_KEY_CITY, sizeof(City)*g_city_maxcount, (void**)&g_city );
+	if ( shmret == SHM_ERROR )
+	{
+		printf( "City shm_pool_add error\n" );
+		return -1;
+	}
+	else if ( shmret == SHM_ATTACH )
+	{
+		printf( "City shm_pool_add attach\n" );
+		return 0;
+	}
+#else
 	g_city = (City*)malloc( sizeof(City)* g_city_maxcount );
 	memset( g_city, 0, sizeof(City)* g_city_maxcount );
+#endif // SHM_USE
+
 	printf( "City  maxcount=%d  memory=%0.2fMB\n", g_city_maxcount, (sizeof(City)* g_city_maxcount) / 1024.0 / 1024.0 );
 
 	// 读数据库
@@ -130,7 +146,7 @@ RE_CITY_LOAD:
 	// 创建机器人城池
 	robot_city_create();
 	// 所有城池初始化完毕
-	city_allinited = 1;
+	g_city_allinited = 1;
 	return 0;
 }
 
@@ -223,7 +239,7 @@ RE_CITY_INSERT:
 // 所有城市每秒的逻辑 , 一般是检查建筑的建造升级拆除，造兵等
 void city_logic_sec()
 {
-	if ( !city_allinited )
+	if ( !g_city_allinited )
 		return;
 	//DWORD b = timeGetTime();
 	for ( int tmpi = 0; tmpi < g_city_maxindex/*注意：使用索引位置，为了效率*/; tmpi++ )
@@ -617,6 +633,14 @@ void city_underfire( City *pCity, int army_index )
 	}
 	pCity->underfire[index].army_index = army_index;
 	// 通知该城主
+	if ( pCity->actor_index < 0 || pCity->actor_index > g_maxactornum )
+	{
+		return;
+	}
+	//通知 消息到对应的角色
+	int value[1] = { 0 };
+	value[0] = 3;
+	actor_notify_value( pCity->actor_index, NOTIFY_ACTOR,1,value, NULL );
 }
 
 // 出征
@@ -644,7 +668,7 @@ void city_battle( int actor_index, City *pCity, SLK_NetC_CityBattleInfo *info )
 	}
 
 	// 创建部队
-	int army_index = army_create( 1, 0, 0, "army" );
+	int army_index = army_create( g_actors[actor_index].actorid, 0, 0, g_actors[actor_index].name );
 	g_Army[army_index].actorid = actorid;
 	g_Army[army_index].stat = ARMY_STAT_WALK;
 	g_Army[army_index].stat_time = (int)time( NULL );
@@ -655,12 +679,6 @@ void city_battle( int actor_index, City *pCity, SLK_NetC_CityBattleInfo *info )
 	g_Army[army_index].target_posx = info->m_to_posx;
 	g_Army[army_index].target_posy = info->m_to_posy;
 	g_Army[army_index].walk_total_distance = (int)sqrt( pow( (float)(info->m_to_posx - from_posx), 2 ) + pow( (float)(info->m_to_posy - from_posy), 2 ) );
-
-	// 通知这支部队所攻击的城市
-	if ( pTargetCity )
-	{
-		city_underfire( pTargetCity, army_index );
-	}
 
 	// 添加到地图显示单元
 	from_unit_index = mapunit_add( MAPUNIT_TYPE_ARMY, army_index );
@@ -684,6 +702,12 @@ void city_battle( int actor_index, City *pCity, SLK_NetC_CityBattleInfo *info )
 	for ( int tmpi = 0; tmpi < info->m_hero_count; tmpi++ )
 	{
 		g_Army[army_index].heroes_offset[tmpi] = info->m_hero_list[tmpi];
+	}
+
+	// 通知这支部队所攻击的城市
+	if ( pTargetCity )
+	{
+		city_underfire( pTargetCity, army_index );
 	}
 }
 
@@ -740,4 +764,62 @@ void city_handle_queue_clear( City *pCity )
 	{
 		pCity->handle_queue[handleindex] = -1;
 	}
+}
+// 判断用户的城市是否被攻击/出征了
+bool actor_city_is_underfire( int city_index )
+{
+	if ( city_index <0 || city_index >= g_city_maxcount )
+	{
+		return false;
+	}
+
+	// 判断这个用户是否被攻击
+	for ( int tmpi = 0; tmpi <= CityUnderFire; tmpi++ )
+	{
+		if ( g_city[city_index].underfire[tmpi].army_index > 0 )
+		{
+			// 存在一个 
+			return true;
+		}
+	}
+	return false;
+}
+// 发送完整的军情
+// actor_index 被攻击的对象
+int actor_city_underfire_info( int actor_index )
+{
+	ACTOR_CHECK_INDEX( actor_index );
+
+	CITY_CHECK_INDEX( g_actors[actor_index].city_index );
+
+	City * pCity =  &g_city[g_actors[actor_index].city_index];
+
+	SLK_NetS_CityBattleInfo info = { 0 };
+	
+	for ( int tmpi = 0 ; tmpi <= CityUnderFire; tmpi++ )
+	{
+		if ( pCity->underfire[tmpi].army_index > 0 )
+		{
+			//todo 暂时没有考虑集结攻击的情况
+			info.m_actor_count = 1;
+			info.m_actor_list[0].m_actor_index = 0; //暂时没有用
+			strcpy( info.m_actor_list[0].m_name, g_Army[pCity->underfire[tmpi].army_index].armyname );
+			info.m_pos_x = g_Army[pCity->underfire[tmpi].army_index].from_posx;
+			info.m_pos_y = g_Army[pCity->underfire[tmpi].army_index].from_posy;
+			info.m_remaining_time = g_Army[pCity->underfire[tmpi].army_index].walk_remaining_time;
+			info.m_troop_count = g_Army[pCity->underfire[tmpi].army_index].troops_count;
+			
+			for ( int tmpj = 0; tmpj < info.m_troop_count; tmpj++ )
+			{
+				info.m_troop_list[tmpj].m_corps = g_Army[pCity->underfire[tmpi].army_index].troops[tmpj].corps;
+				info.m_troop_list[tmpj].m_count = g_Army[pCity->underfire[tmpi].army_index].troops[tmpj].maxnumber;
+				info.m_troop_list[tmpj].m_level = g_Army[pCity->underfire[tmpi].army_index].troops[tmpj].level;
+			}
+
+			info.m_type = 0;
+
+			netsend_citybattleinfo_S( actor_index, SENDTYPE_ACTOR, &info );
+		}
+	}
+	return 0;
 }

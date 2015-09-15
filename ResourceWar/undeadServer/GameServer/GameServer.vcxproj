@@ -134,6 +134,8 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mapunit.cpp" />
     <ClCompile Include="src\robot.cpp" />
+    <ClCompile Include="src\shm.cpp" />
+    <ClCompile Include="src\shm_ao.cpp" />
     <ClCompile Include="src\system.cpp" />
     <ClCompile Include="src\system_askinfo.cpp" />
     <ClCompile Include="src\plat.cpp" />
@@ -174,6 +176,8 @@
     <ClInclude Include="include\mail_msg.h" />
     <ClInclude Include="include\mapunit.h" />
     <ClInclude Include="include\robot.h" />
+    <ClInclude Include="include\shm.h" />
+    <ClInclude Include="include\shm_ao.h" />
     <ClInclude Include="include\system.h" />
     <ClInclude Include="include\system_askinfo.h" />
     <ClInclude Include="include\login.h" />

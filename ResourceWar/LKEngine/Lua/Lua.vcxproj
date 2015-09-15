@@ -41,8 +41,8 @@
     <_ProjectFileVersion>12.0.21005.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>../../Public/Lib/$(Configuration)\</OutDir>
-    <IntDir>../../Public/IntDir/$(ProjectName)/$(Configuration)\</IntDir>
+    <OutDir>..\..\Public\Lib\$(Configuration)\</OutDir>
+    <IntDir>..\..\Public\IntDir\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>../../Public/Lib/$(Configuration)\</OutDir>
@@ -133,9 +133,6 @@
     <ClCompile Include="src\lundump.c" />
     <ClCompile Include="src\lvm.c" />
     <ClCompile Include="src\lzio.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

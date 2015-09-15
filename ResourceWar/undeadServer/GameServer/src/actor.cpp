@@ -621,6 +621,13 @@ int actor_enterworld(int client_index, int actorid, int actor_index)
 	SLK_NetS_Talk *pValue = talk_cache_queue_get(0, talk_cache_queue_end(0));
 	if (pValue)
 		netsend_talk_S(actor_index, SENDTYPE_ACTOR, pValue);
+
+	// 判断用户的城市是否被攻击了
+	if ( actor_city_is_underfire( g_actors[actor_index].city_index ) )
+	{
+		actor_notify( actor_index, NOTIFY_ACTOR, NULL );
+	}
+	
 	return 0;
 }
 

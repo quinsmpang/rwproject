@@ -169,5 +169,8 @@ void city_troop_sendinfolist( int actor_index, City* pCity );
 
 // 发送单个兵种信息更新
 void city_troop_sendinfo( int actor_index, City* pCity, int corps_type, int level );
-
+// 判断用户的城市是否被攻击/出征了
+bool actor_city_is_underfire( int city_index );
+// 发送军情给对应的玩家
+int actor_city_underfire_info( int actor_index );
 #endif

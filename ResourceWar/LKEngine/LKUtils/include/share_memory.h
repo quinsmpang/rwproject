@@ -7,6 +7,12 @@
 #endif
 #include "utils.h"
 
+#ifdef	WIN32
+#define INVALID_SM_HANDLE	 ((VOID*)0)
+#else
+#define INVALID_SM_HANDLE	 -1
+#endif
+
 /* 共享内存句柄 */
 #ifdef WIN32
 typedef		VOID*	SM_HANDLE;
@@ -15,7 +21,11 @@ typedef		int		SM_HANDLE;
 #endif
 
 /* 键值 */
+#ifdef WIN32
 typedef	ULONG SM_KEY;
+#else
+typedef int SM_KEY;
+#endif
 
 /* 创建共享内存区 */
 SM_HANDLE share_memory_create( SM_KEY key, unsigned int size );

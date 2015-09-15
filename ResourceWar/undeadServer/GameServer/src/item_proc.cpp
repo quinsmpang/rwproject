@@ -85,7 +85,7 @@ int item_use( int actor_index, short itemindex, short itemnum, int hero_index, i
 
 
 	// 普通物品根据类型进行不同的使用方式
-	if ( item_type == ITEM_TYPE_NORMAL )
+	if ( item_type == ITEM_TYPE_NORMAL || item_type == ITEM_TYPE_GEM || item_type == ITEM_TYPE_MATERIAL || item_type == ITEM_TYPE_STUFF )
 	{ // 普通使用类道具
 		int ability1 = item_get_base_ability( g_actors[actor_index].item[itemindex].m_kind, 0 );
 		int value1 = item_get_base_value( g_actors[actor_index].item[itemindex].m_kind, 0 );

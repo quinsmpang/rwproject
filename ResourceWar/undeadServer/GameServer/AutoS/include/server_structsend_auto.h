@@ -444,6 +444,31 @@ struct _slk_NetS_HeroInfo {
 };
 typedef struct _slk_NetS_HeroInfo SLK_NetS_HeroInfo;	//英雄详细信息
 
+struct _slk_NetS_CityBattleTroopList {
+	short m_corps;	//出征-士兵兵种
+	char m_level;	//出征-士兵等级
+	int m_count;	//出征-士兵个数
+};
+typedef struct _slk_NetS_CityBattleTroopList SLK_NetS_CityBattleTroopList;	//出征-部队信息
+
+struct _slk_NetS_CityBattleActorList {
+	char m_name[22];	//出征-玩家名称
+	int m_actor_index;	//出征-玩家索引
+};
+typedef struct _slk_NetS_CityBattleActorList SLK_NetS_CityBattleActorList;	//出征-玩家信息
+
+struct _slk_NetS_CityBattleInfo {
+	char m_actor_count;	//出征-玩家个数
+	SLK_NetS_CityBattleActorList m_actor_list[5];	//出征-玩家列表
+	char m_troop_count;	//出征-兵种个数
+	SLK_NetS_CityBattleTroopList m_troop_list[10];	//出征-兵种列表
+	short m_pos_x;	//出征-发起者的坐标
+	short m_pos_y;	//出征-发起者的坐标
+	int m_remaining_time;	//出征-剩余时间
+	char m_type;	//出征-行动类别(普通攻击/集结攻击)
+};
+typedef struct _slk_NetS_CityBattleInfo SLK_NetS_CityBattleInfo;	//出征-战斗整体信息
+
 int struct_NetS_Login_send( char **pptr, int *psize, SLK_NetS_Login *pValue );
 int struct_ListInfo_send( char **pptr, int *psize, SLK_ListInfo *pValue );
 int struct_NetS_List_send( char **pptr, int *psize, SLK_NetS_List *pValue );
@@ -494,5 +519,8 @@ int struct_NetS_TroopInfoList_send( char **pptr, int *psize, SLK_NetS_TroopInfoL
 int struct_NetS_HeroSmpInfo_send( char **pptr, int *psize, SLK_NetS_HeroSmpInfo *pValue );
 int struct_NetS_HeroList_send( char **pptr, int *psize, SLK_NetS_HeroList *pValue );
 int struct_NetS_HeroInfo_send( char **pptr, int *psize, SLK_NetS_HeroInfo *pValue );
+int struct_NetS_CityBattleTroopList_send( char **pptr, int *psize, SLK_NetS_CityBattleTroopList *pValue );
+int struct_NetS_CityBattleActorList_send( char **pptr, int *psize, SLK_NetS_CityBattleActorList *pValue );
+int struct_NetS_CityBattleInfo_send( char **pptr, int *psize, SLK_NetS_CityBattleInfo *pValue );
 
 #endif

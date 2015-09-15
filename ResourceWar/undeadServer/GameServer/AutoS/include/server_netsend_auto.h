@@ -47,6 +47,7 @@ int netsend_troopinfo_S( int actor_index, char send_type, SLK_NetS_TroopInfo *pV
 int netsend_troopinfolist_S( int actor_index, char send_type, SLK_NetS_TroopInfoList *pValue );
 int netsend_heroinfolist_S( int actor_index, char send_type, SLK_NetS_HeroList *pValue );
 int netsend_heroinfo_S( int actor_index, char send_type, SLK_NetS_HeroInfo *pValue );
+int netsend_citybattleinfo_S( int actor_index, char send_type, SLK_NetS_CityBattleInfo *pValue );
 
 int netsend_logined_S( int actor_index, char send_type, SLK_NetU_Logined *pValue );
 int netsend_timer_S( int actor_index, char send_type, char *pValue );

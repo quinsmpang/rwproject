@@ -15,7 +15,6 @@
 #include "actor_notify.h"
 #include "actor_send.h"
 #include "server_netsend_auto.h"
-#include "item_send.h"
 extern MYSQL *myData;
 extern MYSQL *myGame;
 
@@ -147,6 +146,47 @@ int item_equip_list( int actor_index, int hero_index )
 		Value.m_item[Value.m_kindnum].m_num = pEquip[tmpi].m_num;
 		Value.m_item[Value.m_kindnum].m_colorlevel = pEquip[tmpi].m_color_level;
 		Value.m_kindnum++;
+	}
+	netsend_itemlist_S( actor_index, SENDTYPE_ACTOR, &Value );
+	return 0;
+}
+
+// 发送整个玩家的道具内容(道具,英雄已装备和角色已装备)
+int item_list_all( int actor_index )
+{
+	int beginindex = 0;
+	int max_itemnum = 0;
+	int offsetbase = 0;
+	
+	if ( actor_index < 0 || actor_index >= g_maxactornum )
+		return -1;
+	item_list( actor_index );
+	item_equip_list( actor_index, -1 );
+
+	// 如果是英雄
+	beginindex = 0 * MAX_ACTOR_EQUIPNUM;
+	max_itemnum = MAX_ACTOR_EQUIPNUM*HERO_MAXCOUNT;
+	offsetbase = HEROEQUIP_OFFSETBASE;
+	// 装备列表
+	SLK_NetS_ItemList Value = { 0 };
+	Value.m_kindnum = 0;
+	Item *pEquip = g_actors[actor_index].hero_equip;
+	for ( int tmpi = beginindex; tmpi < max_itemnum; tmpi++ )
+	{
+		if ( pEquip[tmpi].m_kind <= 0 || pEquip[tmpi].m_num <= 0 )
+			continue;
+		Value.m_item[Value.m_kindnum].m_offset = offsetbase + tmpi;
+		Value.m_item[Value.m_kindnum].m_kind = pEquip[tmpi].m_kind;
+		Value.m_item[Value.m_kindnum].m_type = item_gettype( pEquip[tmpi].m_kind );
+		Value.m_item[Value.m_kindnum].m_num = pEquip[tmpi].m_num;
+		Value.m_item[Value.m_kindnum].m_colorlevel = pEquip[tmpi].m_color_level;
+		Value.m_kindnum++;
+
+		if ( Value.m_kindnum >= 80 )
+		{
+			netsend_itemlist_S( actor_index, SENDTYPE_ACTOR, &Value );
+			Value.m_kindnum = 0;
+		}
 	}
 	netsend_itemlist_S( actor_index, SENDTYPE_ACTOR, &Value );
 	return 0;

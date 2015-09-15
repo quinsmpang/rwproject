@@ -36,6 +36,11 @@
 #define ITEM_TYPE_EQUIP8					8   // 
 #define ITEM_TYPE_EQUIP9					9   //
 #define ITEM_TYPE_EQUIP10					10  //
+#define ITEM_TYPE_STUFF						11  //物资
+#define ITEM_TYPE_MATERIAL					12  //材料
+#define ITEM_TYPE_GEM						13  //钻石
+#define ITEM_TYPE_OTHER						14  //其他
+
 
 /* 动态属性 */
 #define ITEM_ABILITY_NONE					0
@@ -49,6 +54,7 @@
 #define ITEM_PROCESS_DROP		6 // 丢弃道具
 #define ITEM_PROCESS_SELL		7 // 出售道具
 #define ITEM_PROCESS_SETTLE		8 // 背包整理
+#define ITEM_PROCESS_LIST		9 // 背包列表
 
 /* 物品信息结构 */
 typedef struct _itemkind
@@ -132,6 +138,7 @@ int item_sendnotuse( int actor_index, short itemindex, int err );
 void item_sendlost( int actor_index, int target_index, short item_index, short item_num, char path );
 void item_sendget( int actor_index, int target_index, short item_index, short item_num, char path );
 int item_list( int actor_index );	// 发送道具列表
+int item_list_all( int actor_index ); // 发送整个玩家的道具内容(道具,英雄已装备和角色已装备)
 int item_equip_list( int actor_index, int hero_index ); // 发送装备列表
 int item_info( int actor_index, short itemindex ); // 发送道具详细信息
 int item_info_withitem( Item *pItem, int actor_index, short itemindex );// 真正的发送道具信息函数
